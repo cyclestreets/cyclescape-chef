@@ -9,7 +9,7 @@ prep the cookbooks, then install chef-solo, then chef can take care of the rest.
 The base system is ubuntu-server 11.04 so there's not much installed already.
 
     $ sudo apt-get install git
-    $ git clone git@github.com:cyclestreets/toolkit-chef.git
+    $ git clone https://github.com/cyclestreets/toolkit-chef.git
     $ cd toolkit-chef/
 
 (From this point on, we could just make a magic script to do the rest.)
