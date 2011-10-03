@@ -23,26 +23,44 @@ end
 # Install a very old version of nodejs
 package "nodejs"
 
+user "cyclekit" do
+  action :create
+end
+
+# Create the database user. For now, it's a superuser.
+script "create cyclekit db user" do
+  interpreter "bash"
+  user "postgres"
+  group "postgres"
+  cwd "/var/lib/postgresql"
+  code <<-EOH
+    createuser cyclekit -s
+  EOH
+  not_if %q{test -n "`sudo -u postgres psql template1 -A -t -c '\du cyclekit'`"} # Mmm, hacky
+end
+
 deploy_dir = "/var/www/toolkit"
 
-directory deploy_dir + "/shared/config" do
-  owner "www-data"
-  group "www-data"
-  recursive true
+[deploy_dir, deploy_dir + "/shared/config"].each do |dir|
+  directory deploy_dir + "/shared/config" do
+    owner "cyclekit"
+    group "cyclekit"
+    recursive true
+  end
 end
 
 template deploy_dir + "/shared/config/database.yml" do
   source "database.example.yml"
-  owner "www-data"
-  group "www-data"
+  owner "cyclekit"
+  group "cyclekit"
   mode "0644"
 end
 
 deploy_revision deploy_dir do
   repo "https://github.com/cyclestreets/toolkit.git"
   revision "master"
-  user "www-data"
-  group "www-data"
+  user "cyclekit"
+  group "cyclekit"
   before_migrate do
     current_release_directory = release_path
     running_deploy_user = new_resource.user
