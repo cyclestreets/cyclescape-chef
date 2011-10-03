@@ -33,6 +33,7 @@ deploy "/var/www/toolkit" do
   repo "https://github.com/cyclestreets/toolkit.git"
   revision "master"
   user "www-data"
+  group "www-data"
   before_migrate do
     current_release_directory = release_path
     running_deploy_user = new_resource.user
