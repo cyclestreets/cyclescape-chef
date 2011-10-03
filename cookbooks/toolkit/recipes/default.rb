@@ -30,8 +30,24 @@ deploy "/var/www/toolkit" do
   repo "https://github.com/cyclestreets/toolkit.git"
   revision "master"
   user "www-data"
+  before_migrate do
+    current_release_directory = release_path
+    running_deploy_user = new_resource.user
+    bundler_depot = new_resource.shared_path + '/bundle'
+    excluded_groups = %w(development test)
+
+    script 'Bundling the gems' do
+      interpreter 'bash'
+      cwd current_release_directory
+      user running_deploy_user
+      code <<-EOS
+        bundle install --quiet --deployment --path #{bundler_depot} \
+        --without #{excluded_groups.join(' ')}
+      EOS
+    end
+  end
   migrate true
-  migration_command "rake db:migrate"
+  migration_command "bundle exec rake db:migrate"
   environment "RAILS_ENV" => "production"
   action :deploy
   restart_command "touch tmp/restart.txt"
