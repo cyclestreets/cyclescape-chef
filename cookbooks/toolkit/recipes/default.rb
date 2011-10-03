@@ -23,13 +23,22 @@ end
 # Install a very old version of nodejs
 package "nodejs"
 
-directory "/var/www/toolkit/shared" do
+deploy_dir = "/var/www/toolkit"
+
+directory deploy_dir + "/shared/config" do
   owner "www-data"
   group "www-data"
   recursive true
 end
 
-deploy_revision "/var/www/toolkit" do
+template deploy_dir + "/shared/config/database.yml" do
+  source "database.example.yml"
+  owner "www-data"
+  group "www-data"
+  mode "0644"
+end
+
+deploy_revision deploy_dir do
   repo "https://github.com/cyclestreets/toolkit.git"
   revision "master"
   user "www-data"
