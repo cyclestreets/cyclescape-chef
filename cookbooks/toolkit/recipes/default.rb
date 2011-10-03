@@ -29,7 +29,7 @@ directory "/var/www/toolkit/shared" do
   recursive true
 end
 
-deploy "/var/www/toolkit" do
+deploy_revision "/var/www/toolkit" do
   repo "https://github.com/cyclestreets/toolkit.git"
   revision "master"
   user "www-data"
