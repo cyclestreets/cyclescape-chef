@@ -20,6 +20,9 @@ link "/usr/bin/bundle" do
   to "/var/lib/gems/1.9.1/bin/bundle"
 end
 
+# Install a very old version of nodejs
+package "nodejs"
+
 directory "/var/www/toolkit/shared" do
   owner "www-data"
   group "www-data"
