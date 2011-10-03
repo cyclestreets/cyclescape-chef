@@ -65,6 +65,7 @@ deploy_revision deploy_dir do
     current_release_directory = release_path
     running_deploy_user = new_resource.user
     bundler_depot = new_resource.shared_path + '/bundle'
+    shared_config = new_resource.shared_path + '/config'
     excluded_groups = %w(development test)
 
     script 'Bundling the gems' do
@@ -75,6 +76,23 @@ deploy_revision deploy_dir do
         bundle install --quiet --deployment --path #{bundler_depot} \
         --without #{excluded_groups.join(' ')}
       EOS
+    end
+
+    # The symlink_before_default does this, but annoyingly comes after before_migrate is called
+    # That way, db:create fails. So do it manually instead...
+    link current_release_directory + '/config/database.yml' do
+      to shared_config + '/database.yml'
+    end
+
+    script 'Create the database' do
+      interpreter "bash"
+      cwd current_release_directory
+      user running_deploy_user
+      environment 'RAILS_ENV' => 'production'
+      code <<-EOH
+        bundle exec rake db:create
+      EOH
+      not_if %q{test -n "`sudo -u postgres psql template1 -A -t -c '\l' | grep cyclekit_production`"}
     end
   end
   migrate true
