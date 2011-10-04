@@ -97,16 +97,6 @@ deploy_revision deploy_dir do
       not_if %q{test -n "`sudo -u postgres psql template1 -A -t -c '\l' | grep cyclekit_production`"}
     end
 
-    script 'Update seed data' do
-      interpreter "bash"
-      cwd current_release_directory
-      user running_deploy_user
-      environment 'RAILS_ENV' => 'production'
-      code <<-EOH
-        bundle exec rake db:seed
-      EOH
-    end
-
     script 'Compile the assets' do
       interpreter "bash"
       cwd current_release_directory
@@ -117,6 +107,19 @@ deploy_revision deploy_dir do
       EOH
     end
   end
+
+  before_restart do
+    script 'Update seed data' do
+      interpreter "bash"
+      cwd current_release_directory
+      user running_deploy_user
+      environment 'RAILS_ENV' => 'production'
+      code <<-EOH
+        bundle exec rake db:seed
+      EOH
+    end
+  end
+
   migrate true
   migration_command "bundle exec rake db:migrate"
   environment "RAILS_ENV" => "production"
