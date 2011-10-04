@@ -1,0 +1,35 @@
+#
+# Cookbook Name:: passenger-gem
+# Recipe:: default
+#
+# Copyright 2011, Cyclestreets Ltd
+
+gem_package "passenger" do
+  gem_binary "/usr/bin/gem1.9.1"
+  action :install
+end
+
+#Fix the stupid path issues
+link "/usr/bin/passenger-install-apache2-module" do
+  to "/var/lib/gems/1.9.1/bin/passenger-install-apache2-module"
+end
+
+script "install the passenger module" do
+  interpreter "bash"
+  cwd "/tmp"
+  code <<-EOH
+    /usr/bin/passenger-install-apache2-module --auto
+  EOH
+  not_if "test -f /var/lib/gems/1.9.1/gems/passenger-3.0.9/ext/apache2/mod_passenger.so"
+end
+
+template "/etc/apache2/mods-available/passenger.load" do
+  source "passenger.module.conf"
+  mode "0644"
+  notifies :restart, "service[apache2]"
+end
+
+link "/etc/apache2/mods-enabled/passenger.load" do
+  to "/etc/apache2/mods-available/passenger.load"
+  notifies :restart, "service[apache2]"
+end

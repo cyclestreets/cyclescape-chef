@@ -4,9 +4,10 @@
 #
 # Copyright 2011, Cyclestreets Ltd
 
-include_recipe 'passenger'
+include_recipe 'apache2'
 include_recipe 'postgres'
 include_recipe 'ruby19'
+include_recipe 'passenger-gem'
 
 # We can install bundler with the ubuntu version of gem ...
 gem_package "bundler" do
