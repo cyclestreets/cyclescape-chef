@@ -9,6 +9,9 @@ include_recipe 'postgres'
 include_recipe 'ruby19'
 include_recipe 'passenger-gem'
 
+# Geos dev package for RGeo gem
+package "libgeos-dev"
+
 # We can install bundler with the ubuntu version of gem ...
 gem_package "bundler" do
   gem_binary "/usr/bin/gem1.9.1"
