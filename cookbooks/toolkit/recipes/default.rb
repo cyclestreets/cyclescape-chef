@@ -99,7 +99,7 @@ deploy_revision deploy_dir do
 
     script 'Compile the assets' do
       interpreter "bash"
-      cwd current_release_directory
+      cwd release_path
       user running_deploy_user
       environment 'RAILS_ENV' => 'production'
       code <<-EOH
