@@ -4,6 +4,10 @@
 #
 # Copyright 2011, Cyclestreets Ltd
 
+["libcurl4-openssl-dev", "libssl-dev", "zlib1g-dev", "apache2-prefork-dev", "libapr1-dev", "libaprutil1-dev"].each do |p|
+  package p
+end
+
 gem_package "passenger" do
   gem_binary "/usr/bin/gem1.9.1"
   action :install
