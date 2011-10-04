@@ -112,7 +112,7 @@ deploy_revision deploy_dir do
     script 'Update seed data' do
       interpreter "bash"
       cwd release_path
-      user running_deploy_user
+      user new_resource.user
       environment 'RAILS_ENV' => 'production'
       code <<-EOH
         bundle exec rake db:seed
