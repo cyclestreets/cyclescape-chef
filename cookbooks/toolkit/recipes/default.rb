@@ -101,3 +101,23 @@ deploy_revision deploy_dir do
   action :deploy
   restart_command "touch tmp/restart.txt"
 end
+
+# sort out the virtual hosts, with delayed reloading of apache2
+link "/etc/apache2/sites-enabled/000-default" do
+  action :delete
+  only_if "test -L /etc/apache2/sites-enabled/000-default"
+  notifies :reload, "service[apache2]"
+end
+
+template "/etc/apache2/sites-available/toolkit" do
+  source "passenger.vhost.conf"
+  owner "www-data"
+  group "www-data"
+  mode "0644"
+  notifies :reload, "service[apache2]"
+end
+
+link "/etc/apache2/sites-enabled/toolkit" do
+  to "/etc/apache2/sites-available/toolkit"
+  notifies :reload, "service[apache2]"
+end
