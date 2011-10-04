@@ -99,7 +99,7 @@ deploy_revision deploy_dir do
 
     script 'Compile the assets' do
       interpreter "bash"
-      cwd release_path
+      cwd current_release_directory
       user running_deploy_user
       environment 'RAILS_ENV' => 'production'
       code <<-EOH
@@ -111,7 +111,7 @@ deploy_revision deploy_dir do
   before_restart do
     script 'Update seed data' do
       interpreter "bash"
-      cwd current_release_directory
+      cwd release_path
       user running_deploy_user
       environment 'RAILS_ENV' => 'production'
       code <<-EOH
