@@ -21,7 +21,16 @@ First, we need to bundle up the cookbooks. This comes in handy later on.
 Now, we need to install chef. We're using chef 0.10 from the Opscode apt
 repository.
 
-[ Insert instructions from the opscode wiki here ]
+    echo "deb http://apt.opscode.com/ `lsb_release -cs`-0.10 main" | sudo tee /etc/apt/sources.list.d/opscode.list
+    sudo mkdir -p /etc/apt/trusted.gpg.d
+    gpg --keyserver keys.gnupg.net --recv-keys 83EF826A
+    gpg --export packages@opscode.com | sudo tee /etc/apt/trusted.gpg.d/opscode-keyring.gpg > /dev/null
+    sudo apt-get update
+    sudo apt-get install opscode-keyring # permanent upgradeable keyring
+    sudo apt-get upgrade
+    sudo apt-get install chef
+
+When you are prompted for the server url, enter "none"
 
 Now we can run chef to take care of everything else. The node.json file
 specifies which recipies we want to run
