@@ -41,8 +41,9 @@ script "create cyclekit db user" do
 end
 
 deploy_dir = "/var/www/toolkit"
+shared_dir = File.join(deploy_dir, "shared")
 
-[deploy_dir, deploy_dir + "/shared/config"].each do |dir|
+[deploy_dir, deploy_dir + "/shared/config", File.join(shared_dir, "log"), File.join(shared_dir, "system")].each do |dir|
   directory deploy_dir + "/shared/config" do
     owner "cyclekit"
     group "cyclekit"
