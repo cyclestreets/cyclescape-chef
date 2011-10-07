@@ -46,7 +46,7 @@ end
 deploy_dir = "/var/www/toolkit"
 shared_dir = File.join(deploy_dir, "shared")
 
-[deploy_dir, File.join(shared_dir, "config"), File.join(shared_dir, "log"), File.join(shared_dir, "system")].each do |dir|
+[deploy_dir, File.join(shared_dir, "config"), File.join(shared_dir, "log"), File.join(shared_dir, "system"), File.join(shared_dir, "tmp/dragonfly")].each do |dir|
   directory dir do
     owner "cyclekit"
     group "cyclekit"
@@ -68,6 +68,7 @@ deploy_revision deploy_dir do
   group "cyclekit"
   before_migrate do
     current_release_directory = release_path
+    shared_directory = new_resource.shared_path
     running_deploy_user = new_resource.user
     bundler_depot = new_resource.shared_path + '/bundle'
     shared_config = new_resource.shared_path + '/config'
@@ -87,6 +88,17 @@ deploy_revision deploy_dir do
     # That way, db:create fails. So do it manually instead...
     link current_release_directory + '/config/database.yml' do
       to shared_config + '/database.yml'
+    end
+
+    # Things for the dragonfly gem
+    directory current_release_directory + '/tmp' do
+      action :create
+      owner "cyclekit"
+      group "cyclekit"
+    end
+
+    link current_release_directory + '/tmp/dragonfly' do
+      to shared_directory + '/tmp/dragonfly'
     end
 
     script 'Create the database' do
