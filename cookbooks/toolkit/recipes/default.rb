@@ -13,6 +13,9 @@ include_recipe 'postfix'
 # Geos dev package for RGeo gem
 package "libgeos-dev"
 
+# Redis server for queueing and caching
+package "redis-server"
+
 # We can install bundler with the ubuntu version of gem ...
 gem_package "bundler" do
   gem_binary "/usr/bin/gem1.9.1"
