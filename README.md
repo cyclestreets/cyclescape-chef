@@ -43,7 +43,7 @@ specifies which recipies we want to run
 It's easy to run chef again - for example, in order to deploy the latest version. Simply run
 
     $ cd ~
-    $ sudo chef-solo -j toolkit-chef/node.json toolkit-chef/cookbooks
+    $ sudo chef-solo -c toolkit-chef/solo.rb -j toolkit-chef/node.json
 
 # Updating the cookbooks
 
@@ -54,4 +54,4 @@ the cookbooks, then run chef-solo
     $ cd toolkit-chef
     $ git pull
     $ cd ~
-    $ sudo chef-solo -j toolkit-chef/node.json toolkit-chef/cookbooks
+    $ sudo chef-solo -c toolkit-chef/solo.rb -j toolkit-chef/node.json
