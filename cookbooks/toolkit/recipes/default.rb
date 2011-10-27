@@ -16,6 +16,18 @@ package "libgeos-dev"
 # Redis server for queueing and caching
 package "redis-server"
 
+# module for basic auth access control
+%w(libapache2-mod-authnz-external pwauth).each do |p|
+  package p do
+    notifies :restart, "service[apache2]"
+  end
+end
+
+link "/etc/apache2/mods-enabled/authnz_external.load" do
+  to "/etc/apache2/mods-available/authnz_external.load"
+  notifies :restart, "service[apache2]"
+end
+
 # We can install bundler with the ubuntu version of gem ...
 gem_package "bundler" do
   gem_binary "/usr/bin/gem1.9.1"
