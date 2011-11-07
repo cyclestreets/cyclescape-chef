@@ -137,6 +137,20 @@ deploy_revision deploy_dir do
         bundle exec rake assets:precompile
       EOH
     end
+
+    # We need to create a secret token, and store it in the shared config
+    # path for future use.
+    script 'create the secret token' do
+      interpreter "bash"
+      cwd current_release_directory
+      user running_deploy_user
+      code "bundle exec rake secret > #{shared_config + '/secret_token'}"
+      not_if "test -e #{shared_config + '/secret_token'}"
+    end
+
+    link current_release_directory + '/config/secret_token' do
+      to shared_config + '/secret_token'
+    end
   end
 
   before_restart do
