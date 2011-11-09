@@ -31,6 +31,8 @@ link "/etc/apache2/mods-enabled/authnz_external.load" do
   notifies :restart, "service[apache2]"
 end
 
+apache_module "rewrite"
+
 # We can install bundler with the ubuntu version of gem ...
 gem_package "bundler" do
   gem_binary "/usr/bin/gem1.9.1"
