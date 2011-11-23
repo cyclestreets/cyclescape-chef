@@ -50,6 +50,7 @@ package "nodejs"
 
 user "cyclekit" do
   action :create
+  shell "/bin/bash"
 end
 
 # Create the database user. For now, it's a superuser.
