@@ -168,6 +168,24 @@ deploy_revision deploy_dir do
         bundle exec rake db:seed
       EOH
     end
+
+    # use foreman to create upstart files. Two improvements are possible:
+    # 1) Only run the export/restart if the Procfile has changed.
+    # 2) Upstart on reboot (see https://github.com/ddollar/foreman/issues/33 )
+    script 'Update foreman configuration' do
+      interpreter "bash"
+      cwd release_path
+      environment 'RAILS_ENV' => 'production'
+      code <<-EOH
+        bundle exec foreman export upstart /etc/init -a toolkit -u cyclekit
+      EOH
+      notifies :restart, "service[toolkit]"
+    end
+
+    service "toolkit" do
+      provider Chef::Provider::Service::Upstart
+      supports :restart => true
+    end
   end
 
   migrate true
