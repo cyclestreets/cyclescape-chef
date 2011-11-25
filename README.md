@@ -14,10 +14,6 @@ The base system is ubuntu-server 11.04 so there's not much installed already.
 
 (From this point on, we could just make a magic script to do the rest.)
 
-First, we need to bundle up the cookbooks. This comes in handy later on.
-
-    $ tar -czvf cookbooks.tgz cookbooks/
-
 Now, we need to install chef. We're using chef 0.10 from the Opscode apt
 repository.
 
@@ -32,18 +28,34 @@ repository.
 
 When you are prompted for the server url, enter "none"
 
-Now we can run chef to take care of everything else. The node.json file
-specifies which recipies we want to run
+# Databags
 
-    $ cd ~
-    $ sudo chef-solo -j toolkit-chef/node.json -r toolkit-chef/cookbooks.tgz
+If you are running this recipe with chef-solo, you need to
+create the secrets databag in /etc. Unfortunately chef loads databags
+before running any recipies, so it needs to be done by hand.
+
+    sudo mkdir -p /etc/chef/databags/secrets
+
+Then copy the example file over
+
+    sudo cp path/to/cookbooks/toolkit/templates/default/mailbox.json /etc/chef/databags/secrets/
+    sudo chmod 0600 /etc/chef/databags/secrets/mailbox.json
+
+Then fill in the real values
+
+    sudo nano /etc/chef/databags/secrets/mailbox.json
+
+Then run chef as normal. If you are running against a chef-server,
+then create the databag from the .json example using knife.
 
 # Running chef
 
-It's easy to run chef again - for example, in order to deploy the latest version. Simply run
+At this point, chef can take care of everything else.
 
     $ cd ~
     $ sudo chef-solo -c toolkit-chef/solo.rb -j toolkit-chef/node.json
+
+It's easy to run chef again - for example, in order to deploy the latest version.
 
 # Updating the cookbooks
 

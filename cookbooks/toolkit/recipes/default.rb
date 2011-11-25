@@ -83,6 +83,20 @@ template deploy_dir + "/shared/config/database.yml" do
   mode "0644"
 end
 
+mb = data_bag_item("secrets", "mailbox")
+
+template deploy_dir + "/shared/config/mailboxes.yml" do
+  source "mailboxes.example.yml"
+  owner "cyclekit"
+  group "cyclekit"
+  mode "0400"
+  variables({
+    :server => mb["server"],
+    :username => mb["username"],
+    :password => mb["password"]
+  })
+end
+
 deploy_revision deploy_dir do
   repo "https://github.com/cyclestreets/toolkit.git"
   revision "master"
@@ -110,6 +124,10 @@ deploy_revision deploy_dir do
     # That way, db:create fails. So do it manually instead...
     link current_release_directory + '/config/database.yml' do
       to shared_config + '/database.yml'
+    end
+
+    link current_release_directory + '/config/mailboxes.yml' do
+      to shared_config + '/mailboxes.yml'
     end
 
     # Things for the dragonfly gem
