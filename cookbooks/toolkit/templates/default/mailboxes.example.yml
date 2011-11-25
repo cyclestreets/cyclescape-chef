@@ -1,0 +1,5 @@
+primary:
+  address: "<%= @server %>"
+  user_name: "<%= @username %>"
+  password: "<%= @password %>"
+  authentication: "PLAIN"
