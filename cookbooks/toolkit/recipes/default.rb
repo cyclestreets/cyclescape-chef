@@ -194,9 +194,8 @@ deploy_revision deploy_dir do
     script 'Update foreman configuration' do
       interpreter "bash"
       cwd release_path
-      environment 'RAILS_ENV' => 'production'
       code <<-EOH
-        bundle exec foreman export upstart /etc/init -a toolkit -u cyclekit
+        bundle exec foreman export upstart /etc/init -a toolkit -u cyclekit -e .env.production
       EOH
       notifies :restart, "service[toolkit]"
     end
