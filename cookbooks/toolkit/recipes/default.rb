@@ -110,6 +110,16 @@ deploy_revision deploy_dir do
     shared_config = new_resource.shared_path + '/config'
     excluded_groups = %w(development test)
 
+    # Stop any cron jobs from running during migration
+    script 'Clear crontab' do
+      interpreter 'bash'
+      cwd current_release_directory
+      user running_deploy_user
+      code <<-EOH
+        bundle exec whenever --clear-crontab
+      EOH
+    end
+
     script 'Bundling the gems' do
       interpreter 'bash'
       cwd current_release_directory
@@ -203,6 +213,15 @@ deploy_revision deploy_dir do
     service "toolkit" do
       provider Chef::Provider::Service::Upstart
       supports :restart => true
+    end
+
+    script 'Set crontab' do
+      interpreter 'bash'
+      cwd current_release_directory
+      user running_deploy_user
+      code <<-EOH
+        bundle exec whenever --write-crontab
+      EOH
     end
   end
 
