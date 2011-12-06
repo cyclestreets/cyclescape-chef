@@ -110,16 +110,7 @@ deploy_revision deploy_dir do
     shared_config = new_resource.shared_path + '/config'
     excluded_groups = %w(development test)
 
-    # Stop any cron jobs from running during migration
-    script 'Clear crontab' do
-      interpreter 'bash'
-      cwd current_release_directory
-      user running_deploy_user
-      code <<-EOH
-        bundle exec whenever --clear-crontab
-      EOH
-    end
-
+    # This must be called before any bundle execs
     script 'Bundling the gems' do
       interpreter 'bash'
       cwd current_release_directory
@@ -128,6 +119,16 @@ deploy_revision deploy_dir do
         bundle install --quiet --deployment --path #{bundler_depot} \
         --without #{excluded_groups.join(' ')}
       EOS
+    end
+
+    # Stop any cron jobs from running during migration
+    script 'Clear crontab' do
+      interpreter 'bash'
+      cwd current_release_directory
+      user running_deploy_user
+      code <<-EOH
+        bundle exec whenever --clear-crontab
+      EOH
     end
 
     # The symlink_before_default does this, but annoyingly comes after before_migrate is called
