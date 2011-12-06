@@ -217,8 +217,8 @@ deploy_revision deploy_dir do
 
     script 'Set crontab' do
       interpreter 'bash'
-      cwd current_release_directory
-      user running_deploy_user
+      cwd release_path
+      user new_resource.user
       code <<-EOH
         bundle exec whenever --write-crontab
       EOH
