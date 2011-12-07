@@ -19,6 +19,9 @@ package "redis-server"
 # Imagemagick, for dragonfly to do image processing with convert
 package "imagemagick"
 
+# Mailutils - not actually for the app, just for some other scripts we have
+package "mailutils"
+
 # module for basic auth access control
 %w(libapache2-mod-authnz-external pwauth).each do |p|
   package p do
