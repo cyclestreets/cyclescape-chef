@@ -1,5 +1,5 @@
-myhostname = www.cyclescape.com
-mydomain = cyclescape.com
+myhostname = www.cyclescape.org
+mydomain = cyclescape.org
 myorigin = $mydomain
 
 smtpd_banner = $myhostname ESMTP $mail_name
