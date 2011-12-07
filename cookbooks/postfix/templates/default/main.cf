@@ -13,9 +13,8 @@ mynetworks = 127.0.0.0/8
 mailbox_size_limit = 0
 recipient_delimiter = +
 
-# SECURITY NOTE: Listening on all interfaces. Make sure your firewall is
-# configured correctly
-inet_interfaces = all
+# We only use postfix for sending from the web app, not receiving.
+inet_interfaces = loopback-only
 
 relayhost = [mx.mythic-beasts.com]
 smtp_connection_cache_destinations = mx.mythic-beasts.com
