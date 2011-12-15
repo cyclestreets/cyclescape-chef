@@ -1,5 +1,7 @@
 primary:
-  address: "<%= @server %>"
+  host: "<%= @server %>"
   user_name: "<%= @username %>"
   password: "<%= @password %>"
   authentication: "PLAIN"
+  mailbox: "INBOX"
+  mailbox_processor: "InboundMailProcessor"
