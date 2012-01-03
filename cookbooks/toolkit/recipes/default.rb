@@ -35,6 +35,7 @@ link "/etc/apache2/mods-enabled/authnz_external.load" do
 end
 
 apache_module "rewrite"
+apache_module "ssl"
 
 # We can install bundler with the ubuntu version of gem ...
 gem_package "bundler" do
