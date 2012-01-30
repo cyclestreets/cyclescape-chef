@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+# Back up the shared directory, which includes uploaded images and documents
+tar cjpf <%= @shared_filename %> -C /var/www/toolkit shared
+openssl dgst -md5 <%= @shared_filename %> > <%= @shared_filename + ".md5" %>
+
+# Back up the database
+pg_dump <%= @database %> -Z 1 -f <%= @dbdump_filename %>
+openssl dgst -md5 <%= @dbdump_filename %> > <%= @dbdump_filename + ".md5" %>
