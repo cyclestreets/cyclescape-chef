@@ -134,7 +134,7 @@ deploy_revision deploy_dir do
       cwd current_release_directory
       user running_deploy_user
       code <<-EOH
-        bundle exec whenever --clear-crontab
+        bundle exec whenever --clear-crontab cyclescape_app
       EOH
     end
 
@@ -228,7 +228,7 @@ deploy_revision deploy_dir do
       cwd release_path
       user new_resource.user
       code <<-EOH
-        bundle exec whenever --write-crontab
+        bundle exec whenever -i cyclescape_app --update-crontab
       EOH
     end
   end
