@@ -10,6 +10,7 @@ include_recipe 'ruby19'
 include_recipe 'passenger-gem'
 include_recipe 'postfix'
 include_recipe 'toolkit-backups'
+include_recipe 'ufw::recipes'
 
 # Geos dev package for RGeo gem
 package "libgeos-dev"
