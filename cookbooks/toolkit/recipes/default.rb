@@ -38,6 +38,8 @@ end
 
 apache_module "rewrite"
 apache_module "ssl"
+apache_module "expires"
+apache_module "headers"
 
 # We can install bundler with the ubuntu version of gem ...
 gem_package "bundler" do
