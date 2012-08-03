@@ -19,6 +19,7 @@ end
 gem_package "passenger" do
   gem_binary "/usr/bin/gem1.9.1"
   action :install
+  version '3.0.9'
 end
 
 #Fix the stupid path issues
