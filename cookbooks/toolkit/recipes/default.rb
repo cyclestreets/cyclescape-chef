@@ -9,6 +9,7 @@ include_recipe 'postgres'
 include_recipe 'ruby19'
 include_recipe 'passenger-gem'
 include_recipe 'postfix'
+include_recipe 'cyclekit-user'
 include_recipe 'toolkit-backups'
 include_recipe 'ufw::recipes'
 
@@ -55,11 +56,6 @@ end
 
 # Install a very old version of nodejs
 package "nodejs"
-
-user "cyclekit" do
-  action :create
-  shell "/bin/bash"
-end
 
 # Create the database user. For now, it's a superuser.
 script "create cyclekit db user" do
