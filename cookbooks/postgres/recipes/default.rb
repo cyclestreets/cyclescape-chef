@@ -28,8 +28,8 @@ end
 
 # https://launchpad.net/~ubuntugis/+archive/ubuntugis-unstable
 # purely for libgeos-c1 needed for postgis
-apt_repository "ubuntugis-unstable" do
-  uri "http://ppa.launchpad.net/ubuntugis/ubuntugis-unstable/ubuntu"
+apt_repository "ubuntugis-stable" do
+  uri "http://ppa.launchpad.net/ubuntugis/ppa/ubuntu"
   distribution node['lsb']['codename']
   components ["main"]
   keyserver "keyserver.ubuntu.com"
