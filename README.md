@@ -44,23 +44,27 @@ Then copy the example file over:
     sudo cp cookbooks/toolkit/templates/default/mailbox.json /etc/chef/databags/secrets/
     sudo chmod 0600 /etc/chef/databags/secrets/mailbox.json
 
-Then fill in the real values
+Then fill in the real values, to add the details of a mailbox you have set up on a
+third-party server (Cyclescape will retrieve mail periodically from this).
 
     sudo nano /etc/chef/databags/secrets/mailbox.json
 
-Then run chef as normal. If you are running against a chef-server,
+Then run chef as normal (described below). If you are running against a chef-server,
 then create the databag from the .json example using knife.
 
 N.B. When you set up the mailbox values, and run chef (below), it'll
 start processing emails from that mailbox with no further configuration
 change. It's worth being cautious when setting up failover servers,
-for example.
+for example. In that scenario, while setting up, don't put the credentials in.
+Chef will work, but there will be a slightly annoyed daemon who can't fetch any
+mail. When you want to run the site live, edit the credentials and re-run chef
+and it should all kick into life.
 
 # Running chef
 
 At this point, chef can take care of everything else.
 
-    $ cd ~
+    $ cd /opt/
     $ sudo chef-solo -c toolkit-chef/solo.rb -j toolkit-chef/node.json
 
 It's easy to run chef again - for example, in order to deploy the latest version.
