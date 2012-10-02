@@ -48,6 +48,11 @@ Then fill in the real values
 Then run chef as normal. If you are running against a chef-server,
 then create the databag from the .json example using knife.
 
+N.B. When you set up the mailbox values, and run chef (below), it'll
+start processing emails from that mailbox with no further configuration
+change. It's worth being cautious when setting up failover servers,
+for example.
+
 # Running chef
 
 At this point, chef can take care of everything else.
