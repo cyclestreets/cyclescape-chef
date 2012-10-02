@@ -7,10 +7,13 @@ and pull requests are very welcome.
 This is designed to use chef-solo. First we need to grab this repository and
 prep the cookbooks, then install chef-solo, then chef can take care of the rest.
 The base system is ubuntu-server 11.04 so there's not much installed already.
+We'll install the chef location software as any user and create space for it.
 
+    $ cd ~
     $ sudo apt-get install git
     $ git clone https://github.com/cyclestreets/toolkit-chef.git
-    $ cd toolkit-chef/
+    $ sudo mv toolkit-chef /opt
+    $ cd /opt/toolkit-chef/
 
 (From this point on, we could just make a magic script to do the rest.)
 
@@ -36,9 +39,9 @@ before running any recipies, so it needs to be done by hand.
 
     sudo mkdir -p /etc/chef/databags/secrets
 
-Then copy the example file over
+Then copy the example file over:
 
-    sudo cp path/to/cookbooks/toolkit/templates/default/mailbox.json /etc/chef/databags/secrets/
+    sudo cp cookbooks/toolkit/templates/default/mailbox.json /etc/chef/databags/secrets/
     sudo chmod 0600 /etc/chef/databags/secrets/mailbox.json
 
 Then fill in the real values
