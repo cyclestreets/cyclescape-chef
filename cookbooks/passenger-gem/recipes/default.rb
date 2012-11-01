@@ -22,16 +22,11 @@ gem_package "passenger" do
   version '3.0.9'
 end
 
-#Fix the stupid path issues
-link "/usr/bin/passenger-install-apache2-module" do
-  to "/var/lib/gems/1.9.1/bin/passenger-install-apache2-module"
-end
-
 script "install the passenger module" do
   interpreter "bash"
   cwd "/tmp"
   code <<-EOH
-    /usr/bin/passenger-install-apache2-module --auto
+    /usr/local/bin/passenger-install-apache2-module --auto
   EOH
   not_if "test -f /var/lib/gems/1.9.1/gems/passenger-3.0.9/ext/apache2/mod_passenger.so"
 end
