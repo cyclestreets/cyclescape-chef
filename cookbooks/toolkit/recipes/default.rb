@@ -27,6 +27,10 @@ package "imagemagick"
 # mailx - not actually for the app, just for some other scripts we have
 package "heirloom-mailx"
 
+# git - useful when running testing the scripts with Vagrant. Normally
+# installed manually in order to acquire the cookbooks, as per README
+package "git"
+
 # module for basic auth access control
 %w(libapache2-mod-authnz-external pwauth).each do |p|
   package p do
