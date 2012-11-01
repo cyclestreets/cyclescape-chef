@@ -31,18 +31,6 @@ package "heirloom-mailx"
 # installed manually in order to acquire the cookbooks, as per README
 package "git"
 
-# module for basic auth access control
-%w(libapache2-mod-authnz-external pwauth).each do |p|
-  package p do
-    notifies :restart, "service[apache2]"
-  end
-end
-
-link "/etc/apache2/mods-enabled/authnz_external.load" do
-  to "/etc/apache2/mods-available/authnz_external.load"
-  notifies :restart, "service[apache2]"
-end
-
 apache_module "rewrite"
 apache_module "ssl"
 apache_module "expires"
