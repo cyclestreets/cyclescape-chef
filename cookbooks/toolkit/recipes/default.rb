@@ -73,7 +73,7 @@ end
 deploy_dir = "/var/www/toolkit"
 shared_dir = File.join(deploy_dir, "shared")
 
-[deploy_dir, File.join(shared_dir, "config"), File.join(shared_dir, "log"),
+[deploy_dir, shared_dir, File.join(shared_dir, "config"), File.join(shared_dir, "log"),
  File.join(shared_dir, "system"), File.join(shared_dir, "tmp/dragonfly"),
  File.join(shared_dir, "tmp/index")].each do |dir|
   directory dir do
