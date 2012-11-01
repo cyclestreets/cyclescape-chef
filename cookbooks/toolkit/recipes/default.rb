@@ -4,6 +4,7 @@
 #
 # Copyright 2011, Cyclestreets Ltd
 
+include_recipe 'ssl'
 include_recipe 'apache2'
 include_recipe 'postgres'
 include_recipe 'ntp'
