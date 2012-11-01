@@ -6,8 +6,7 @@ and pull requests are very welcome.
 
 This is designed to use chef-solo. First we need to grab this repository and
 prep the cookbooks, then install chef-solo, then chef can take care of the rest.
-The base system is ubuntu-server 11.04 so there's not much installed already.
-We'll install the chef location software as any user and create space for it.
+The base system is ubuntu-server 12.04 LTS so there's not much installed already.
 
     $ cd ~
     $ sudo apt-get install git
