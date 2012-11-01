@@ -18,6 +18,7 @@ end
 template "/etc/munin/munin-node.conf" do
   source "munin-node.conf"
   mode "0644"
+  notifies :restart, "service[munin-node]"
 end
 
 service "munin-node"
