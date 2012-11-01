@@ -15,6 +15,11 @@ template "/etc/munin/munin.conf" do
   mode "0644"
 end
 
+template "/etc/munin/munin-node.conf" do
+  source "munin-node.conf"
+  mode "0644"
+end
+
 service "munin-node"
 
 # Normal postgres plugins
