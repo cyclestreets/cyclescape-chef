@@ -259,3 +259,11 @@ link "/etc/apache2/sites-enabled/toolkit" do
   to "/etc/apache2/sites-available/toolkit"
   notifies :reload, "service[apache2]"
 end
+
+# Enable ExtendedStatus in apache2
+# This can be removed with later apache2 versions which have it included by default.
+template "/etc/apache2/conf.d/status.conf" do
+  source "status.conf"
+  mode "0644"
+  notifies :reload, "service[apache2]"
+end
