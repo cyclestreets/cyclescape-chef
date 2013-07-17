@@ -14,6 +14,7 @@ include_recipe 'postfix'
 include_recipe 'cyclekit-user'
 include_recipe 'toolkit-backups'
 include_recipe 'ufw::recipes'
+include_recipe 'munin-plugins-rails'
 
 # Geos dev package for RGeo gem
 package "libgeos-dev"
