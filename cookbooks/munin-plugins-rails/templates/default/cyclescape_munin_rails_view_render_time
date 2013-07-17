@@ -1,0 +1,6 @@
+[cyclescape_munin_rails_view_render_time]
+env.log_file /var/www/toolkit/shared/log/production.log
+user root
+command /usr/bin/ruby %c
+env.request_log_analyzer /usr/local/bin/request-log-analyzer
+env.graph_category cyclescape

@@ -1,0 +1,6 @@
+[munin_passenger_status]
+user root
+command /usr/bin/ruby %c
+env.passenger_status '/usr/local/bin/passenger-status'
+env.passenger_memory_stats '/usr/local/bin/passenger-memory-stats'
+env.graph_category Passenger
