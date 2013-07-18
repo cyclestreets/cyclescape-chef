@@ -206,9 +206,7 @@ deploy_revision deploy_dir do
       EOH
     end
 
-    # use foreman to create upstart files. Two improvements are possible:
-    # 1) Only run the export/restart if the Procfile has changed.
-    # 2) Upstart on reboot (see https://github.com/ddollar/foreman/issues/33 )
+    # use foreman to create upstart files.
     script 'Update foreman configuration' do
       interpreter "bash"
       cwd release_path
