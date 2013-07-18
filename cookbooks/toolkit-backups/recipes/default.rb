@@ -32,6 +32,7 @@ end
 
 cron "shared-backup" do
   minute "37"
+  hour "1"
   user "cyclekit"
   command "/bin/bash #{File.join(backup_directory, "run-backups.sh")} > #{File.join(backup_directory, "run-backups.log")} 2>&1"
 end
