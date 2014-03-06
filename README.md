@@ -64,7 +64,7 @@ and it should all kick into life.
 Apache is configured to require SSL certificates. Obviously the actual production signing key
 can't be included in these chef scripts, otherwise anyone can set up a fake https server.
 
-To setup SSL, overwrite the /etc/apache/ssl/cyclescape-org.ssl.crt and cyclescape-org.ssl.nopassword.key
+To setup SSL, overwrite the /etc/apache2/ssl/cyclescape-org.ssl.crt and cyclescape-org.ssl.nopassword.key
 with the actual copies (held elsewhere).
 
 # Running chef
