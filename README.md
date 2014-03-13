@@ -8,25 +8,20 @@ This is designed to use chef-solo. First we need to grab this repository and
 prep the cookbooks, then install chef-solo, then chef can take care of the rest.
 The base system is ubuntu-server 12.04 LTS so there's not much installed already.
 
-    $ cd ~
-    $ sudo apt-get install git
-    $ git clone https://github.com/cyclestreets/toolkit-chef.git
-    $ sudo mv toolkit-chef /opt
-    $ cd /opt/toolkit-chef/
+    cd ~
+    sudo apt-get install git
+    git clone https://github.com/cyclestreets/toolkit-chef.git
+    sudo mv toolkit-chef /opt
+    cd /opt/toolkit-chef/
 
 (From this point on, we could just make a magic script to do the rest.)
 
-Now, we need to install chef. We're using chef 0.10 from the Opscode apt
-repository.
+Now, we need to install chef. We're using chef 11.10 with the ombnibus (i.e. embedded
+ruby) package
 
-    echo "deb http://apt.opscode.com/ `lsb_release -cs`-0.10 main" | sudo tee /etc/apt/sources.list.d/opscode.list
-    sudo mkdir -p /etc/apt/trusted.gpg.d
-    gpg --keyserver keys.gnupg.net --recv-keys 83EF826A
-    gpg --export packages@opscode.com | sudo tee /etc/apt/trusted.gpg.d/opscode-keyring.gpg > /dev/null
-    sudo apt-get update
-    sudo apt-get install opscode-keyring # permanent upgradeable keyring
-    sudo apt-get upgrade
-    sudo apt-get install chef
+    wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chef_11.10.4-1.ubuntu.12.04_amd64.deb
+    sudo dpkg -i chef_11.10.4-1.ubuntu.12.04_amd64.deb
+
 
 When you are prompted for the server url, enter "none"
 

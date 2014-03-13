@@ -20,6 +20,9 @@
 
 # expand and parse the node's runlist for recipes and find attributes of the form node[<recipe>]['firewall']['rules']
 # append them to the node['firewall']['rules'] array attribute
+
+node.set['firewall']['rules'] = [] unless node.set['firewall']['rules'].respond_to? :concat
+
 node.expand!.recipes.each do |recipe|
   Chef::Log.debug "ufw::recipes: #{recipe}"
   cookbook = recipe.split('::')[0]
@@ -27,13 +30,13 @@ node.expand!.recipes.each do |recipe|
   if recipe != cookbook and node[cookbook] and node[cookbook]['firewall'] and node[cookbook]['firewall']['rules']
     rules = node[cookbook]['firewall']['rules']
     Chef::Log.debug "ufw::recipes:#{cookbook}:rules #{rules}"
-    node['firewall']['rules'].concat(rules) unless rules.nil?
+    node.set['firewall']['rules'].concat(rules) unless rules.nil?
   end
   #get the recipe attributes if there are any
   if node[recipe] and node[recipe]['firewall'] and node[recipe]['firewall']['rules']
     rules = node[recipe]['firewall']['rules']
     Chef::Log.debug "ufw::recipes:#{recipe}:rules #{rules}"
-    node['firewall']['rules'].concat(rules) unless rules.nil?
+    node.set['firewall']['rules'].concat(rules) unless rules.nil?
   end
 end
 
