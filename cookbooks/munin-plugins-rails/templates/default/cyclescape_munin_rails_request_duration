@@ -1,5 +1,5 @@
 [cyclescape_munin_rails_request_duration]
-env.log_file /var/www/toolkit/shared/log/production.log
+env.log_file /var/www/cyclescape/shared/log/production.log
 user root
 command /usr/bin/ruby %c
 env.request_log_analyzer /usr/local/bin/request-log-analyzer

@@ -32,7 +32,7 @@ end
 script "install rails munin plugins" do
   interpreter "bash"
   code <<-EOH
-    request-log-analyzer-munin add cyclescape /var/www/toolkit/shared/log/production.log
+    request-log-analyzer-munin add cyclescape /var/www/cyclescape/shared/log/production.log
   EOH
   notifies :restart, "service[munin-node]"
   not_if "test -e /etc/munin/plugin-conf.d/cyclescape_munin_rails_requests"

@@ -1,6 +1,6 @@
-This is a collection of chef recipies that set up the server for the
-Cyclestreets Toolkit. You might need to customise them for your own situation,
-and pull requests are very welcome.
+This is a collection of chef recipies that set up the server for Cyclescape.
+You might need to customise them for your own situation, and pull requests
+are very welcome.
 
 # Setup
 
@@ -10,9 +10,9 @@ The base system is ubuntu-server 12.04 LTS so there's not much installed already
 
     cd ~
     sudo apt-get install git
-    git clone https://github.com/cyclestreets/toolkit-chef.git
-    sudo mv toolkit-chef /opt
-    cd /opt/toolkit-chef/
+    git clone https://github.com/cyclestreets/cyclescape-chef.git
+    sudo mv cyclescape-chef /opt
+    cd /opt/cyclescape-chef/
 
 (From this point on, we could just make a magic script to do the rest.)
 
@@ -35,7 +35,7 @@ before running any recipies, so it needs to be done by hand.
 
 Then copy the example file over:
 
-    sudo cp cookbooks/toolkit/templates/default/mailbox.json /etc/chef/databags/secrets/
+    sudo cp cookbooks/cyclescape/templates/default/mailbox.json /etc/chef/databags/secrets/
     sudo chmod 0600 /etc/chef/databags/secrets/mailbox.json
 
 Then fill in the real values, to add the details of a mailbox you have set up on a
@@ -67,7 +67,7 @@ with the actual copies (held elsewhere).
 At this point, chef can take care of everything else.
 
     $ cd /opt/
-    $ sudo chef-solo -c toolkit-chef/solo.rb -j toolkit-chef/node.json
+    $ sudo chef-solo -c cyclescape-chef/solo.rb -j cyclescape-chef/node.json
 
 It's easy to run chef again - for example, in order to deploy the latest version.
 
@@ -77,7 +77,7 @@ If the cookbooks themselves change - for example, if you add another package,
 or change the contents of one of the templates, you'll need to update and rebundle
 the cookbooks, then run chef-solo
 
-    $ cd toolkit-chef
+    $ cd cyclescape-chef
     $ git pull
     $ cd ~
-    $ sudo chef-solo -c toolkit-chef/solo.rb -j toolkit-chef/node.json
+    $ sudo chef-solo -c cyclescape-chef/solo.rb -j cyclescape-chef/node.json

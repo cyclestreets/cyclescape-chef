@@ -1,25 +1,25 @@
 #
-# Cookbook Name:: toolkit-backups
+# Cookbook Name:: cyclescape-backups
 # Recipe:: default
 #
 # Copyright 2011, Cyclestreets Ltd
 
 backup_directory = "/websites/cyclescape/backup"
-shared = "toolkitShared.tar.bz2"
+shared = "cyclescapeShared.tar.bz2"
 dbdump = "cyclescapeDB.sql.gz"
-database = "cyclekit_production"
+database = "cyclescape_production"
 
 directory backup_directory do
-  owner "cyclekit"
-  group "cyclekit"
+  owner "cyclescape"
+  group "cyclescape"
   recursive true
 end
 
 # Add backup cron job
 
 template "backup script" do
-  owner "cyclekit"
-  group "cyclekit"
+  owner "cyclescape"
+  group "cyclescape"
   path File.join(backup_directory, "run-backups.sh")
   source "run-backups.sh.erb"
   variables({
@@ -33,6 +33,6 @@ end
 cron "shared-backup" do
   minute "37"
   hour "1"
-  user "cyclekit"
+  user "cyclescape"
   command "/bin/bash #{File.join(backup_directory, "run-backups.sh")} > #{File.join(backup_directory, "run-backups.log")} 2>&1"
 end

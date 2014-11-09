@@ -1,4 +1,4 @@
-default['toolkit']['firewall']['rules'] = [
+default['cyclescape']['firewall']['rules'] = [
   "http" => {
     "port" => "80"
   },

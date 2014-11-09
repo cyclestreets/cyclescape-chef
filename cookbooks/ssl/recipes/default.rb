@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: toolkit
+# Cookbook Name:: cyclescape
 # Recipe:: default
 #
 # Copyright 2011, Cyclestreets Ltd

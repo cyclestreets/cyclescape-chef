@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: toolkit
+# Cookbook Name:: cyclescape
 # Recipe:: default
 #
 # Copyright 2011, Cyclestreets Ltd
@@ -11,8 +11,8 @@ include_recipe 'ntp'
 include_recipe 'ruby19'
 include_recipe 'passenger-gem'
 include_recipe 'postfix'
-include_recipe 'cyclekit-user'
-include_recipe 'toolkit-backups'
+include_recipe 'cyclescape-user'
+include_recipe 'cyclescape-backups'
 include_recipe 'ufw::recipes'
 include_recipe 'munin-plugins-rails'
 
@@ -53,34 +53,34 @@ end
 package "nodejs"
 
 # Create the database user. For now, it's a superuser.
-script "create cyclekit db user" do
+script "create cyclescape db user" do
   interpreter "bash"
   user "postgres"
   group "postgres"
   cwd "/var/lib/postgresql"
   code <<-EOH
-    createuser cyclekit -s
+    createuser cyclescape -s
   EOH
-  not_if %q{test -n "`sudo -u postgres psql template1 -A -t -c '\du cyclekit'`"} # Mmm, hacky
+  not_if %q{test -n "`sudo -u postgres psql template1 -A -t -c '\du cyclescape'`"} # Mmm, hacky
 end
 
-deploy_dir = "/var/www/toolkit"
+deploy_dir = "/var/www/cyclescape"
 shared_dir = File.join(deploy_dir, "shared")
 
 [deploy_dir, shared_dir, File.join(shared_dir, "config"), File.join(shared_dir, "log"),
  File.join(shared_dir, "system"), File.join(shared_dir, "tmp/dragonfly"),
  File.join(shared_dir, "tmp/index")].each do |dir|
   directory dir do
-    owner "cyclekit"
-    group "cyclekit"
+    owner "cyclescape"
+    group "cyclescape"
     recursive true
   end
 end
 
 template deploy_dir + "/shared/config/database.yml" do
   source "database.example.yml"
-  owner "cyclekit"
-  group "cyclekit"
+  owner "cyclescape"
+  group "cyclescape"
   mode "0644"
 end
 
@@ -88,8 +88,8 @@ mb = data_bag_item("secrets", "mailbox")
 
 template deploy_dir + "/shared/config/mailboxes.yml" do
   source "mailboxes.example.yml"
-  owner "cyclekit"
-  group "cyclekit"
+  owner "cyclescape"
+  group "cyclescape"
   mode "0400"
   variables({
     :server => mb["server"],
@@ -99,10 +99,10 @@ template deploy_dir + "/shared/config/mailboxes.yml" do
 end
 
 deploy_revision deploy_dir do
-  repo "https://github.com/cyclestreets/toolkit.git"
+  repo "https://github.com/cyclestreets/cyclescape.git"
   revision "master"
-  user "cyclekit"
-  group "cyclekit"
+  user "cyclescape"
+  group "cyclescape"
   before_migrate do
     current_release_directory = release_path
     shared_directory = new_resource.shared_path
@@ -146,8 +146,8 @@ deploy_revision deploy_dir do
     # Things for the dragonfly gem
     directory current_release_directory + '/tmp' do
       action :create
-      owner "cyclekit"
-      group "cyclekit"
+      owner "cyclescape"
+      group "cyclescape"
     end
 
     link current_release_directory + '/tmp/dragonfly' do
@@ -167,7 +167,7 @@ deploy_revision deploy_dir do
       code <<-EOH
         bundle exec rake db:create
       EOH
-      not_if %q{test -n "`sudo -u postgres psql template1 -A -t -c '\l' | grep cyclekit_production`"}
+      not_if %q{test -n "`sudo -u postgres psql template1 -A -t -c '\l' | grep cyclescape_production`"}
     end
 
     script 'Compile the assets' do
@@ -211,12 +211,12 @@ deploy_revision deploy_dir do
       interpreter "bash"
       cwd release_path
       code <<-EOH
-        bundle exec foreman export upstart /etc/init -a toolkit -u cyclekit -e .env.production
+        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env.production
       EOH
-      notifies :restart, "service[toolkit]"
+      notifies :restart, "service[cyclescape]"
     end
 
-    service "toolkit" do
+    service "cyclescape" do
       provider Chef::Provider::Service::Upstart
       supports :restart => true
     end
@@ -245,7 +245,7 @@ link "/etc/apache2/sites-enabled/000-default" do
   notifies :reload, "service[apache2]"
 end
 
-template "/etc/apache2/sites-available/toolkit" do
+template "/etc/apache2/sites-available/cyclescape" do
   source "passenger.vhost.conf"
   owner "www-data"
   group "www-data"
@@ -253,8 +253,8 @@ template "/etc/apache2/sites-available/toolkit" do
   notifies :reload, "service[apache2]"
 end
 
-link "/etc/apache2/sites-enabled/toolkit" do
-  to "/etc/apache2/sites-available/toolkit"
+link "/etc/apache2/sites-enabled/cyclescape" do
+  to "/etc/apache2/sites-available/cyclescape"
   notifies :reload, "service[apache2]"
 end
 

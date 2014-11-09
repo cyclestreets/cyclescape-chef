@@ -3,7 +3,7 @@
 set -e
 
 # Back up the shared directory, which includes uploaded images and documents
-tar --exclude="*.log" -cjpf <%= @shared_filename %> -C /var/www/toolkit shared
+tar --exclude="*.log" -cjpf <%= @shared_filename %> -C /var/www/cyclescape shared
 openssl dgst -md5 <%= @shared_filename %> > <%= @shared_filename + ".md5" %>
 
 # Back up the database

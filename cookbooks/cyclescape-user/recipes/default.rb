@@ -1,10 +1,10 @@
 #
-# Cookbook Name:: cyclekit-user
+# Cookbook Name:: cyclescape-user
 # Recipe:: default
 #
 # Copyright 2012, Cyclestreets Ltd
 
-user "cyclekit" do
+user "cyclescape" do
   action :create
   shell "/bin/bash"
 end
