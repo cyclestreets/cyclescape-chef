@@ -4,7 +4,6 @@
 #
 # Copyright 2011, Cyclestreets Ltd
 
-
 # This recipe sets up some dummy SSL certificates,
 # so that apache will load without complaining.
 
