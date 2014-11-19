@@ -11,7 +11,7 @@
 # Install the actual startcom certificates used for
 # the live operations
 
-cert_dir = "/etc/apache2/ssl/"
+cert_dir = '/etc/apache2/ssl/'
 
 directory cert_dir do
   owner 'www-data'

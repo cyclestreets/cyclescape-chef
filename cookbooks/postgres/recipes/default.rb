@@ -4,19 +4,19 @@
 #
 # Copyright 2011, Cyclestreets Ltd
 
-package "postgresql-9.1" do
+package 'postgresql-9.1' do
   action :install
 end
 
-package "postgresql-contrib-9.1" do
+package 'postgresql-contrib-9.1' do
   action :install
 end
 
-service "postgresql" do
+service 'postgresql' do
   supports :reload => true, :restart => true
   action :enable
 end
 
-package "postgresql-9.1-postgis" do
+package 'postgresql-9.1-postgis' do
   action :install
 end

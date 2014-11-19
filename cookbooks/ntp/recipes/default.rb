@@ -4,20 +4,20 @@
 #
 # Copyright 2012, Cyclestreets Ltd.
 
-package "ntp"
+package 'ntp'
 
-service "ntp" do
+service 'ntp' do
   supports :restart => true
 end
 
-template "/etc/ntp.conf" do
-  source "ntp.conf"
-  notifies :restart, "service[ntp]"
+template '/etc/ntp.conf' do
+  source 'ntp.conf'
+  notifies :restart, 'service[ntp]'
 end
 
-directory "/etc/ntp"
+directory '/etc/ntp'
 
-template "/etc/ntp/step-tickers" do
-  source "step-tickers"
-  notifies :restart, "service[ntp]"
+template '/etc/ntp/step-tickers' do
+  source 'step-tickers'
+  notifies :restart, 'service[ntp]'
 end

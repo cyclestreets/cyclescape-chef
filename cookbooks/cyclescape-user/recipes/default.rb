@@ -4,7 +4,7 @@
 #
 # Copyright 2012, Cyclestreets Ltd
 
-user "cyclescape" do
+user 'cyclescape' do
   action :create
-  shell "/bin/bash"
+  shell '/bin/bash'
 end

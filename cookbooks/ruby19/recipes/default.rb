@@ -7,12 +7,12 @@
 # I hate having multiple rubies, but I hate having rvm even more
 
 # Due to the joys of debian package names, these are actually 1.9.2
-["ruby1.9.1", "irb1.9.1", "ri1.9.1", "ruby1.9.1-dev"].each do |p|
+['ruby1.9.1', 'irb1.9.1', 'ri1.9.1', 'ruby1.9.1-dev'].each do |p|
   package p
 end
 
-script "configure ruby in update-alternatives" do
-  interpreter "bash"
+script 'configure ruby in update-alternatives' do
+  interpreter 'bash'
   code <<-EOH
     update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby1.8 400 \
                         --slave   /usr/share/man/man1/ruby.1.gz ruby.1.gz \

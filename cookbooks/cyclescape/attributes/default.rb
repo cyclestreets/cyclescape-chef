@@ -1,9 +1,9 @@
 default['cyclescape']['firewall']['rules'] = [
-  "http" => {
-    "port" => "80"
+  'http' => {
+    'port' => '80'
   },
-  "https" => {
-    "port" => "443"
+  'https' => {
+    'port' => '443'
   }
 ]
 

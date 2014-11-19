@@ -17,92 +17,92 @@ include_recipe 'ufw::recipes'
 include_recipe 'munin-plugins-rails'
 
 # Geos dev package for RGeo gem
-package "libgeos-dev"
+package 'libgeos-dev'
 
 # Redis server for queueing and caching
-package "redis-server"
+package 'redis-server'
 
 # Imagemagick, for dragonfly to do image processing with convert
-package "imagemagick"
+package 'imagemagick'
 
 # mailx - not actually for the app, just for some other scripts we have
-package "heirloom-mailx"
+package 'heirloom-mailx'
 
 # git - useful when running testing the scripts with Vagrant. Normally
 # installed manually in order to acquire the cookbooks, as per README
-package "git"
+package 'git'
 
-apache_module "rewrite"
-apache_module "ssl"
-apache_module "expires"
-apache_module "headers"
+apache_module 'rewrite'
+apache_module 'ssl'
+apache_module 'expires'
+apache_module 'headers'
 
 # We can install bundler with the ubuntu version of gem ...
-gem_package "bundler" do
-  gem_binary "/usr/bin/gem1.9.1"
+gem_package 'bundler' do
+  gem_binary '/usr/bin/gem1.9.1'
   action :install
 end
 
 # ... but it installs binaries into a non-PATH directory
 # See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=448639
-link "/usr/bin/bundle" do
-  to "/var/lib/gems/1.9.1/bin/bundle"
+link '/usr/bin/bundle' do
+  to '/var/lib/gems/1.9.1/bin/bundle'
 end
 
 # Install a very old version of nodejs
-package "nodejs"
+package 'nodejs'
 
 # Create the database user. For now, it's a superuser.
-script "create cyclescape db user" do
-  interpreter "bash"
-  user "postgres"
-  group "postgres"
-  cwd "/var/lib/postgresql"
+script 'create cyclescape db user' do
+  interpreter 'bash'
+  user 'postgres'
+  group 'postgres'
+  cwd '/var/lib/postgresql'
   code <<-EOH
     createuser cyclescape -s
   EOH
   not_if %q{test -n "`sudo -u postgres psql template1 -A -t -c '\du cyclescape'`"} # Mmm, hacky
 end
 
-deploy_dir = "/var/www/cyclescape"
-shared_dir = File.join(deploy_dir, "shared")
+deploy_dir = '/var/www/cyclescape'
+shared_dir = File.join(deploy_dir, 'shared')
 
-[deploy_dir, shared_dir, File.join(shared_dir, "config"), File.join(shared_dir, "log"),
- File.join(shared_dir, "system"), File.join(shared_dir, "tmp/dragonfly"),
- File.join(shared_dir, "tmp/index")].each do |dir|
+[deploy_dir, shared_dir, File.join(shared_dir, 'config'), File.join(shared_dir, 'log'),
+ File.join(shared_dir, 'system'), File.join(shared_dir, 'tmp/dragonfly'),
+ File.join(shared_dir, 'tmp/index')].each do |dir|
   directory dir do
-    owner "cyclescape"
-    group "cyclescape"
+    owner 'cyclescape'
+    group 'cyclescape'
     recursive true
   end
 end
 
-template deploy_dir + "/shared/config/database.yml" do
-  source "database.example.yml"
-  owner "cyclescape"
-  group "cyclescape"
-  mode "0644"
+template deploy_dir + '/shared/config/database.yml' do
+  source 'database.example.yml'
+  owner 'cyclescape'
+  group 'cyclescape'
+  mode '0644'
 end
 
-mb = data_bag_item("secrets", "mailbox")
+mb = data_bag_item('secrets', 'mailbox')
 
-template deploy_dir + "/shared/config/mailboxes.yml" do
-  source "mailboxes.example.yml"
-  owner "cyclescape"
-  group "cyclescape"
-  mode "0400"
+template deploy_dir + '/shared/config/mailboxes.yml' do
+  source 'mailboxes.example.yml'
+  owner 'cyclescape'
+  group 'cyclescape'
+  mode '0400'
   variables({
-    :server => mb["server"],
-    :username => mb["username"],
-    :password => mb["password"]
+    :server => mb['server'],
+    :username => mb['username'],
+    :password => mb['password']
   })
 end
 
 deploy_revision deploy_dir do
-  repo "https://github.com/cyclestreets/cyclescape.git"
-  revision "master"
-  user "cyclescape"
-  group "cyclescape"
+  repo 'https://github.com/cyclestreets/cyclescape.git'
+  revision 'master'
+  user 'cyclescape'
+  group 'cyclescape'
   before_migrate do
     current_release_directory = release_path
     shared_directory = new_resource.shared_path
@@ -146,8 +146,8 @@ deploy_revision deploy_dir do
     # Things for the dragonfly gem
     directory current_release_directory + '/tmp' do
       action :create
-      owner "cyclescape"
-      group "cyclescape"
+      owner 'cyclescape'
+      group 'cyclescape'
     end
 
     link current_release_directory + '/tmp/dragonfly' do
@@ -160,7 +160,7 @@ deploy_revision deploy_dir do
     end
 
     script 'Create the database' do
-      interpreter "bash"
+      interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
       environment 'RAILS_ENV' => 'production'
@@ -171,7 +171,7 @@ deploy_revision deploy_dir do
     end
 
     script 'Compile the assets' do
-      interpreter "bash"
+      interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
       environment 'RAILS_ENV' => 'production'
@@ -183,7 +183,7 @@ deploy_revision deploy_dir do
     # We need to create a secret token, and store it in the shared config
     # path for future use.
     script 'create the secret token' do
-      interpreter "bash"
+      interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
       code "bundle exec rake secret > #{shared_config + '/secret_token'}"
@@ -197,7 +197,7 @@ deploy_revision deploy_dir do
 
   before_restart do
     script 'Update seed data' do
-      interpreter "bash"
+      interpreter 'bash'
       cwd release_path
       user new_resource.user
       environment 'RAILS_ENV' => 'production'
@@ -208,15 +208,15 @@ deploy_revision deploy_dir do
 
     # use foreman to create upstart files.
     script 'Update foreman configuration' do
-      interpreter "bash"
+      interpreter 'bash'
       cwd release_path
       code <<-EOH
         bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env.production
       EOH
-      notifies :restart, "service[cyclescape]"
+      notifies :restart, 'service[cyclescape]'
     end
 
-    service "cyclescape" do
+    service 'cyclescape' do
       provider Chef::Provider::Service::Upstart
       supports :restart => true
     end
@@ -232,36 +232,36 @@ deploy_revision deploy_dir do
   end
 
   migrate true
-  migration_command "bundle exec rake db:migrate"
-  environment "RAILS_ENV" => "production"
+  migration_command 'bundle exec rake db:migrate'
+  environment 'RAILS_ENV' => 'production'
   action :deploy
-  restart_command "touch tmp/restart.txt"
+  restart_command 'touch tmp/restart.txt'
 end
 
 # sort out the virtual hosts, with delayed reloading of apache2
-link "/etc/apache2/sites-enabled/000-default" do
+link '/etc/apache2/sites-enabled/000-default' do
   action :delete
-  only_if "test -L /etc/apache2/sites-enabled/000-default"
-  notifies :reload, "service[apache2]"
+  only_if 'test -L /etc/apache2/sites-enabled/000-default'
+  notifies :reload, 'service[apache2]'
 end
 
-template "/etc/apache2/sites-available/cyclescape" do
-  source "passenger.vhost.conf"
-  owner "www-data"
-  group "www-data"
-  mode "0644"
-  notifies :reload, "service[apache2]"
+template '/etc/apache2/sites-available/cyclescape' do
+  source 'passenger.vhost.conf'
+  owner 'www-data'
+  group 'www-data'
+  mode '0644'
+  notifies :reload, 'service[apache2]'
 end
 
-link "/etc/apache2/sites-enabled/cyclescape" do
-  to "/etc/apache2/sites-available/cyclescape"
-  notifies :reload, "service[apache2]"
+link '/etc/apache2/sites-enabled/cyclescape' do
+  to '/etc/apache2/sites-available/cyclescape'
+  notifies :reload, 'service[apache2]'
 end
 
 # Enable ExtendedStatus in apache2
 # This can be removed with later apache2 versions which have it included by default.
-template "/etc/apache2/conf.d/status.conf" do
-  source "status.conf"
-  mode "0644"
-  notifies :reload, "service[apache2]"
+template '/etc/apache2/conf.d/status.conf' do
+  source 'status.conf'
+  mode '0644'
+  notifies :reload, 'service[apache2]'
 end
