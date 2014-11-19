@@ -1,0 +1,15 @@
+inherit_from: .rubocop_todo.yml
+AllCops:
+  Exclude:
+    - 'cookbooks/apache2/**/*'
+    - 'cookbooks/apt/**/*'
+    - 'cookbooks/build-essential/**/*'
+    - 'cookbooks/firewall/**/*'
+    - 'cookbooks/ufw/**/*'
+Encoding:
+  Enabled: false
+Style/SingleSpaceBeforeFirstArg:
+  Exclude:
+    - '**/metadata.rb'
+Metrics/LineLength:
+  Max: 160
