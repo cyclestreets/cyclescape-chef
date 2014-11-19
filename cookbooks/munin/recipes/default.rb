@@ -6,7 +6,7 @@
 
 include_recipe 'apache2'
 
-%w{munin munin-node libdbd-pg-perl}.each do |p|
+%w(munin munin-node libdbd-pg-perl).each do |p|
   package p
 end
 
@@ -24,11 +24,11 @@ end
 service 'munin-node'
 
 # Normal postgres plugins
-%w{ postgres_bgwriter
-    postgres_checkpoints
-    postgres_users
-    postgres_xlog
-}.each do |p|
+%w(postgres_bgwriter
+   postgres_checkpoints
+   postgres_users
+   postgres_xlog
+).each do |p|
   link File.join('/etc/munin/plugins', p) do
     to File.join('/usr/share/munin/plugins', p)
     notifies :restart, 'service[munin-node]'
@@ -37,25 +37,25 @@ end
 
 # Clever little postgres scripts that monitor specific
 # databases, or ALL of them
-%w{ postgres_size_
-    postgres_connections_
-    postgres_locks_
-    postgres_transactions_
-    postgres_cache_
-    postgres_querylength_
-    postgres_scans_
-    postgres_tuples_
-}.each do |p|
+%w(postgres_size_
+   postgres_connections_
+   postgres_locks_
+   postgres_transactions_
+   postgres_cache_
+   postgres_querylength_
+   postgres_scans_
+   postgres_tuples_
+).each do |p|
   link File.join('/etc/munin/plugins', p + 'ALL') do
     to File.join('/usr/share/munin/plugins', p)
     notifies :restart, 'service[munin-node]'
   end
 end
 
-%w{ apache_accesses
-    apache_processes
-    apache_volume
-}.each do |p|
+%w(apache_accesses
+   apache_processes
+   apache_volume
+).each do |p|
   link File.join('/etc/munin/plugins', p) do
     to File.join('/usr/share/munin/plugins', p)
     notifies :restart, 'service[munin-node]'

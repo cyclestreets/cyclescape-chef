@@ -61,7 +61,7 @@ script 'create cyclescape db user' do
   code <<-EOH
     createuser cyclescape -s
   EOH
-  not_if %q{test -n "`sudo -u postgres psql template1 -A -t -c '\du cyclescape'`"} # Mmm, hacky
+  not_if %q(test -n "`sudo -u postgres psql template1 -A -t -c '\du cyclescape'`") # Mmm, hacky
 end
 
 deploy_dir = '/var/www/cyclescape'
@@ -167,7 +167,7 @@ deploy_revision deploy_dir do
       code <<-EOH
         bundle exec rake db:create
       EOH
-      not_if %q{test -n "`sudo -u postgres psql template1 -A -t -c '\l' | grep cyclescape_production`"}
+      not_if %q(test -n "`sudo -u postgres psql template1 -A -t -c '\l' | grep cyclescape_production`")
     end
 
     script 'Compile the assets' do

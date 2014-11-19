@@ -4,7 +4,7 @@
 #
 # Copyright 2011, Cyclestreets Ltd
 
-%w{
+%w(
   build-essential
   libcurl4-openssl-dev
   libssl-dev
@@ -12,7 +12,7 @@
   apache2-prefork-dev
   libapr1-dev
   libaprutil1-dev
-}.each do |p|
+).each do |p|
   package p
 end
 
