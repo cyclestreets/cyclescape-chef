@@ -22,12 +22,12 @@ template 'backup script' do
   group 'cyclescape'
   path File.join(backup_directory, 'run-backups.sh')
   source 'run-backups.sh.erb'
-  variables({
+  variables(
     :backup_directory => backup_directory,
     :shared_filename => File.join(backup_directory, shared),
     :dbdump_filename => File.join(backup_directory, dbdump),
     :database => database
-  })
+  )
 end
 
 cron 'shared-backup' do

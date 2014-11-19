@@ -91,11 +91,11 @@ template deploy_dir + '/shared/config/mailboxes.yml' do
   owner 'cyclescape'
   group 'cyclescape'
   mode '0400'
-  variables({
+  variables(
     :server => mb['server'],
     :username => mb['username'],
     :password => mb['password']
-  })
+  )
 end
 
 deploy_revision deploy_dir do
