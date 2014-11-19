@@ -40,8 +40,12 @@ end
 
 # again, override the config files, to fix the ruby path
 
-%w{cyclescape_munin_rails_database_time cyclescape_munin_rails_request_error cyclescape_munin_rails_view_render_time
-cyclescape_munin_rails_request_duration cyclescape_munin_rails_requests}.each do |f|
+%w{cyclescape_munin_rails_database_time
+   cyclescape_munin_rails_request_error
+   cyclescape_munin_rails_view_render_time
+   cyclescape_munin_rails_request_duration
+   cyclescape_munin_rails_requests
+  }.each do |f|
   template File.join('/etc/munin/plugin-conf.d/', f) do
     source f
     notifies :restart, 'service[munin-node]'
