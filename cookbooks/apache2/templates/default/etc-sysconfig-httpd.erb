@@ -1,4 +1,4 @@
-# This file managed by Chef. Changes will be overwritten.
+# This file is managed by Chef. Changes will be overwritten.
 
 #
 # The default processing model (MPM) is the process-based
@@ -28,4 +28,8 @@ HTTPD=<%= node['apache']['binary'] %>
 # specified in httpd.conf (via the PidFile directive), the new
 # location needs to be reported in the PIDFILE.
 #
-#PIDFILE=<%= node['apache']['pid_file'] %>
+PIDFILE=<%= node['apache']['pid_file'] %>
+
+<% node['apache']['sysconfig_additional_params'].each do |k,v| %>
+<%= "#{k}=#{v}" %>
+<% end %>
