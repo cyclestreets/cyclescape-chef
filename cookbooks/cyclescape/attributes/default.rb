@@ -8,4 +8,4 @@ default['cyclescape']['firewall']['rules'] = [
 ]
 
 # Make sure apache listens for both http and https connections
-default['apache']['listen_ports'] = ['80', '443']
+default['apache']['listen_ports'] = %w(80 443)
