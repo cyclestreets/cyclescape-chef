@@ -7,7 +7,7 @@
 package 'ntp'
 
 service 'ntp' do
-  supports :restart => true
+  supports restart: true
 end
 
 template '/etc/ntp.conf' do

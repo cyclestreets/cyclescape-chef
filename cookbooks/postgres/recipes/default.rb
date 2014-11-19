@@ -13,7 +13,7 @@ package 'postgresql-contrib-9.1' do
 end
 
 service 'postgresql' do
-  supports :reload => true, :restart => true
+  supports reload: true, restart: true
   action :enable
 end
 

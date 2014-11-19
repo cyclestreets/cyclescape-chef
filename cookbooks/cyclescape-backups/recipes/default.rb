@@ -23,10 +23,10 @@ template 'backup script' do
   path File.join(backup_directory, 'run-backups.sh')
   source 'run-backups.sh.erb'
   variables(
-    :backup_directory => backup_directory,
-    :shared_filename => File.join(backup_directory, shared),
-    :dbdump_filename => File.join(backup_directory, dbdump),
-    :database => database
+    backup_directory: backup_directory,
+    shared_filename: File.join(backup_directory, shared),
+    dbdump_filename: File.join(backup_directory, dbdump),
+    database: database
   )
 end
 

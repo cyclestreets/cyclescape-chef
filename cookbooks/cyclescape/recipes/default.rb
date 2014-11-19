@@ -92,9 +92,9 @@ template deploy_dir + '/shared/config/mailboxes.yml' do
   group 'cyclescape'
   mode '0400'
   variables(
-    :server => mb['server'],
-    :username => mb['username'],
-    :password => mb['password']
+    server: mb['server'],
+    username: mb['username'],
+    password: mb['password']
   )
 end
 
@@ -218,7 +218,7 @@ deploy_revision deploy_dir do
 
     service 'cyclescape' do
       provider Chef::Provider::Service::Upstart
-      supports :restart => true
+      supports restart: true
     end
 
     script 'Set crontab' do
