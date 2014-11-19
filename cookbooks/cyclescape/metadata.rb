@@ -5,6 +5,7 @@ license          'MIT'
 description      'Installs/Configures Cyclescape'
 version          '0.1.0'
 
+depends 'apt'
 depends 'ssl'
 depends 'apache2'
 depends 'postgres'
