@@ -21,7 +21,7 @@ end
 gem_package 'passenger' do
   gem_binary '/usr/bin/gem1.9.1'
   action :install
-  version '3.0.9'
+  version node['passenger-gem']['version']
 end
 
 script 'install the passenger module' do
@@ -30,13 +30,14 @@ script 'install the passenger module' do
   code <<-EOH
     /usr/local/bin/passenger-install-apache2-module --auto
   EOH
-  not_if 'test -f /var/lib/gems/1.9.1/gems/passenger-3.0.9/ext/apache2/mod_passenger.so'
+  not_if "test -f /var/lib/gems/1.9.1/gems/passenger-#{node['passenger-gem']['version']}/ext/apache2/mod_passenger.so"
 end
 
 template '/etc/apache2/mods-available/passenger.load' do
   source 'passenger.module.conf'
   mode '0644'
   notifies :restart, 'service[apache2]'
+  variables(passenger_version: node['passenger-gem']['version'])
 end
 
 link '/etc/apache2/mods-enabled/passenger.load' do
