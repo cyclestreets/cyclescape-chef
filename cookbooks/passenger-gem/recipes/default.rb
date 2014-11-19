@@ -4,6 +4,8 @@
 #
 # Copyright 2011, Cyclestreets Ltd
 
+include_recipe 'apache2'
+
 %w(
   build-essential
   libcurl4-openssl-dev
