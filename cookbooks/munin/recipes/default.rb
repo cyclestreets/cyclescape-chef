@@ -28,7 +28,7 @@ service 'munin-node'
     postgres_checkpoints
     postgres_users
     postgres_xlog
-  }.each do |p|
+}.each do |p|
   link File.join('/etc/munin/plugins', p) do
     to File.join('/usr/share/munin/plugins', p)
     notifies :restart, 'service[munin-node]'
@@ -45,7 +45,7 @@ end
     postgres_querylength_
     postgres_scans_
     postgres_tuples_
-  }.each do |p|
+}.each do |p|
   link File.join('/etc/munin/plugins', p + 'ALL') do
     to File.join('/usr/share/munin/plugins', p)
     notifies :restart, 'service[munin-node]'
@@ -55,7 +55,7 @@ end
 %w{ apache_accesses
     apache_processes
     apache_volume
-  }.each do |p|
+}.each do |p|
   link File.join('/etc/munin/plugins', p) do
     to File.join('/usr/share/munin/plugins', p)
     notifies :restart, 'service[munin-node]'

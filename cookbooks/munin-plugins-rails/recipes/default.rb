@@ -45,7 +45,7 @@ end
    cyclescape_munin_rails_view_render_time
    cyclescape_munin_rails_request_duration
    cyclescape_munin_rails_requests
-  }.each do |f|
+}.each do |f|
   template File.join('/etc/munin/plugin-conf.d/', f) do
     source f
     notifies :restart, 'service[munin-node]'
