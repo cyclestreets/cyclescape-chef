@@ -20,6 +20,14 @@ include_recipe 'munin-plugins-rails'
 # Geos dev package for RGeo gem
 package 'libgeos-dev'
 
+if node['platform'] == 'ubuntu' && node['platform_version'] == '14.04'
+  ['/usr/lib/libgeos.so', '/usr/lib/libgeos.so.1'].each do |t|
+    link t do
+      to '/usr/lib/libgeos-3.4.2.so'
+    end
+  end
+end
+
 # Redis server for queueing and caching
 package 'redis-server'
 
