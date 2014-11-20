@@ -91,6 +91,7 @@ template deploy_dir + '/shared/config/database.yml' do
   owner 'cyclescape'
   group 'cyclescape'
   mode '0644'
+  variables script_dir: node['postgres']['script_dir']
 end
 
 mb = data_bag_item('secrets', 'mailbox')
@@ -269,8 +270,4 @@ end
 
 # Enable ExtendedStatus in apache2
 # This can be removed with later apache2 versions which have it included by default.
-template '/etc/apache2/conf.d/status.conf' do
-  source 'status.conf'
-  mode '0644'
-  notifies :reload, 'service[apache2]'
-end
+apache_conf 'status'
