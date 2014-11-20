@@ -1,1 +1,1 @@
-default['passenger-gem']['version'] = '3.0.9'
+default['passenger-gem']['version'] = '4.0.53'

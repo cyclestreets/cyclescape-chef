@@ -30,7 +30,7 @@ script 'install the passenger module' do
   code <<-EOH
     /usr/local/bin/passenger-install-apache2-module --auto
   EOH
-  not_if "test -f /var/lib/gems/1.9.1/gems/passenger-#{node['passenger-gem']['version']}/ext/apache2/mod_passenger.so"
+  not_if "test -f /var/lib/gems/1.9.1/gems/passenger-#{node['passenger-gem']['version']}/buildout/apache2/mod_passenger.so"
 end
 
 template '/etc/apache2/mods-available/passenger.load' do
