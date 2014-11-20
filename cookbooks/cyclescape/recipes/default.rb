@@ -255,7 +255,7 @@ link '/etc/apache2/sites-enabled/000-default' do
   notifies :reload, 'service[apache2]'
 end
 
-template '/etc/apache2/sites-available/cyclescape' do
+template '/etc/apache2/sites-available/cyclescape.conf' do
   source 'passenger.vhost.conf'
   owner 'www-data'
   group 'www-data'
@@ -263,8 +263,8 @@ template '/etc/apache2/sites-available/cyclescape' do
   notifies :reload, 'service[apache2]'
 end
 
-link '/etc/apache2/sites-enabled/cyclescape' do
-  to '/etc/apache2/sites-available/cyclescape'
+link '/etc/apache2/sites-enabled/cyclescape.conf' do
+  to '/etc/apache2/sites-available/cyclescape.conf'
   notifies :reload, 'service[apache2]'
 end
 
