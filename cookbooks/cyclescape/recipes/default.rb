@@ -42,6 +42,9 @@ package 'heirloom-mailx'
 package 'git'
 
 apache_module 'rewrite'
+if node['platform'] == 'ubuntu' && node['platform_version'] == '14.04'
+  apache_module 'socache_shmcb'
+end
 apache_module 'ssl'
 apache_module 'expires'
 apache_module 'headers'
