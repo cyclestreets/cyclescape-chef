@@ -6,24 +6,24 @@ are very welcome.
 
 This is designed to use chef-solo. First we need to grab this repository and
 prep the cookbooks, then install chef-solo, then chef can take care of the rest.
-The base system is ubuntu-server 12.04 LTS so there's not much installed already.
+The base system is ubuntu-server 14.04 LTS or 12.04 LTS so there's not much
+installed already.
 
     cd ~
-    sudo apt-get install git
+    sudo apt-get -y install git
     git clone https://github.com/cyclestreets/cyclescape-chef.git
     sudo mv cyclescape-chef /opt
     cd /opt/cyclescape-chef/
 
 (From this point on, we could just make a magic script to do the rest.)
 
-Now, we need to install chef. We're using chef 11.10 with the ombnibus (i.e. embedded
+Now, we need to install chef. We're using chef 11.16 with the ombnibus (i.e. embedded
 ruby) package
 
-    wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chef_11.10.4-1.ubuntu.12.04_amd64.deb
-    sudo dpkg -i chef_11.10.4-1.ubuntu.12.04_amd64.deb
+    curl -L https://www.getchef.com/chef/install.sh | sudo bash
+    sudo mkdir /var/log/chef
 
-
-When you are prompted for the server url, enter "none"
+When you are prompted for the server url, enter "none".
 
 # Databags
 
@@ -66,8 +66,8 @@ with the actual copies (held elsewhere).
 
 At this point, chef can take care of everything else.
 
-    $ cd /opt/
-    $ sudo chef-solo -c cyclescape-chef/solo.rb -j cyclescape-chef/node.json
+    cd /opt/
+    sudo chef-solo -c cyclescape-chef/solo.rb -j cyclescape-chef/node.json
 
 It's easy to run chef again - for example, in order to deploy the latest version.
 
@@ -75,9 +75,9 @@ It's easy to run chef again - for example, in order to deploy the latest version
 
 If the cookbooks themselves change - for example, if you add another package,
 or change the contents of one of the templates, you'll need to update and rebundle
-the cookbooks, then run chef-solo
+the cookbooks, then run chef-solo:
 
-    $ cd cyclescape-chef
-    $ git pull
-    $ cd ~
-    $ sudo chef-solo -c cyclescape-chef/solo.rb -j cyclescape-chef/node.json
+    cd /opt/cyclescape-chef/
+    git pull
+    cd ..
+    sudo chef-solo -c cyclescape-chef/solo.rb -j cyclescape-chef/node.json
