@@ -69,6 +69,10 @@ At this point, chef can take care of everything else.
     cd /opt/
     sudo chef-solo -c cyclescape-chef/solo.rb -j cyclescape-chef/node.json
 
+If the chef run reports that it has failed, check the log file at /var/log/chef/solo.log .
+
+If running a test in a VM, ensure you have allocated enough memory. The installation is known to fail with, for instance, only 512M allocated.
+
 It's easy to run chef again - for example, in order to deploy the latest version.
 
 # Updating the cookbooks
