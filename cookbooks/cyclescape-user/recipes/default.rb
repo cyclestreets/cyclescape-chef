@@ -4,7 +4,7 @@
 #
 # Copyright 2012, Cyclestreets Ltd
 
-user 'cyclescape' do
+user node['user'] do
   action :create
   shell '/bin/bash'
 end

@@ -9,13 +9,25 @@ include_recipe 'ssl'
 include_recipe 'apache2'
 include_recipe 'postgres'
 include_recipe 'ntp'
-include_recipe 'rbenv'
+include_recipe "rbenv::default"
+include_recipe "rbenv::ruby_build"
 include_recipe 'passenger-gem'
 include_recipe 'postfix'
 include_recipe 'cyclescape-user'
 include_recipe 'cyclescape-backups'
 include_recipe 'ufw::recipes'
 include_recipe 'munin-plugins-rails'
+
+ruby_version_string = '2.1.5'
+
+rbenv_ruby ruby_version_string do
+  ruby_version ruby_version_string
+  global true
+end
+
+rbenv_gem "bundler" do
+  ruby_version ruby_version_string
+end
 
 # Geos dev package for RGeo gem
 package 'libgeos-dev'
@@ -49,18 +61,6 @@ apache_module 'ssl'
 apache_module 'expires'
 apache_module 'headers'
 
-# We can install bundler with the ubuntu version of gem ...
-gem_package 'bundler' do
-  gem_binary '/usr/bin/gem1.9.1'
-  action :install
-end
-
-# ... but it installs binaries into a non-PATH directory
-# See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=448639
-link '/usr/bin/bundle' do
-  to '/var/lib/gems/1.9.1/bin/bundle'
-end
-
 # Install a very old version of nodejs
 package 'nodejs'
 
@@ -83,16 +83,16 @@ shared_dir = File.join(deploy_dir, 'shared')
  File.join(shared_dir, 'system'), File.join(shared_dir, 'tmp/dragonfly'),
  File.join(shared_dir, 'tmp/index')].each do |dir|
   directory dir do
-    owner 'cyclescape'
-    group 'cyclescape'
+    owner node['user']
+    group node['user']
     recursive true
   end
 end
 
 template deploy_dir + '/shared/config/database.yml' do
   source 'database.example.yml'
-  owner 'cyclescape'
-  group 'cyclescape'
+  owner node['user']
+  group node['user']
   mode '0644'
   variables script_dir: node['postgres']['script_dir']
 end
@@ -101,8 +101,8 @@ mb = data_bag_item('secrets', 'mailbox')
 
 template deploy_dir + '/shared/config/mailboxes.yml' do
   source 'mailboxes.example.yml'
-  owner 'cyclescape'
-  group 'cyclescape'
+  owner node['user']
+  group node['user']
   mode '0400'
   variables(
     server: mb['server'],
@@ -113,9 +113,9 @@ end
 
 deploy_revision deploy_dir do
   repo 'https://github.com/cyclestreets/cyclescape.git'
+  owner node['user']
+  group node['user']
   revision 'master'
-  user 'cyclescape'
-  group 'cyclescape'
   before_migrate do
     current_release_directory = release_path
     shared_directory = new_resource.shared_path
@@ -159,8 +159,8 @@ deploy_revision deploy_dir do
     # Things for the dragonfly gem
     directory current_release_directory + '/tmp' do
       action :create
-      owner 'cyclescape'
-      group 'cyclescape'
+      owner node['user']
+      group node['user']
     end
 
     link current_release_directory + '/tmp/dragonfly' do
@@ -224,7 +224,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd release_path
       code <<-EOH
-        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env.production
+        bundle exec foreman export upstart /etc/init -a #{node['user']} -u #{node['user']} -e .env.production
       EOH
       notifies :restart, 'service[cyclescape]'
     end
