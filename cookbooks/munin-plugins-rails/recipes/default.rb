@@ -7,7 +7,7 @@
 include_recipe 'munin'
 
 gem_package 'munin-plugins-rails' do
-  gem_binary '/usr/bin/gem1.9.1'
+  gem_binary "/usr/bin/gem#{node['ruby']['version']}"
   action :install
 end
 

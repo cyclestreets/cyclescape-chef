@@ -2,7 +2,7 @@
 # Cookbook Name:: cyclescape
 # Recipe:: default
 #
-# Copyright 2011, Cyclestreets Ltd
+# Copyright 2015, Cyclestreets Ltd
 
 include_recipe 'apt'
 include_recipe 'ssl'
@@ -51,14 +51,14 @@ apache_module 'headers'
 
 # We can install bundler with the ubuntu version of gem ...
 gem_package 'bundler' do
-  gem_binary '/usr/bin/gem1.9.1'
+  gem_binary "/usr/bin/gem#{node['ruby']['version']}"
   action :install
 end
 
 # ... but it installs binaries into a non-PATH directory
 # See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=448639
 link '/usr/bin/bundle' do
-  to '/var/lib/gems/1.9.1/bin/bundle'
+  to "/var/lib/gems/#{node['ruby']['version']}/bin/bundle"
 end
 
 # Install a very old version of nodejs

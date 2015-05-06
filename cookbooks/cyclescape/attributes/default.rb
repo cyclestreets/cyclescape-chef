@@ -9,3 +9,4 @@ default['cyclescape']['firewall']['rules'] = [
 
 # Make sure apache listens for both http and https connections
 default['apache']['listen_ports'] = %w(80 443)
+default['ruby']['version'] = '2.1'

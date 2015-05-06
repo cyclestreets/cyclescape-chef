@@ -19,7 +19,7 @@ include_recipe 'apache2'
 end
 
 gem_package 'passenger' do
-  gem_binary '/usr/bin/gem1.9.1'
+  gem_binary "/usr/bin/gem#{node['ruby']['version']}"
   action :install
   version node['passenger-gem']['version']
 end
@@ -30,7 +30,7 @@ script 'install the passenger module' do
   code <<-EOH
     /usr/local/bin/passenger-install-apache2-module --auto
   EOH
-  not_if "test -f /var/lib/gems/1.9.1/gems/passenger-#{node['passenger-gem']['version']}/buildout/apache2/mod_passenger.so"
+  not_if "test -f /var/lib/gems/#{node['ruby']['version']}/gems/passenger-#{node['passenger-gem']['version']}/buildout/apache2/mod_passenger.so"
 end
 
 template '/etc/apache2/mods-available/passenger.load' do
