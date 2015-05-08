@@ -51,14 +51,7 @@ apache_module 'headers'
 
 # We can install bundler with the ubuntu version of gem ...
 gem_package 'bundler' do
-  gem_binary "/usr/bin/gem#{node['brightbox-ruby']['version']}"
   action :install
-end
-
-# ... but it installs binaries into a non-PATH directory
-# See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=448639
-link '/usr/bin/bundle' do
-  to "/var/lib/gems/#{node['brightbox-ruby']['version']}/bin/bundle"
 end
 
 # Install a very old version of nodejs

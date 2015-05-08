@@ -19,7 +19,6 @@ include_recipe 'apache2'
 end
 
 gem_package 'passenger' do
-  gem_binary "/usr/bin/gem#{node['brightbox-ruby']['version']}"
   action :install
   version node['passenger-gem']['version']
 end
@@ -30,7 +29,7 @@ script 'install the passenger module' do
   code <<-EOH
     /usr/local/bin/passenger-install-apache2-module --auto
   EOH
-  not_if "test -f /var/lib/gems/#{node['brightbox-ruby']['version']}/gems/passenger-#{node['passenger-gem']['version']}/buildout/apache2/mod_passenger.so"
+  not_if "test -f /var/lib/gems/#{node['cyclescape']['gem_folder']}/gems/passenger-#{node['passenger-gem']['version']}/buildout/apache2/mod_passenger.so"
 end
 
 template '/etc/apache2/mods-available/passenger.load' do

@@ -7,7 +7,6 @@
 include_recipe 'munin'
 
 gem_package 'munin-plugins-rails' do
-  gem_binary "/usr/bin/gem#{node['brightbox-ruby']['version']}"
   action :install
 end
 
