@@ -36,9 +36,9 @@ template '/etc/apache2/mods-available/passenger.load' do
   source 'passenger.module.conf'
   mode '0644'
   notifies :restart, 'service[apache2]'
-  variables(passenger_version: node['passenger-gem']['version'])
-  variables(gem_folder: node['cyclescape']['gem_folder'])
-  variables(ruby_version: node['brightbox-ruby']['version'])
+  variables(passenger_version: node['passenger-gem']['version'],
+            gem_folder: node['cyclescape']['gem_folder'],
+            ruby_version: node['brightbox-ruby']['version'])
 end
 
 link '/etc/apache2/mods-enabled/passenger.load' do
