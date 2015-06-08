@@ -196,8 +196,22 @@ deploy_revision deploy_dir do
       not_if "test -e #{shared_config + '/secret_token'}"
     end
 
+    # We need to create a secret token, and store it in the shared config
+    # path for future use.
+    script 'create the devise secret token' do
+      interpreter 'bash'
+      cwd current_release_directory
+      user running_deploy_user
+      code "bundle exec rake secret > #{shared_config}/devise_secret_token"
+      not_if "test -e #{shared_config}/devise_secret_token"
+    end
+
     link current_release_directory + '/config/secret_token' do
       to shared_config + '/secret_token'
+    end
+
+    link current_release_directory + '/config/devise_secret_token' do
+      to shared_config + '/devise_secret_token'
     end
   end
 
