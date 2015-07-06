@@ -186,32 +186,20 @@ deploy_revision deploy_dir do
       EOH
     end
 
-    # We need to create a secret token, and store it in the shared config
-    # path for future use.
-    script 'create the secret token' do
-      interpreter 'bash'
-      cwd current_release_directory
-      user running_deploy_user
-      code "bundle exec rake secret > #{shared_config + '/secret_token'}"
-      not_if "test -e #{shared_config + '/secret_token'}"
-    end
+    %w(secret_token devise_secret_token secret_key_base).each do |secret|
+      # We need to create a secret, and store it in the shared config
+      # path for future use.
+      script "create the #{secret}" do
+        interpreter 'bash'
+        cwd current_release_directory
+        user running_deploy_user
+        code "bundle exec rake secret > #{shared_config}/#{secret}"
+        not_if "test -e #{shared_config}/#{secret}"
+      end
 
-    # We need to create a secret token, and store it in the shared config
-    # path for future use.
-    script 'create the devise secret token' do
-      interpreter 'bash'
-      cwd current_release_directory
-      user running_deploy_user
-      code "bundle exec rake secret > #{shared_config}/devise_secret_token"
-      not_if "test -e #{shared_config}/devise_secret_token"
-    end
-
-    link current_release_directory + '/config/secret_token' do
-      to shared_config + '/secret_token'
-    end
-
-    link current_release_directory + '/config/devise_secret_token' do
-      to shared_config + '/devise_secret_token'
+      link current_release_directory + "/config/#{secret}" do
+        to shared_config + "/#{secret}"
+      end
     end
   end
 
