@@ -165,6 +165,22 @@ deploy_revision deploy_dir do
       to shared_directory + '/tmp/index'
     end
 
+    %w(secret_token devise_secret_token secret_key_base).each do |secret|
+      # We need to create a secret, and store it in the shared config
+      # path for future use.
+      script "create the #{secret}" do
+        interpreter 'bash'
+        cwd current_release_directory
+        user running_deploy_user
+        code "bundle exec rake secret > #{shared_config}/#{secret}"
+        not_if "test -e #{shared_config}/#{secret}"
+      end
+
+      link current_release_directory + "/config/#{secret}" do
+        to shared_config + "/#{secret}"
+      end
+    end
+
     script 'Create the database' do
       interpreter 'bash'
       cwd current_release_directory
@@ -186,21 +202,6 @@ deploy_revision deploy_dir do
       EOH
     end
 
-    %w(secret_token devise_secret_token secret_key_base).each do |secret|
-      # We need to create a secret, and store it in the shared config
-      # path for future use.
-      script "create the #{secret}" do
-        interpreter 'bash'
-        cwd current_release_directory
-        user running_deploy_user
-        code "bundle exec rake secret > #{shared_config}/#{secret}"
-        not_if "test -e #{shared_config}/#{secret}"
-      end
-
-      link current_release_directory + "/config/#{secret}" do
-        to shared_config + "/#{secret}"
-      end
-    end
   end
 
   before_restart do
