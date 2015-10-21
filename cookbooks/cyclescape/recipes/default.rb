@@ -166,8 +166,8 @@ deploy_revision deploy_dir do
     end
 
     # Rollbar API key
-    link current_release_directory + "/config/rollbar" do
-      to shared_config + "/rollbar"
+    link current_release_directory + '/config/rollbar' do
+      to data_bag_item('secrets', 'rollbar')
     end
 
     %w(secret_token devise_secret_token secret_key_base).each do |secret|
