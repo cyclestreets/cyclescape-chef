@@ -165,6 +165,11 @@ deploy_revision deploy_dir do
       to shared_directory + '/tmp/index'
     end
 
+    # Rollbar API key
+    link current_release_directory + "/config/rollbar" do
+      to shared_config + "/rollbar"
+    end
+
     %w(secret_token devise_secret_token secret_key_base).each do |secret|
       # We need to create a secret, and store it in the shared config
       # path for future use.
