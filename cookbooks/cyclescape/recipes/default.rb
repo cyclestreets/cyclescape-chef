@@ -104,6 +104,14 @@ template deploy_dir + '/shared/config/mailboxes.yml' do
   )
 end
 
+template deploy_dir + '/shared/config/rollbar' do
+  source 'rollbar'
+  owner 'cyclescape'
+  group 'cyclescape'
+  mode '0400'
+  variables api_key: data_bag_item('secrets', 'rollbar')
+end
+
 deploy_revision deploy_dir do
   repo 'https://github.com/cyclestreets/cyclescape.git'
   revision 'master'
