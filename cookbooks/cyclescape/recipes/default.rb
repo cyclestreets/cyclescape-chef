@@ -104,12 +104,15 @@ template deploy_dir + '/shared/config/mailboxes.yml' do
   )
 end
 
-template deploy_dir + '/shared/config/rollbar' do
-  source 'rollbar'
-  owner 'cyclescape'
-  group 'cyclescape'
-  mode '0400'
-  variables api_key: data_bag_item('secrets', 'rollbar')
+api_keys = %(rollbar akismet)
+api_keys.each do |key|
+  template deploy_dir + "/shared/config/#{key}" do
+    source 'api_key'
+    owner 'cyclescape'
+    group 'cyclescape'
+    mode '0400'
+    variables(api_key: data_bag_item('secrets', 'keys')[key])
+  end
 end
 
 deploy_revision deploy_dir do
@@ -173,9 +176,11 @@ deploy_revision deploy_dir do
       to shared_directory + '/tmp/index'
     end
 
-    # Rollbar API key
-    link current_release_directory + "/config/rollbar" do
-      to shared_config + "/rollbar"
+    # Link API keys
+    api_keys.each do |key|
+      link current_release_directory + "/config/#{key}" do
+        to shared_config + "/#{key}"
+      end
     end
 
     %w(secret_token devise_secret_token secret_key_base).each do |secret|
