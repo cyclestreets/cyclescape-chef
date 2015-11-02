@@ -104,7 +104,7 @@ template deploy_dir + '/shared/config/mailboxes.yml' do
   )
 end
 
-api_keys = %(rollbar akismet)
+api_keys = %w(rollbar akismet)
 api_keys.each do |key|
   template deploy_dir + "/shared/config/#{key}" do
     source 'api_key'
