@@ -9,6 +9,7 @@ DEPENDENCIES
     path: local-cookbooks/cyclescape-backups
   cyclescape-user
     path: local-cookbooks/cyclescape-user
+  firewall (< 2.0.0)
   munin
     path: local-cookbooks/munin
   munin-plugins-rails
@@ -24,7 +25,7 @@ DEPENDENCIES
   solr (~> 0.5.0)
   ssl
     path: local-cookbooks/ssl
-  ufw (~> 0.6.2)
+  ufw (~> 0.7.4)
 
 GRAPH
   apache2 (2.0.0)
@@ -35,7 +36,6 @@ GRAPH
   brightbox-ruby (1.2.1)
     apt (>= 0.0.0)
   build-essential (1.0.2)
-  chef-sugar (3.1.1)
   cyclescape (0.1.0)
     apache2 (>= 0.0.0)
     apt (>= 0.0.0)
@@ -47,12 +47,13 @@ GRAPH
     passenger-gem (>= 0.0.0)
     postfix (>= 0.0.0)
     postgres (>= 0.0.0)
+    solr (>= 0.0.0)
     ssl (>= 0.0.0)
     ufw (>= 0.0.0)
   cyclescape-backups (0.0.1)
   cyclescape-user (0.0.1)
-  firewall (2.1.0)
-    chef-sugar (>= 0.0.0)
+  firewall (1.6.1)
+    poise (~> 2.0)
   iptables (1.1.0)
   java (1.35.0)
   logrotate (1.9.2)
@@ -62,11 +63,12 @@ GRAPH
   pacman (1.1.1)
   passenger-gem (0.0.0)
     apache2 (>= 0.0.0)
+  poise (2.4.0)
   postfix (0.0.1)
   postgres (0.0.1)
   solr (0.5.0)
     apt (>= 0.0.0)
     java (>= 0.0.0)
   ssl (0.0.1)
-  ufw (0.6.4)
-    firewall (>= 0.8.0)
+  ufw (0.7.4)
+    firewall (>= 0.9.0)

@@ -15,6 +15,7 @@ include_recipe 'passenger-gem'
 include_recipe 'postfix'
 include_recipe 'cyclescape-user'
 include_recipe 'cyclescape-backups'
+node.set['firewall']['rules'] = []
 include_recipe 'ufw::recipes'
 include_recipe 'munin-plugins-rails'
 
@@ -105,6 +106,17 @@ template deploy_dir + '/shared/config/mailboxes.yml' do
   )
 end
 
+api_keys = %w(rollbar akismet)
+api_keys.each do |key|
+  template deploy_dir + "/shared/config/#{key}" do
+    source 'api-key.yml'
+    owner 'cyclescape'
+    group 'cyclescape'
+    mode '0400'
+    variables(api_key: data_bag_item('secrets', 'keys')[key])
+  end
+end
+
 deploy_revision deploy_dir do
   repo 'https://github.com/cyclestreets/cyclescape.git'
   revision 'master'
@@ -175,6 +187,13 @@ deploy_revision deploy_dir do
         user running_deploy_user
         code "bundle exec rake secret > #{shared_config}/#{secret}"
         not_if "test -e #{shared_config}/#{secret}"
+      end
+
+      # Link API keys
+      api_keys.each do |key|
+        link current_release_directory + "/config/#{key}" do
+          to shared_config + "/#{key}"
+        end
       end
 
       link current_release_directory + "/config/#{secret}" do

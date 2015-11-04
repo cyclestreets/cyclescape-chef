@@ -12,7 +12,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   config.vm.hostname = 'cyclescape-berkshelf'
-
   # Set the version of chef to install using the vagrant-omnibus plugin
   # NOTE: You will need to install the vagrant-omnibus plugin:
   #
@@ -25,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   # If this value is a shorthand to a box in Vagrant Cloud then
   # config.vm.box_url doesn't need to be specified.
-  config.vm.box = 'chef/ubuntu-14.04'
+  config.vm.box = 'bento/ubuntu-14.04'
 
 
   # Assign this VM to a host-only network IP, allowing you to access it
@@ -47,15 +46,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
-  #
-  # config.vm.provider :virtualbox do |vb|
-  #   # Don't boot with headless mode
+
+  config.vm.provider :virtualbox do |vb|
+     # Don't boot with headless mode
   #   vb.gui = true
   #
-  #   # Use VBoxManage to customize the VM. For example to change memory:
-  #   vb.customize ["modifyvm", :id, "--memory", "1024"]
-  # end
-  #
+     # Use VBoxManage to customize the VM. For example to change memory:
+    vb.customize ["modifyvm", :id, "--memory", "4096"]
+  end
+
   # View the documentation for the provider you're using for more
   # information on available options.
 
@@ -82,6 +81,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         server_repl_password: 'replpass'
       }
     }
+    chef.data_bags_path = 'data-bags'
 
     chef.run_list = [
       'recipe[cyclescape::default]'
