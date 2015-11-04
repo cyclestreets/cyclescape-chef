@@ -15,8 +15,7 @@ include_recipe 'passenger-gem'
 include_recipe 'postfix'
 include_recipe 'cyclescape-user'
 include_recipe 'cyclescape-backups'
-node.set['firewall']['rules'] = []
-include_recipe 'ufw::recipes'
+include_recipe 'ufw'
 include_recipe 'munin-plugins-rails'
 
 # Geos dev package for RGeo gem

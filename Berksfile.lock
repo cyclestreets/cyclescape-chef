@@ -1,7 +1,6 @@
 DEPENDENCIES
   apache2 (~> 2.0.0)
-  brightbox-ruby
-    path: local-cookbooks/brightbox-ruby
+  brightbox-ruby (~> 1.2.1)
   build-essential (~> 1.0.0)
   cyclescape
     path: local-cookbooks/cyclescape

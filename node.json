@@ -1,6 +1,5 @@
 {
   "default_attributes": {
-    "firewall": {"rules":  []},
     "apache": {"listen_ports": ["80", "443"]},
     "brightbox-ruby": {"install_ruby_switch": true}
   },
