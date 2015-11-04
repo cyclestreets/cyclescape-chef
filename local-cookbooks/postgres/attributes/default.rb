@@ -1,1 +1,1 @@
-default['postgres']['script_dir'] = '/usr/share/postgresql/9.1/contrib/postgis-1.5'
+default['postgres']['script_dir'] = '/usr/share/postgresql/9.3/contrib/postgis-2.1'
