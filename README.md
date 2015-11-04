@@ -18,12 +18,7 @@ installed already.
 (From this point on, we could just make a magic script to do the rest.)
 
 Now, we need to install chef. We're using the latest chef with the ombnibus (i.e. embedded
-ruby) package
-
-    curl -L https://www.getchef.com/chef/install.sh | sudo bash
-    sudo mkdir /var/log/chef
-
-When you are prompted for the server url, enter "none".
+ruby) package, you can get chef and Berkshelf from https://downloads.chef.io/chef-dk/
 
 # Databags
 
