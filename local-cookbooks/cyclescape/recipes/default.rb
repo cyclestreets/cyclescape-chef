@@ -9,7 +9,7 @@ include_recipe 'ssl'
 include_recipe 'apache2'
 include_recipe 'postgres'
 include_recipe 'ntp'
-include_recipe 'solr'
+include_recipe 'java'
 include_recipe 'brightbox-ruby::default'
 include_recipe 'passenger_apache2'
 include_recipe 'postfix'
@@ -151,6 +151,17 @@ deploy_revision deploy_dir do
       EOH
     end
 
+    script 'Stop Solr' do
+      interpreter 'bash'
+      cwd current_release_directory
+      user running_deploy_user
+      environment 'RAILS_ENV' => 'production'
+      code <<-EOH
+        bundle exec rake sunspot:solr:stop
+      EOH
+      only_if "test -e sunspot-solr.pid"
+    end
+
     # The symlink_before_default does this, but annoyingly comes after before_migrate is called
     # That way, db:create fails. So do it manually instead...
     link current_release_directory + '/config/database.yml' do
@@ -257,6 +268,16 @@ deploy_revision deploy_dir do
         bundle exec whenever -i cyclescape_app --update-crontab
       EOH
     end
+
+    script 'Start Solr' do
+      interpreter 'bash'
+      cwd current_release_directory
+      user running_deploy_user
+      environment 'RAILS_ENV' => 'production'
+      code <<-EOH
+        bundle exec rake sunspot:solr:start
+      EOH
+    end
   end
 
   migrate true
@@ -264,6 +285,7 @@ deploy_revision deploy_dir do
   environment 'RAILS_ENV' => 'production'
   action :deploy
   restart_command 'touch tmp/restart.txt'
+
 end
 
 # sort out the virtual hosts, with delayed reloading of apache2
