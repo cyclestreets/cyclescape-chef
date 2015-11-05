@@ -4,6 +4,9 @@ default['firewall']['rules'] = [
   },
   'https' => {
     'port' => '443'
+  },
+  'munin' => {
+    'port' => '4949'
   }
 ]
 
