@@ -18,7 +18,10 @@ installed already.
 (From this point on, we could just make a magic script to do the rest.)
 
 Now, we need to install chef. We're using the latest chef with the ombnibus (i.e. embedded
-ruby) package, you can get chef and Berkshelf from https://downloads.chef.io/chef-dk/
+ruby) package, you can get chef and Berkshelf
+
+    curl -L "https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.9.0-1_amd64.deb" > "chefdk_amd64.deb"
+    sudo dpkg -i chefdk_amd64.deb
 
 # Databags
 
@@ -63,6 +66,7 @@ At this point, chef can take care of everything else.
 
     cd /opt/cyclescape-chef/
     sudo berks install
+    sudo berks vendor cookbooks/
     sudo chef-solo -c solo.rb -j node.json
 
 If the chef run reports that it has failed, check the log file at /var/log/chef/solo.log .
@@ -80,4 +84,5 @@ the cookbooks, then run chef-solo:
     cd /opt/cyclescape-chef/
     git pull
     sudo berks install
+    sudo berks vendor cookbooks/
     sudo chef-solo -c solo.rb -j node.json
