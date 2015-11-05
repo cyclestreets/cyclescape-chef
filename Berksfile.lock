@@ -15,8 +15,7 @@ DEPENDENCIES
     path: local-cookbooks/munin-plugins-rails
   ntp
     path: local-cookbooks/ntp
-  passenger-gem
-    path: local-cookbooks/passenger-gem
+  passenger_apache2 (~> 2.3.0)
   postfix
     path: local-cookbooks/postfix
   postgres
@@ -43,7 +42,7 @@ GRAPH
     cyclescape-user (>= 0.0.0)
     munin-plugins-rails (>= 0.0.0)
     ntp (>= 0.0.0)
-    passenger-gem (>= 0.0.0)
+    passenger_apache2 (>= 0.0.0)
     postfix (>= 0.0.0)
     postgres (>= 0.0.0)
     solr (>= 0.0.0)
@@ -60,8 +59,9 @@ GRAPH
   munin-plugins-rails (0.0.1)
   ntp (0.0.1)
   pacman (1.1.1)
-  passenger-gem (0.0.0)
-    apache2 (>= 0.0.0)
+  passenger_apache2 (2.3.0)
+    apache2 (>= 2.0)
+    build-essential (>= 0.0.0)
   poise (2.4.0)
   postfix (0.0.1)
   postgres (0.0.1)
