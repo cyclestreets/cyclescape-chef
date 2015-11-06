@@ -1,3 +1,4 @@
 cookbooks.tgz
 .kitchen/
+.vagrant/
 .kitchen.local.yml

@@ -1,0 +1,70 @@
+DEPENDENCIES
+  apache2 (~> 2.0.0)
+  brightbox-ruby (~> 1.2.1)
+  build-essential (~> 1.0.0)
+  cyclescape
+    path: local-cookbooks/cyclescape
+  cyclescape-backups
+    path: local-cookbooks/cyclescape-backups
+  cyclescape-user
+    path: local-cookbooks/cyclescape-user
+  firewall (< 2.0.0)
+  java (~> 1.35.0)
+  munin
+    path: local-cookbooks/munin
+  munin-plugins-rails
+    path: local-cookbooks/munin-plugins-rails
+  ntp
+    path: local-cookbooks/ntp
+  passenger_apache2 (~> 2.3.0)
+  postfix
+    path: local-cookbooks/postfix
+  postgres
+    path: local-cookbooks/postgres
+  ssl
+    path: local-cookbooks/ssl
+  ufw (~> 0.7.4)
+
+GRAPH
+  apache2 (2.0.0)
+    iptables (>= 0.0.0)
+    logrotate (>= 0.0.0)
+    pacman (>= 0.0.0)
+  apt (2.8.2)
+  brightbox-ruby (1.2.1)
+    apt (>= 0.0.0)
+  build-essential (1.0.2)
+  cyclescape (0.1.0)
+    apache2 (>= 0.0.0)
+    apt (>= 0.0.0)
+    brightbox-ruby (>= 0.0.0)
+    cyclescape-backups (>= 0.0.0)
+    cyclescape-user (>= 0.0.0)
+    java (>= 0.0.0)
+    munin-plugins-rails (>= 0.0.0)
+    ntp (>= 0.0.0)
+    passenger_apache2 (>= 0.0.0)
+    postfix (>= 0.0.0)
+    postgres (>= 0.0.0)
+    ssl (>= 0.0.0)
+    ufw (>= 0.0.0)
+  cyclescape-backups (0.0.1)
+  cyclescape-user (0.0.1)
+  firewall (1.6.1)
+    poise (~> 2.0)
+  iptables (1.1.0)
+  java (1.35.0)
+  logrotate (1.9.2)
+  munin (0.0.1)
+  munin-plugins-rails (0.0.1)
+  ntp (0.0.1)
+  pacman (1.1.1)
+  passenger_apache2 (2.3.0)
+    apache2 (>= 2.0)
+    build-essential (>= 0.0.0)
+  poise (2.4.0)
+  postfix (0.0.1)
+  postgres (0.0.1)
+  ssl (0.0.1)
+  ufw (0.7.4)
+    firewall (>= 0.9.0)

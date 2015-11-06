@@ -17,13 +17,11 @@ installed already.
 
 (From this point on, we could just make a magic script to do the rest.)
 
-Now, we need to install chef. We're using chef 11.16 with the ombnibus (i.e. embedded
-ruby) package
+Now, we need to install chef. We're using the latest chef with the ombnibus (i.e. embedded
+ruby) package, you can get chef and Berkshelf
 
-    curl -L https://www.getchef.com/chef/install.sh | sudo bash
-    sudo mkdir /var/log/chef
-
-When you are prompted for the server url, enter "none".
+    curl -L "https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.9.0-1_amd64.deb" > "chefdk_amd64.deb"
+    sudo dpkg -i chefdk_amd64.deb
 
 # Databags
 
@@ -35,13 +33,13 @@ before running any recipies, so it needs to be done by hand.
 
 Then copy the example file over:
 
-    sudo cp cookbooks/cyclescape/templates/default/mailbox.json /etc/chef/databags/secrets/
-    sudo chmod 0600 /etc/chef/databags/secrets/mailbox.json
+    sudo cp -r data-bags /etc/chef/databags/
+    sudo chmod 0600 /etc/chef/databags/secrets/*
 
 Then fill in the real values, to add the details of a mailbox you have set up on a
 third-party server (Cyclescape will retrieve mail periodically from this).
 
-    sudo nano /etc/chef/databags/secrets/mailbox.json
+    sudo nano /etc/chef/databags/secrets/*
 
 Then run chef as normal (described below). If you are running against a chef-server,
 then create the databag from the .json example using knife.
@@ -66,8 +64,10 @@ with the actual copies (held elsewhere).
 
 At this point, chef can take care of everything else.
 
-    cd /opt/
-    sudo chef-solo -c cyclescape-chef/solo.rb -j cyclescape-chef/node.json
+    cd /opt/cyclescape-chef/
+    sudo berks install
+    sudo berks vendor cookbooks/
+    sudo chef-solo -c solo.rb -j node.json
 
 If the chef run reports that it has failed, check the log file at /var/log/chef/solo.log .
 
@@ -83,5 +83,6 @@ the cookbooks, then run chef-solo:
 
     cd /opt/cyclescape-chef/
     git pull
-    cd ..
-    sudo chef-solo -c cyclescape-chef/solo.rb -j cyclescape-chef/node.json
+    sudo berks install
+    sudo berks vendor cookbooks/
+    sudo chef-solo -c solo.rb -j node.json
