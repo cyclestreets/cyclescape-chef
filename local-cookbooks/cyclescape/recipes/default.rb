@@ -274,7 +274,7 @@ deploy_revision deploy_dir do
       code <<-EOH
         bundle exec whenever -i cyclescape_app --update-crontab
       EOH
-      only_if { node['hostname'].strip == 'cyclescape3' }
+      only_if { node['cyclescape']['environment'] == 'production' }
     end
 
     script 'Start Solr' do

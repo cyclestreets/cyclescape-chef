@@ -75,16 +75,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :chef_solo do |chef|
     chef.json = {
-      mysql: {
-        server_root_password: 'rootpass',
-        server_debian_password: 'debpass',
-        server_repl_password: 'replpass'
-      }
+      cyclescape: {environment: "staging"}
     }
     chef.data_bags_path = 'data-bags'
 
     chef.run_list = [
-      'recipe[cyclescape::default]'
+      'recipe[cyclescape]', 'recipe[munin]'
     ]
   end
 end
