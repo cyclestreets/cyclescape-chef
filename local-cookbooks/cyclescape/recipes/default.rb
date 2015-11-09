@@ -155,7 +155,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment 'RAILS_ENV' => 'production'
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
         bundle exec rake sunspot:solr:stop
       EOH
@@ -222,7 +222,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment 'RAILS_ENV' => 'production'
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
         bundle exec rake db:create
       EOH
@@ -233,12 +233,11 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment 'RAILS_ENV' => 'production'
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
         bundle exec rake assets:precompile
       EOH
     end
-
   end
 
   before_restart do
@@ -246,7 +245,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd release_path
       user new_resource.user
-      environment 'RAILS_ENV' => 'production'
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
         bundle exec rake db:seed
       EOH
@@ -256,8 +255,9 @@ deploy_revision deploy_dir do
     script 'Update foreman configuration' do
       interpreter 'bash'
       cwd release_path
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
-        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env.production
+        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape
       EOH
       notifies :restart, 'service[cyclescape]'
     end
@@ -281,7 +281,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd release_path
       user new_resource.user
-      environment 'RAILS_ENV' => 'production'
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
         bundle exec rake sunspot:solr:start
       EOH
@@ -290,7 +290,7 @@ deploy_revision deploy_dir do
 
   migrate true
   migration_command 'bundle exec rake db:migrate'
-  environment 'RAILS_ENV' => 'production'
+  environment 'RAILS_ENV' => node['cyclescape']['environment']
   action :deploy
   restart_command 'touch tmp/restart.txt'
 
