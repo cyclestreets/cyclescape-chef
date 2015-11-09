@@ -1,6 +1,4 @@
 {
-  "default_attributes": {
-    "cyclescape": {"environment": "staging"}
-  },
+  "cyclescape": {"environment": "staging"},
   "run_list": [ "recipe[cyclescape]", "recipe[munin]" ]
 }
