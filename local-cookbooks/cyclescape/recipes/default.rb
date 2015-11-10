@@ -256,7 +256,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd release_path
       code <<-EOH
-        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .#{node['cyclescape']['environment']}
+        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env.#{node['cyclescape']['environment']}
       EOH
       notifies :restart, 'service[cyclescape]'
     end
@@ -306,6 +306,7 @@ template '/etc/apache2/sites-available/cyclescape.conf' do
   owner 'www-data'
   group 'www-data'
   mode '0644'
+  variables environment: node['cyclescape']['environment']
   notifies :reload, 'service[apache2]'
 end
 
