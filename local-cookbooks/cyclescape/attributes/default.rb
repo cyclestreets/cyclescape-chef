@@ -10,8 +10,8 @@ default['firewall']['rules'] = [
   }
 ]
 
-default['cyclescape']['gem_folder'] = "#{default['brightbox-ruby']['version']}.0"
+default['apache']['listen_ports'] = %w(80 442)
 default['passenger']['ruby_bin'] = "/usr/bin/ruby#{default['brightbox-ruby']['version']}"
-default['passenger']['version'] = '4.0.53'
+default['passenger']['version'] = '5.0.20'
 default['brightbox-ruby']['install_ruby_switch'] = true
 default['java']['jdk_version'] = 7

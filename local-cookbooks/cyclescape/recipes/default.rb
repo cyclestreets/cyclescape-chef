@@ -292,6 +292,7 @@ deploy_revision deploy_dir do
   environment 'RAILS_ENV' => node['cyclescape']['environment']
   action :deploy
   restart_command 'touch tmp/restart.txt'
+  # restart_command 'passenger-config restart-app /'
 end
 
 # sort out the virtual hosts, with delayed reloading of apache2

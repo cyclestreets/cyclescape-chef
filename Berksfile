@@ -1,7 +1,7 @@
 source "https://supermarket.chef.io"
 
 cookbook 'build-essential', '~> 1.0.0'
-cookbook 'apache2', '~> 2.0.0'
+cookbook 'apache2', '~> 3.0.0'
 cookbook 'java', '~> 1.35.0'
 cookbook 'ufw', '~> 0.7.4'
 cookbook 'firewall', '< 2.0.0'
