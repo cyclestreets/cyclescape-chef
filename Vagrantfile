@@ -75,7 +75,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :chef_solo do |chef|
     chef.json = {
-      cyclescape: {environment: "production"}
+      cyclescape: {environment: "staging"}
     }
     chef.data_bags_path = 'data-bags'
 

@@ -255,9 +255,8 @@ deploy_revision deploy_dir do
     script 'Update foreman configuration' do
       interpreter 'bash'
       cwd release_path
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
-        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env.#{node['cyclescape']['environment']}
+        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .#{node['cyclescape']['environment']}
       EOH
       notifies :restart, 'service[cyclescape]'
     end
