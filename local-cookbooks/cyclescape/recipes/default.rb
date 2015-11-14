@@ -116,9 +116,11 @@ api_keys.each do |key|
   end
 end
 
+deploy_branch = (node['cyclescape']['environment'] == 'staging') ? 'staging' : 'master'
+
 deploy_revision deploy_dir do
   repo 'https://github.com/cyclestreets/cyclescape.git'
-  revision 'master'
+  revision deploy_branch
   user 'cyclescape'
   group 'cyclescape'
   before_migrate do
