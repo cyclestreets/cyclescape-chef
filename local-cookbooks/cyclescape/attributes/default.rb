@@ -16,6 +16,6 @@ default['passenger']['version'] = '5.0.20'
 default['brightbox-ruby']['install_ruby_switch'] = true
 default['java']['jdk_version'] = 7
 
-node['apache']['prefork']['startservers'] = 5
-node['apache']['prefork']['minspareservers'] = 5
-node['apache']['prefork']['maxspareservers'] = 8
+default['apache']['prefork']['startservers'] = 5
+default['apache']['prefork']['minspareservers'] = 5
+default['apache']['prefork']['maxspareservers'] = 8
