@@ -20,8 +20,7 @@ installed already.
 Now, we need to install chef. We're using the latest chef with the ombnibus (i.e. embedded
 ruby) package, you can get chef and Berkshelf
 
-    curl -L "https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.9.0-1_amd64.deb" > "chefdk_amd64.deb"
-    sudo dpkg -i chefdk_amd64.deb
+    curl -L https://www.opscode.com/chef/install.sh | bash
 
 # Databags
 
@@ -29,11 +28,12 @@ If you are running this recipe with chef-solo, you need to
 create the secrets databag in /etc. Unfortunately chef loads databags
 before running any recipies, so it needs to be done by hand.
 
-    sudo mkdir -p /etc/chef/databags/secrets
+    sudo mkdir -p /etc/chef/databags/
+    sudo mkdir -p /var/log/chef/
 
 Then copy the example file over:
 
-    sudo cp -r data-bags /etc/chef/databags/
+    sudo cp -r data-bags/* /etc/chef/databags/
     sudo chmod 0600 /etc/chef/databags/secrets/*
 
 Then fill in the real values, to add the details of a mailbox you have set up on a
