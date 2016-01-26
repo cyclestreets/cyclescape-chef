@@ -17,10 +17,10 @@ installed already.
 
 (From this point on, we could just make a magic script to do the rest.)
 
-Now, we need to install chef. We're using the latest chef with the ombnibus (i.e. embedded
-ruby) package, you can get chef and Berkshelf
+Now, we need to install chef development kit can (full details from https://downloads.chef.io/chef-dk/ubuntu/)
 
-    curl -L https://www.opscode.com/chef/install.sh | bash
+    wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.10.0-1_amd64.deb
+    sudo dpkg -i chefdk_0.10.0-1_amd64.deb
 
 # Databags
 
