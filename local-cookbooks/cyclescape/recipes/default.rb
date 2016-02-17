@@ -161,7 +161,9 @@ deploy_revision deploy_dir do
       code <<-EOH
         bundle exec rake sunspot:solr:stop
       EOH
-      only_if "test -e sunspot-solr.pid"
+      only_if { File.exist?(
+        File.join('solr' 'pids', node['cyclescape']['environment'])
+      ) }
     end
 
     # The symlink_before_default does this, but annoyingly comes after before_migrate is called
