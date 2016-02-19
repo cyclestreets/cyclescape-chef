@@ -73,9 +73,11 @@ end
 deploy_dir = '/var/www/cyclescape'
 shared_dir = File.join(deploy_dir, 'shared')
 
-[deploy_dir, shared_dir, File.join(shared_dir, 'config'), File.join(shared_dir, 'log'),
- File.join(shared_dir, 'system'), File.join(shared_dir, 'tmp/dragonfly'),
- File.join(shared_dir, 'tmp/index')].each do |dir|
+[
+  deploy_dir, shared_dir,
+  File.join(shared_dir, 'config'), File.join(shared_dir, 'log'),
+  File.join(shared_dir, 'system'), File.join(shared_dir, 'tmp', 'dragonfly'),
+].each do |dir|
   directory dir do
     owner 'cyclescape'
     group 'cyclescape'
@@ -185,11 +187,6 @@ deploy_revision deploy_dir do
 
     link current_release_directory + '/tmp/dragonfly' do
       to shared_directory + '/tmp/dragonfly'
-    end
-
-    # acts-as-indexed gem
-    link current_release_directory + '/tmp/index' do
-      to shared_directory + '/tmp/index'
     end
 
     # Link API keys
