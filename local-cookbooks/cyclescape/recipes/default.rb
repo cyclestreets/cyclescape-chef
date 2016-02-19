@@ -155,19 +155,6 @@ deploy_revision deploy_dir do
       EOH
     end
 
-    script 'Stop Solr' do
-      interpreter 'bash'
-      cwd current_release_directory
-      user running_deploy_user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
-      code <<-EOH
-        bundle exec rake sunspot:solr:stop
-      EOH
-      only_if { File.exist?(
-        File.join('solr' 'pids', node['cyclescape']['environment'])
-      ) }
-    end
-
     # The symlink_before_default does this, but annoyingly comes after before_migrate is called
     # That way, db:create fails. So do it manually instead...
     link current_release_directory + '/config/database.yml' do
@@ -275,16 +262,6 @@ deploy_revision deploy_dir do
         bundle exec whenever -i cyclescape_app --update-crontab
       EOH
       only_if { node['cyclescape']['environment'] == 'production' }
-    end
-
-    script 'Start Solr' do
-      interpreter 'bash'
-      cwd release_path
-      user new_resource.user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
-      code <<-EOH
-        bundle exec rake sunspot:solr:start
-      EOH
     end
   end
 
