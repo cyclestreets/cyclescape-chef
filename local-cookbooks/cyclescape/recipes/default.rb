@@ -263,6 +263,16 @@ deploy_revision deploy_dir do
       EOH
       only_if { node['cyclescape']['environment'] == 'production' }
     end
+
+    script 'Reindex serach' do
+      interpreter 'bash'
+      cwd release_path
+      user new_resource.user
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
+      code <<-EOH
+        bundle exec rake sunspot:reindex
+      EOH
+    end
   end
 
   migrate true
