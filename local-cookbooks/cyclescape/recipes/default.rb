@@ -263,7 +263,9 @@ deploy_revision deploy_dir do
       EOH
       only_if { node['cyclescape']['environment'] == 'production' }
     end
+  end
 
+  after_restart do
     script 'Reindex serach' do
       interpreter 'bash'
       cwd release_path
