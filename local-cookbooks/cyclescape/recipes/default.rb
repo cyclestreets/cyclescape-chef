@@ -265,7 +265,7 @@ deploy_revision deploy_dir do
       user new_resource.user
       environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
-        sleep 30 && bundle exec rake sunspot:reindex
+        sleep 1m && bundle exec rake sunspot:reindex
       EOH
     end
   end
