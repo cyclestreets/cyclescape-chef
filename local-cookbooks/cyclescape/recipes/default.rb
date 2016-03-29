@@ -107,7 +107,7 @@ template deploy_dir + '/shared/config/mailboxes.yml' do
   )
 end
 
-api_keys = %w(rollbar akismet)
+api_keys = %w(rollbar akismet cyclestreets)
 api_keys.each do |key|
   template deploy_dir + "/shared/config/#{key}" do
     source 'api-key.yml'
@@ -192,13 +192,6 @@ deploy_revision deploy_dir do
         user running_deploy_user
         code "bundle exec rake secret > #{shared_config}/#{secret}"
         not_if "test -e #{shared_config}/#{secret}"
-      end
-
-      # Link API keys
-      api_keys.each do |key|
-        link current_release_directory + "/config/#{key}" do
-          to shared_config + "/#{key}"
-        end
       end
 
       link current_release_directory + "/config/#{secret}" do
