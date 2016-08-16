@@ -42,6 +42,10 @@ package 'heirloom-mailx'
 # installed manually in order to acquire the cookbooks, as per README
 package 'git'
 
+# To install the JavaScript
+package 'npm'
+package 'nodejs-legacy'
+
 apache_module 'rewrite'
 if node['platform'] == 'ubuntu' && node['platform_version'] == '14.04'
   apache_module 'socache_shmcb'
@@ -157,12 +161,10 @@ deploy_revision deploy_dir do
 
     # The symlink_before_default does this, but annoyingly comes after before_migrate is called
     # That way, db:create fails. So do it manually instead...
-    link current_release_directory + '/config/database.yml' do
-      to shared_config + '/database.yml'
-    end
-
-    link current_release_directory + '/config/mailboxes.yml' do
-      to shared_config + '/mailboxes.yml'
+    (api_keys + %w(database.yml mailboxes.yml)).each do |config|
+      link File.join(current_release_directory, "config", config) do
+        to File.join(shared_config, config)
+      end
     end
 
     # Things for the dragonfly gem
@@ -172,14 +174,15 @@ deploy_revision deploy_dir do
       group 'cyclescape'
     end
 
-    link current_release_directory + '/tmp/dragonfly' do
-      to shared_directory + '/tmp/dragonfly'
+    directory File.join(shared_directory, "node_modules") do
+      action :create
+      owner 'cyclescape'
+      group 'cyclescape'
     end
 
-    # Link API keys
-    api_keys.each do |key|
-      link current_release_directory + "/config/#{key}" do
-        to shared_config + "/#{key}"
+    ["node_modules", File.join(%w(tmp dragonfly))].each do |dir|
+      link File.join(current_release_directory, dir) do
+        to File.join(shared_directory, dir)
       end
     end
 
@@ -210,6 +213,16 @@ deploy_revision deploy_dir do
       not_if %q(test -n "`sudo -u postgres psql template1 -A -t -c '\l' | grep cyclescape_production`")
     end
 
+    script 'Install npm modules' do
+      interpreter 'bash'
+      cwd current_release_directory
+      user running_deploy_user
+      environment NPM_CONFIG_CACHE: "../../shared/npm/cache",
+        NPM_CONFIG_TMP: "../../shared/npm/tmp"
+      code "npm install"
+      only_if "test -e package.json"
+    end
+
     script 'Compile the assets' do
       interpreter 'bash'
       cwd current_release_directory
@@ -227,9 +240,7 @@ deploy_revision deploy_dir do
       cwd release_path
       user new_resource.user
       environment 'RAILS_ENV' => node['cyclescape']['environment']
-      code <<-EOH
-        bundle exec rake db:seed
-      EOH
+      code "bundle exec rake db:seed"
     end
 
     # use foreman to create upstart files.
