@@ -220,7 +220,7 @@ deploy_revision deploy_dir do
       environment NPM_CONFIG_CACHE: "../../shared/npm/cache",
         NPM_CONFIG_TMP: "../../shared/npm/tmp"
       code "npm install"
-      only_if "test -e package.json"
+      only_if { File.exists?('package.json') }
     end
 
     script 'Compile the assets' do
