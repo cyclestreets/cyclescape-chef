@@ -217,10 +217,12 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment NPM_CONFIG_CACHE: "../../shared/npm/cache",
-        NPM_CONFIG_TMP: "../../shared/npm/tmp"
+      environment "NPM_CONFIG_CACHE" => "../../shared/npm/cache",
+        "NPM_CONFIG_TMP" => "../../shared/npm/tmp"
       code "npm install"
-      only_if { File.exists?('package.json') }
+      only_if do
+        File.exists?(File.join(current_release_directory, 'package.json'))
+      end
     end
 
     script 'Compile the assets' do
