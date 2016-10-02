@@ -9,3 +9,23 @@ openssl dgst -md5 <%= @shared_filename %> > <%= @shared_filename + ".md5" %>
 # Back up the database
 pg_dump <%= @database %> -Z 1 -f <%= @dbdump_filename %>
 openssl dgst -md5 <%= @dbdump_filename %> > <%= @dbdump_filename + ".md5" %>
+
+# Create an Anonymous version
+<% backupdb = "#{@database}_backup_#{Time.now.to_i} %>
+createdb <%= backupdb %>
+
+psql <%= backupdb %> < <%= @dbdump_filename %>
+psql -d <%= backupdb %> -c <<SQL
+UPDATE users SET full_name = CONCAT('someone+', id),
+                 email = CONCAT('someone+', id, '@example.com'),
+                 confirmation_token = NULL,
+                 reset_password_token = NULL,
+                 last_seen_at = NULL,
+                 public_token = CONCAT('token', id)
+             WHERE NOT role = 'admin'
+SQL
+
+pg_dump <%= backupdb %> -Z 1 -f <%= "anon.#{@dbdump_filename}" %>
+openssl dgst -md5 <%= "anon.#{@dbdump_filename}" %> > <%= "anon.#{@dbdump_filename}.md5"" %>
+
+dropdb <%= backupdb %>
