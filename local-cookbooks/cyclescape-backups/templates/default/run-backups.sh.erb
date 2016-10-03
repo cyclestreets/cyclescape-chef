@@ -11,7 +11,7 @@ pg_dump <%= @database %> -Z 1 -f <%= @dbdump_filename %>
 openssl dgst -md5 <%= @dbdump_filename %> > <%= @dbdump_filename + ".md5" %>
 
 # Create an Anonymous version
-<% backupdb = "#{@database}_backup_#{Time.now.to_i} %>
+<% backupdb = "#{@database}_backup_#{Time.now.to_i}" %>
 createdb <%= backupdb %>
 
 psql <%= backupdb %> < <%= @dbdump_filename %>
@@ -26,6 +26,6 @@ UPDATE users SET full_name = CONCAT('someone+', id),
 SQL
 
 pg_dump <%= backupdb %> -Z 1 -f <%= "anon.#{@dbdump_filename}" %>
-openssl dgst -md5 <%= "anon.#{@dbdump_filename}" %> > <%= "anon.#{@dbdump_filename}.md5"" %>
+openssl dgst -md5 <%= "anon.#{@dbdump_filename}" %> > <%= "anon.#{@dbdump_filename}.md5" %>
 
 dropdb <%= backupdb %>
