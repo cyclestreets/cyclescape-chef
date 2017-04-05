@@ -11,6 +11,10 @@ include_recipe 'postgres'
 include_recipe 'ntp'
 include_recipe 'java'
 include_recipe 'brightbox-ruby::default'
+gem_package 'rack' do
+  action :install
+  version "1.6.0"
+end
 include_recipe 'passenger_apache2'
 include_recipe 'postfix'
 include_recipe 'cyclescape-user'
