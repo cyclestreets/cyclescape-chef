@@ -16,7 +16,7 @@ DEPENDENCIES
     path: local-cookbooks/munin-plugins-rails
   ntp
     path: local-cookbooks/ntp
-  passenger_apache2 (~> 2.3.0)
+  passenger_apache2 (~> 3.0.1)
   postfix
     path: local-cookbooks/postfix
   postgres
@@ -59,7 +59,7 @@ GRAPH
   munin (0.0.1)
   munin-plugins-rails (0.0.1)
   ntp (0.0.1)
-  passenger_apache2 (2.3.0)
+  passenger_apache2 (3.0.1)
     apache2 (>= 2.0)
     build-essential (>= 0.0.0)
   poise (2.4.0)

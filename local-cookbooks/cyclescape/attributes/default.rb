@@ -12,12 +12,10 @@ default['firewall']['rules'] = [
 
 default['apache']['listen_ports'] = %w(80 443)
 default['passenger']['ruby_bin'] = "/usr/bin/ruby#{default['brightbox-ruby']['version']}"
-default['passenger']['version'] = '5.0.20'
+default['passenger']['version'] = '5.1.3'
 default['passenger']['root_path'] = "#{languages['ruby']['gems_dir']}/gems/passenger-#{node['passenger']['version']}"
 default['brightbox-ruby']['install_ruby_switch'] = true
 default['brightbox-ruby']['rubygems_version'] = '2.5.1'
 default['java']['jdk_version'] = 7
 
-default['apache']['prefork']['startservers'] = 5
-default['apache']['prefork']['minspareservers'] = 5
-default['apache']['prefork']['maxspareservers'] = 8
+default['apache']['prefork']['startservers'] = 4
