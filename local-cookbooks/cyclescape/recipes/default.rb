@@ -241,11 +241,13 @@ deploy_revision deploy_dir do
   end
 
   before_restart do
+    bundler_depot = new_resource.shared_path + '/bundle'
+
     script 'Update seed data' do
       interpreter 'bash'
       cwd release_path
       user new_resource.user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
+      environment 'RAILS_ENV' => node['cyclescape']['environment'], 'HOME' => bundler_depot
       code "bundle exec rake db:seed"
     end
 
@@ -268,6 +270,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd release_path
       user new_resource.user
+      environment 'HOME' => bundler_depot
       code <<-EOH
         bundle exec whenever -i cyclescape_app --update-crontab
       EOH
@@ -276,11 +279,14 @@ deploy_revision deploy_dir do
   end
 
   after_restart do
+    bundler_depot = new_resource.shared_path + '/bundle'
+
     script 'Reindex serach' do
       interpreter 'bash'
       cwd release_path
       user new_resource.user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
+      environment 'RAILS_ENV' => node['cyclescape']['environment'], 'HOME' => bundler_depot
+
       code <<-EOH
         sleep 1m && bundle exec rake sunspot:reindex
       EOH
