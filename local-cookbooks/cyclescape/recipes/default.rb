@@ -281,7 +281,7 @@ deploy_revision deploy_dir do
   after_restart do
     bundler_depot = new_resource.shared_path + '/bundle'
 
-    script 'Reindex serach' do
+    script 'Reindex search' do
       interpreter 'bash'
       cwd release_path
       user new_resource.user
