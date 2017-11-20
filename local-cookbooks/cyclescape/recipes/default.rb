@@ -129,6 +129,7 @@ end
 deploy_branch = (node['cyclescape']['environment'] == 'staging') ? 'staging' : 'master'
 
 deploy_revision deploy_dir do
+  bundler_depot = shared_path + '/bundle'
   repo 'https://github.com/cyclestreets/cyclescape.git'
   revision deploy_branch
   user 'cyclescape'
@@ -137,7 +138,6 @@ deploy_revision deploy_dir do
     current_release_directory = release_path
     shared_directory = new_resource.shared_path
     running_deploy_user = new_resource.user
-    bundler_depot = new_resource.shared_path + '/bundle'
     shared_config = new_resource.shared_path + '/config'
     excluded_groups = %w(development test)
 
@@ -243,8 +243,6 @@ deploy_revision deploy_dir do
   end
 
   before_restart do
-    bundler_depot = new_resource.shared_path + '/bundle'
-
     script 'Update seed data' do
       interpreter 'bash'
       cwd release_path
@@ -282,8 +280,6 @@ deploy_revision deploy_dir do
   end
 
   after_restart do
-    bundler_depot = new_resource.shared_path + '/bundle'
-
     script 'Reindex search' do
       interpreter 'bash'
       cwd release_path
