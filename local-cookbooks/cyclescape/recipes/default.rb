@@ -158,6 +158,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
+      environment 'HOME' => bundler_depot
       code <<-EOH
         bundle exec whenever --clear-crontab cyclescape_app
       EOH
@@ -197,6 +198,7 @@ deploy_revision deploy_dir do
         interpreter 'bash'
         cwd current_release_directory
         user running_deploy_user
+        environment 'HOME' => bundler_depot
         code "bundle exec rake secret > #{shared_config}/#{secret}"
         not_if "test -e #{shared_config}/#{secret}"
       end
@@ -210,7 +212,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
+      environment 'RAILS_ENV' => node['cyclescape']['environment'], 'HOME' => bundler_depot
       code <<-EOH
         bundle exec rake db:create
       EOH
@@ -233,7 +235,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
+      environment 'RAILS_ENV' => node['cyclescape']['environment'], 'HOME' => bundler_depot
       code <<-EOH
         bundle exec rake assets:precompile
       EOH
@@ -255,6 +257,7 @@ deploy_revision deploy_dir do
     script 'Update foreman configuration' do
       interpreter 'bash'
       cwd release_path
+      environment 'HOME' => bundler_depot
       code <<-EOH
         bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env.#{node['cyclescape']['environment']}
       EOH
@@ -295,7 +298,7 @@ deploy_revision deploy_dir do
 
   migrate true
   migration_command 'bundle exec rake db:migrate'
-  environment 'RAILS_ENV' => node['cyclescape']['environment']
+  environment 'RAILS_ENV' => node['cyclescape']['environment'], 'HOME' => bundler_depot
   action :deploy
   restart_command 'touch tmp/restart.txt'
   # restart_command 'passenger-config restart-app /'
