@@ -25,7 +25,7 @@ UPDATE users SET full_name = CONCAT('someone+', id),
              WHERE NOT role = 'admin'
 SQL
 
-pg_dump <%= backupdb %> -Z 1 -f <%= "anon.#{@dbdump_filename}" %>
-openssl dgst -md5 <%= "anon.#{@dbdump_filename}" %> > <%= "anon.#{@dbdump_filename}.md5" %>
+pg_dump <%= backupdb %> -Z 1 -f <%= @anon_dbdump_filename %>
+openssl dgst -md5 <%= @anon_dbdump_filename %> > <%= "#{@anon_dbdump_filename}.md5" %>
 
 dropdb <%= backupdb %>

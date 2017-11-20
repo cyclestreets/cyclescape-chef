@@ -7,6 +7,7 @@
 backup_directory = '/websites/cyclescape/backup'
 shared = 'cyclescapeShared.tar.bz2'
 dbdump = 'cyclescapeDB.sql.gz'
+anon_dbdump = 'cyclescapeDB.anon.sql.gz'
 database = 'cyclescape_production'
 
 directory backup_directory do
@@ -26,6 +27,7 @@ template 'backup script' do
     backup_directory: backup_directory,
     shared_filename: File.join(backup_directory, shared),
     dbdump_filename: File.join(backup_directory, dbdump),
+    anon_dbdump_filename: File.join(backup_directory, anon_dbdump),
     database: database
   )
 end
