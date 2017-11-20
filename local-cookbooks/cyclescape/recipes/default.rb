@@ -146,7 +146,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment 'LC_ALL' => 'en_GB.UTF-8', 'HOME' => bundler_depot
+      environment 'LC_ALL' => 'en_GB.UTF-8', 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
       code <<-EOS
         bundle install --quiet --deployment --path #{bundler_depot} \
         --without #{excluded_groups.join(' ')}
