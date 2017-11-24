@@ -7,4 +7,6 @@
 user 'cyclescape' do
   action :create
   shell '/bin/bash'
+  home '/home/cyclescape'
+  manage_home true
 end

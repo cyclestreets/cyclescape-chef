@@ -129,7 +129,6 @@ end
 deploy_branch = (node['cyclescape']['environment'] == 'staging') ? 'staging' : 'master'
 
 deploy_revision deploy_dir do
-  bundler_depot = shared_path + '/bundle'
   repo 'https://github.com/cyclestreets/cyclescape.git'
   revision deploy_branch
   user 'cyclescape'
@@ -146,9 +145,9 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment 'LC_ALL' => 'en_GB.UTF-8', 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
+      environment 'LC_ALL' => 'en_GB.UTF-8'
       code <<-EOS
-        bundle install --quiet --deployment --path #{bundler_depot} \
+        bundle install --quiet --deployment\
         --without #{excluded_groups.join(' ')}
       EOS
     end
@@ -158,7 +157,6 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
       code <<-EOH
         bundle exec whenever --clear-crontab cyclescape_app
       EOH
@@ -198,7 +196,6 @@ deploy_revision deploy_dir do
         interpreter 'bash'
         cwd current_release_directory
         user running_deploy_user
-        environment 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
         code "bundle exec rake secret > #{shared_config}/#{secret}"
         not_if "test -e #{shared_config}/#{secret}"
       end
@@ -212,7 +209,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment 'RAILS_ENV' => node['cyclescape']['environment'], 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
         bundle exec rake db:create
       EOH
@@ -235,7 +232,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment 'RAILS_ENV' => node['cyclescape']['environment'], 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
         bundle exec rake assets:precompile
       EOH
@@ -247,7 +244,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd release_path
       user new_resource.user
-      environment 'RAILS_ENV' => node['cyclescape']['environment'], 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code "bundle exec rake db:seed"
     end
 
@@ -256,7 +253,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd release_path
       code <<-EOH
-        echo "RAILS_ENV=#{node['cyclescape']['environment']}\nHOME=#{bundler_depot}\nBUNDLE_GITHUB__HTTPS=true" > .env
+        echo "RAILS_ENV=#{node['cyclescape']['environment']}" > .env
       EOH
     end
 
@@ -264,7 +261,6 @@ deploy_revision deploy_dir do
     script 'Update foreman configuration' do
       interpreter 'bash'
       cwd release_path
-      environment 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
       code <<-EOH
         bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env
       EOH
@@ -280,7 +276,6 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd release_path
       user new_resource.user
-      environment 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
       code <<-EOH
         bundle exec whenever -i cyclescape_app --update-crontab
       EOH
@@ -293,7 +288,7 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd release_path
       user new_resource.user
-      environment 'RAILS_ENV' => node['cyclescape']['environment'], 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
 
       code <<-EOH
         sleep 1m && bundle exec rake sunspot:reindex
@@ -303,7 +298,7 @@ deploy_revision deploy_dir do
 
   migrate true
   migration_command 'bundle exec rake db:migrate'
-  environment 'RAILS_ENV' => node['cyclescape']['environment'], 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
+  environment 'RAILS_ENV' => node['cyclescape']['environment']
   action :deploy
   restart_command 'touch tmp/restart.txt'
   # restart_command 'passenger-config restart-app /'
