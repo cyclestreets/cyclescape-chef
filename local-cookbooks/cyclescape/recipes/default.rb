@@ -251,13 +251,22 @@ deploy_revision deploy_dir do
       code "bundle exec rake db:seed"
     end
 
+    # Create the server ENV
+    script 'Update foreman configuration' do
+      interpreter 'bash'
+      cwd release_path
+      code <<-EOH
+        echo "RAILS_ENV=#{node['cyclescape']['environment']}\nHOME=#{bundler_depot}\nBUNDLE_GITHUB__HTTPS=true" > .env
+      EOH
+    end
+
     # use foreman to create upstart files.
     script 'Update foreman configuration' do
       interpreter 'bash'
       cwd release_path
       environment 'HOME' => bundler_depot, 'BUNDLE_GITHUB__HTTPS' => 'true'
       code <<-EOH
-        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env.#{node['cyclescape']['environment']}
+        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env
       EOH
       notifies :restart, 'service[cyclescape]'
     end
