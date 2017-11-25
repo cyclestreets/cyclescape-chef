@@ -19,5 +19,5 @@ default['java']['jdk_version'] = 7
 
 default['apache']['prefork']['startservers'] = 4
 default['passenger']['ruby_bin'] = "/usr/bin/ruby#{default['brightbox-ruby']['version']}"
-default['passenger']['version'] = '5.1.3'
+default['passenger']['version'] = '5.1.11'
 default['passenger']['root_path'] = "#{languages['ruby']['gems_dir']}/gems/passenger-#{node['passenger']['version']}"
