@@ -136,6 +136,7 @@ deploy_revision deploy_dir do
   before_migrate do
     current_release_directory = release_path
     shared_directory = new_resource.shared_path
+    bundler_depot = shared_path + '/bundle'
     running_deploy_user = new_resource.user
     shared_config = new_resource.shared_path + '/config'
     excluded_groups = %w(development test)
@@ -147,7 +148,7 @@ deploy_revision deploy_dir do
       user running_deploy_user
       environment 'LC_ALL' => 'en_GB.UTF-8'
       code <<-EOS
-        bundle install --quiet --deployment\
+        bundle install --quiet --deployment --path #{bundler_depot}\
         --without #{excluded_groups.join(' ')}
       EOS
     end
