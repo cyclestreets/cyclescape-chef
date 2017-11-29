@@ -133,6 +133,7 @@ deploy_revision deploy_dir do
   revision deploy_branch
   user 'cyclescape'
   group 'cyclescape'
+  environment 'HOME' => deploy_dir + "/shared/bundle"
   before_migrate do
     current_release_directory = release_path
     shared_directory = new_resource.shared_path
