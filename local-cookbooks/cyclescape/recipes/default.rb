@@ -150,7 +150,7 @@ deploy_revision deploy_dir do
       environment 'LC_ALL' => 'en_GB.UTF-8', 'HOME' => bundler_depot
       code <<-EOS
         HOME=#{bundler_depot} BUNDLE_PATH=#{bundler_depot}
-        bundle install --quiet --deployment --path #{bundler_depot}\
+        bundle install --verbose --deployment --path #{bundler_depot}\
         --without #{excluded_groups.join(' ')}
       EOS
     end
