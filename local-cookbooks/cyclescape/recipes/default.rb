@@ -61,6 +61,7 @@ apache_module 'headers'
 # We can install bundler with the ubuntu version of gem ...
 gem_package 'bundler' do
   action :install
+  version "1.16.0"
 end
 
 # Install a very old version of nodejs
@@ -134,7 +135,7 @@ deploy_revision deploy_dir do
   revision deploy_branch
   user 'cyclescape'
   group 'cyclescape'
-  environment 'HOME' => deploy_dir + "/shared/bundle"
+  environment 'HOME' => bundler_depot
   before_migrate do
     current_release_directory = release_path
     shared_directory = new_resource.shared_path
