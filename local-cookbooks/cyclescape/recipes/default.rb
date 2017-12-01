@@ -135,7 +135,6 @@ deploy_revision deploy_dir do
   revision deploy_branch
   user 'cyclescape'
   group 'cyclescape'
-  environment 'HOME' => bundler_depot
   before_migrate do
     current_release_directory = release_path
     shared_directory = new_resource.shared_path
@@ -150,6 +149,7 @@ deploy_revision deploy_dir do
       user running_deploy_user
       environment 'LC_ALL' => 'en_GB.UTF-8', 'HOME' => bundler_depot
       code <<-EOS
+        HOME=#{bundler_depot} BUNDLE_PATH=#{bundler_depot}
         bundle install --quiet --deployment --path #{bundler_depot}\
         --without #{excluded_groups.join(' ')}
       EOS
