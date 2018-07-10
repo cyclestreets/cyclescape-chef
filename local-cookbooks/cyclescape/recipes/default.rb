@@ -22,6 +22,7 @@ include_recipe 'cyclescape-user'
 include_recipe 'cyclescape-backups'
 include_recipe 'ufw'
 include_recipe 'munin-plugins-rails'
+include_recipe 'nodejs'
 
 # Geos dev package for RGeo gem
 package 'libgeos-dev'
@@ -47,10 +48,6 @@ package 'heirloom-mailx'
 # installed manually in order to acquire the cookbooks, as per README
 package 'git'
 
-# To install the JavaScript
-package 'npm'
-package 'nodejs-legacy'
-
 apache_module 'rewrite'
 if node['platform'] == 'ubuntu' && node['platform_version'] == '14.04'
   apache_module 'socache_shmcb'
@@ -64,9 +61,6 @@ gem_package 'bundler' do
   action :install
   version "1.16.0"
 end
-
-# Install a very old version of nodejs
-package 'nodejs'
 
 # Create the database user. For now, it's a superuser.
 script 'create cyclescape db user' do

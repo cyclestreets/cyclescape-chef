@@ -14,6 +14,7 @@ DEPENDENCIES
     path: local-cookbooks/munin
   munin-plugins-rails
     path: local-cookbooks/munin-plugins-rails
+  nodejs (~> 5.0.0)
   ntp
     path: local-cookbooks/ntp
   passenger_apache2 (~> 3.0.1)
@@ -30,6 +31,10 @@ GRAPH
     iptables (>= 0.0.0)
     logrotate (>= 0.0.0)
   apt (2.8.2)
+  ark (3.1.0)
+    build-essential (>= 0.0.0)
+    seven_zip (>= 0.0.0)
+    windows (>= 0.0.0)
   brightbox-ruby (1.2.2)
     apt (>= 0.0.0)
   build-essential (1.0.2)
@@ -56,6 +61,9 @@ GRAPH
   logrotate (2.2.0)
   munin (0.0.1)
   munin-plugins-rails (0.0.1)
+  nodejs (5.0.0)
+    ark (>= 2.0.2)
+    build-essential (>= 0.0.0)
   ntp (0.0.1)
   passenger_apache2 (3.0.1)
     apache2 (>= 2.0)
@@ -63,6 +71,9 @@ GRAPH
   poise (2.8.1)
   postfix (0.0.1)
   postgres (0.0.1)
+  seven_zip (3.0.0)
+    windows (>= 0.0.0)
   ssl (0.0.1)
   ufw (0.7.4)
     firewall (>= 0.9.0)
+  windows (4.3.3)
