@@ -22,7 +22,7 @@ include_recipe 'cyclescape-user'
 include_recipe 'cyclescape-backups'
 include_recipe 'ufw'
 include_recipe 'munin-plugins-rails'
-include_recipe 'nodejs'
+include_recipe 'nodejs::npm'
 
 # Geos dev package for RGeo gem
 package 'libgeos-dev'

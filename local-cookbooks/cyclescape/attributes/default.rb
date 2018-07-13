@@ -22,3 +22,5 @@ default['passenger']['ruby_bin'] = "/usr/bin/ruby#{default['brightbox-ruby']['ve
 default['passenger']['version'] = '5.1.11'
 default['passenger']['root_path'] = "#{languages['ruby']['gems_dir']}/gems/passenger-#{node['passenger']['version']}"
 default['nodejs']['version'] = '6.10.2'
+default['nodejs']['source']['checksum'] = '9b897dd6604d50ae5fff25fd14b1c4035462d0598735799e0cfb4f17cb6e0d19'
+default['nodejs']['install_repo'] = true
