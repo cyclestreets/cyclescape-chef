@@ -22,6 +22,16 @@ Now, we need to install chef development kit can (full details from https://down
     wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.10.0-1_amd64.deb
     sudo dpkg -i chefdk_0.10.0-1_amd64.deb
 
+To test on a development machine this it is possible to use vagrant with VirtualBox
+
+```sh
+sudo apt install vagrant virtualbox-5.1
+vagrant plugin install vagrant-berkshelf
+vagrant up
+```
+
+Note on debian https://wiki.debian.org/VirtualBox#Installation_of_non-free_edition
+
 # Databags
 
 If you are running this recipe with chef-solo, you need to
