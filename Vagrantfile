@@ -79,7 +79,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cyclescape: {environment: "staging"}
     }
     chef.data_bags_path = 'data-bags'
-    chef.version = "12.21.20"
+    chef.version = "12.5.1"
 
     chef.run_list = [
       'recipe[cyclescape]', 'recipe[munin]'

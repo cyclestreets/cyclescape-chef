@@ -46,6 +46,7 @@ GRAPH
     cyclescape-user (>= 0.0.0)
     java (>= 0.0.0)
     munin-plugins-rails (>= 0.0.0)
+    nodejs (>= 0.0.0)
     ntp (>= 0.0.0)
     passenger_apache2 (>= 0.0.0)
     postfix (>= 0.0.0)
