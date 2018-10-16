@@ -90,7 +90,7 @@ shared_dir = File.join(deploy_dir, 'shared')
 end
 
 template deploy_dir + '/shared/config/database.yml' do
-  source 'database.example.yml'
+  source 'database.yml.erb'
   owner 'cyclescape'
   group 'cyclescape'
   mode '0644'
@@ -100,7 +100,7 @@ end
 mb = data_bag_item('secrets', 'mailbox')
 
 template deploy_dir + '/shared/config/mailboxes.yml' do
-  source 'mailboxes.example.yml'
+  source 'mailboxes.yml.erb'
   owner 'cyclescape'
   group 'cyclescape'
   mode '0400'
@@ -114,12 +114,25 @@ end
 api_keys = %w(rollbar akismet cyclestreets)
 api_keys.each do |key|
   template deploy_dir + "/shared/config/#{key}" do
-    source 'api-key.yml'
+    source 'api-key.erb'
     owner 'cyclescape'
     group 'cyclescape'
     mode '0400'
     variables(api_key: data_bag_item('secrets', 'keys')[key])
   end
+end
+
+schedule_bag = data_bag_item('secrets', 'i18n')
+template deploy_dir + "/shared/config/schedule.yml" do
+  source "schedule.yml.erb"
+  owner 'cyclescape'
+  group 'cyclescape'
+  mode '0400'
+  variables(
+    error_email: schedule_bag["error_email"],
+    home: schedule_bag["home"],
+    path: schedule_bag["path"]
+  )
 end
 
 deploy_branch = (node['cyclescape']['environment'] == 'staging') ? 'staging' : 'master'
