@@ -24,6 +24,12 @@ include_recipe 'ufw'
 include_recipe 'munin-plugins-rails'
 include_recipe 'nodejs::npm'
 
+node.default['letsencrypt']['error_email'] = data_bag_item("secrets", "i18n")["error_email"]
+node.default['letsencrypt']['domain_names'] = [data_bag_item('secrets', 'dns')["domain_name"]]
+node.default['letsencrypt']['domain_names_and_passwords'] = [data_bag_item('secrets', 'dns')["domain_name"] => data_bag_item('secrets', 'dns')["dns_api_password"]]
+
+include_recipe 'letsencrypt'
+
 # Geos dev package for RGeo gem
 package 'libgeos-dev'
 
