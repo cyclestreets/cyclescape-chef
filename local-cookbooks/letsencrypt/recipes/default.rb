@@ -6,9 +6,9 @@
 
 include_recipe 'apt'
 
-remote_file 'dehydrated.deb' do
+remote_file File.join(node['letsencrypt']['working_dir'], 'dehydrated.deb') do
   source 'http://archive.ubuntu.com/ubuntu/pool/universe/d/dehydrated/dehydrated_0.4.0-2_all.deb'
-  action :create
+  action :create_if_missing
 end
 
 dpkg_package 'dehydrated' do

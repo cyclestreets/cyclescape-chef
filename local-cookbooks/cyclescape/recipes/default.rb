@@ -24,9 +24,12 @@ include_recipe 'ufw'
 include_recipe 'munin-plugins-rails'
 include_recipe 'nodejs::npm'
 
+deploy_dir = '/var/www/cyclescape'
+shared_dir = File.join(deploy_dir, 'shared')
 node.default['letsencrypt']['error_email'] = data_bag_item("secrets", "i18n")["error_email"]
 node.default['letsencrypt']['domain_names'] = [data_bag_item('secrets', 'dns')["domain_name"]]
 node.default['letsencrypt']['domain_names_and_passwords'] = [data_bag_item('secrets', 'dns')["domain_name"] => data_bag_item('secrets', 'dns')["dns_api_password"]]
+node.default['letsencrypt']['working_dir'] = shared_dir
 
 include_recipe 'letsencrypt'
 
@@ -79,9 +82,6 @@ script 'create cyclescape db user' do
   EOH
   not_if %q(test -n "`sudo -u postgres psql template1 -A -t -c '\du cyclescape'`") # Mmm, hacky
 end
-
-deploy_dir = '/var/www/cyclescape'
-shared_dir = File.join(deploy_dir, 'shared')
 
 [
   deploy_dir, shared_dir,
