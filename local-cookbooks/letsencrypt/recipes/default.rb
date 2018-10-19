@@ -64,6 +64,15 @@ file "/etc/cron.daily/dehydrated" do
   content <<-BASH
 #!/bin/sh
 exec /usr/bin/dehydrated -c >>/var/log/dehydrated-cron.log 2>&1
+
+# Find any pem files changed in the last 30 mins
+CHANGED=`find /etc/letsencrypt/live/cyclescape.org -mmin -30 -name "*.pem" -ls`
+
+# If changed files is not empty then symlink over and update apache
+if [[ ! -z $CHANGED ]]; then
+ln -sf /etc/letsencrypt/live/cyclescape.org/* /etc/apache2/ssl/
+/etc/init.d/apache2 reload
+fi
   BASH
   mode '0755'
 end
