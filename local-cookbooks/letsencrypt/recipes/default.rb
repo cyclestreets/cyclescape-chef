@@ -7,8 +7,12 @@
 include_recipe 'apt'
 
 remote_file File.join(node['letsencrypt']['working_dir'], 'dehydrated.deb') do
-  source 'http://archive.ubuntu.com/ubuntu/pool/universe/d/dehydrated/dehydrated_0.4.0-2_all.deb'
+  source 'http://archive.ubuntu.com/ubuntu/pool/universe/d/dehydrated/dehydrated_0.6.1-2_all.deb'
   action :create_if_missing
+end
+
+package 'dpkg' do
+  action :upgrade
 end
 
 dpkg_package 'dehydrated' do
@@ -28,7 +32,7 @@ end
 file '/etc/dehydrated/domains.txt' do
   owner 'root'
   group 'root'
-  content node["letsencrypt"]["domain_names"].join(" ")
+  content node["letsencrypt"]["domain_names"].map { |domain| "*.#{domain} > domain" }.join("\n")
 end
 
 file '/etc/dehydrated/dnsapi.config.txt' do
@@ -58,6 +62,15 @@ CONTACT_EMAIL=#{node["letsencrypt"]["error_email"]}
   BASH
 end
 
+script 'Accept TOS' do
+  interpreter 'bash'
+  code <<-EOS
+    dehydrated --register --accept-terms
+  EOS
+end
+
+dehydrated_cert = "/var/lib/dehydrated/certs"
+
 file "/etc/cron.daily/dehydrated" do
   owner 'root'
   group 'root'
@@ -66,11 +79,11 @@ file "/etc/cron.daily/dehydrated" do
 exec /usr/bin/dehydrated -c >>/var/log/dehydrated-cron.log 2>&1
 
 # Find any pem files changed in the last 30 mins
-CHANGED=`find /etc/letsencrypt/live/cyclescape.org -mmin -30 -name "*.pem" -ls`
+CHANGED=`find #{File.join(dehydrated_cert, "cyclescape.org")} -mmin -30 -name "*.pem" -ls`
 
 # If changed files is not empty then symlink over and update apache
 if [[ ! -z $CHANGED ]]; then
-ln -sf /etc/letsencrypt/live/cyclescape.org/* /etc/apache2/ssl/
+ln -sf #{File.join(dehydrated_cert, "cyclescape.org", "*")} /etc/apache2/ssl/
 /etc/init.d/apache2 reload
 fi
   BASH
