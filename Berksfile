@@ -10,7 +10,7 @@ cookbook 'passenger_apache2', '~> 3.0.1'
 cookbook 'nodejs', '~> 5.0.0'
 
 local_cookbooks = %w(cyclescape cyclescape-backups cyclescape-user munin-plugins-rails
-munin ntp postfix postgres ssl)
+munin ntp postfix postgres ssl letsencrypt)
 local_cookbooks.each do |local_cookbook|
   cookbook local_cookbook, path: "local-cookbooks/#{local_cookbook}"
 end
