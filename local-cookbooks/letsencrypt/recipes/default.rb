@@ -40,7 +40,7 @@ file '/etc/dehydrated/dnsapi.config.txt' do
   group 'root'
   mode '0400'
   content(
-    node["letsencrypt"]["domain_names_and_passwords"].map { |hsh| hsh.to_a.join(" ") }.join("\n")
+    node["letsencrypt"]["domain_names_and_passwords"].map { |hsh| hsh.to_a.join(" ") }.join("\n") + "\n"
   )
 end
 
