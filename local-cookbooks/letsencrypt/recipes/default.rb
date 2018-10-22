@@ -32,7 +32,7 @@ end
 file '/etc/dehydrated/domains.txt' do
   owner 'root'
   group 'root'
-  content node["letsencrypt"]["domain_names"].map { |domain| "*.#{domain} > domain" }.join("\n")
+  content node["letsencrypt"]["domain_names"].map { |domain| "*.#{domain} > #{domain}" }.join("\n")
 end
 
 file '/etc/dehydrated/dnsapi.config.txt' do
