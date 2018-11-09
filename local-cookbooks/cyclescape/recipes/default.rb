@@ -35,6 +35,7 @@ include_recipe 'letsencrypt'
 
 # Geos dev package for RGeo gem
 package 'libgeos-dev'
+package 'apache2-utils'
 
 if node['platform'] == 'ubuntu' && node['platform_version'] == '14.04'
   ['/usr/lib/libgeos.so', '/usr/lib/libgeos.so.1'].each do |t|
@@ -319,6 +320,13 @@ deploy_revision deploy_dir do
   action :deploy
   restart_command 'touch tmp/restart.txt'
   # restart_command 'passenger-config restart-app /'
+end
+
+script 'create cyclescape db user' do
+  interpreter 'bash'
+  code <<-EOH
+    htpasswd -bc /etc/apache2/passwords staginguser staging
+  EOH
 end
 
 # sort out the virtual hosts, with delayed reloading of apache2
