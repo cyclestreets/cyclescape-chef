@@ -1,4 +1,4 @@
 {
-  "cyclescape": {"environment": "staging"},
+  "cyclescape": {"environment": "staging", "server_name": "staging.cyclescape.org"},
   "run_list": [ "recipe[cyclescape]", "recipe[munin]" ]
 }

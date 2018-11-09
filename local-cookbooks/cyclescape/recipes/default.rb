@@ -27,7 +27,7 @@ include_recipe 'nodejs::npm'
 deploy_dir = '/var/www/cyclescape'
 shared_dir = File.join(deploy_dir, 'shared')
 node.default['letsencrypt']['error_email'] = data_bag_item("secrets", "i18n")["error_email"]
-node.default['letsencrypt']['domain_names'] = [data_bag_item('secrets', 'dns')["domain_name"]]
+node.default['letsencrypt']['domain_names'] = [node['cyclescape']['server_name']]
 node.default['letsencrypt']['domain_names_and_passwords'] = [data_bag_item('secrets', 'dns')["domain_name"] => data_bag_item('secrets', 'dns')["dns_api_password"]]
 node.default['letsencrypt']['working_dir'] = shared_dir
 
@@ -333,7 +333,10 @@ template '/etc/apache2/sites-available/cyclescape.conf' do
   owner 'www-data'
   group 'www-data'
   mode '0644'
-  variables environment: node['cyclescape']['environment']
+  variables(
+    environment: node['cyclescape']['environment'],
+    server_name: node['cyclescape']['server_name']
+  )
   notifies :reload, 'service[apache2]'
 end
 

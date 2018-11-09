@@ -1,4 +1,4 @@
 {
-  "cyclescape": {"environment": "production"},
+  "cyclescape": {"environment": "production", "server_name": "cyclescape.org"},
   "run_list": [ "recipe[cyclescape]", "recipe[munin]" ]
 }
