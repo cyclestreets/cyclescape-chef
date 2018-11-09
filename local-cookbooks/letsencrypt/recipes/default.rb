@@ -70,21 +70,26 @@ script 'Accept TOS' do
 end
 
 dehydrated_cert = "/var/lib/dehydrated/certs"
+dehydrated_log = "/var/log/dehydrated-cron.log"
 
 file "/etc/cron.daily/dehydrated" do
   owner 'root'
   group 'root'
   content <<-BASH
 #!/bin/sh
-exec /usr/bin/dehydrated -c >>/var/log/dehydrated-cron.log 2>&1
+LOGFILE=#{dehydrated_log}
+echo "Cron Job running at `date`" >> ${LOGFILE}
+exec /usr/bin/dehydrated -c >> ${LOGFILE} 2>&1
 
 # Find any pem files changed in the last 30 mins
 CHANGED=`/usr/bin/find #{File.join(dehydrated_cert, "cyclescape.org")} -mmin -30 -name "*.pem" -ls`
+echo "CHANGED=${CHANGED}" >> ${LOGFILE}
 
 # If changed files is not empty then symlink over and update apache
 if [[ ! -z $CHANGED ]]; then
+  echo "The certificates have changed, relinking and reloading apache" >> ${LOGFILE}
   /bin/ln -sf #{File.join(dehydrated_cert, "cyclescape.org", "*")} /etc/apache2/ssl/
-  /etc/init.d/apache2 reload
+  /etc/init.d/apache2 reload >> ${LOGFILE}
 fi
   BASH
   mode '0755'
@@ -94,7 +99,7 @@ file "/etc/logrotate.d/dehydrated" do
   owner 'root'
   group 'root'
   content <<-BASH
-/var/log/dehydrated-cron.log
+#{dehydrated_log}
 {
         rotate 12
         monthly
