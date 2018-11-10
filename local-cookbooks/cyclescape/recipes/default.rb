@@ -334,8 +334,9 @@ deploy_revision deploy_dir do
   # restart_command 'passenger-config restart-app /'
 end
 
-script 'create basic auth password' do
+script 'create htpasswd file' do
   interpreter 'bash'
+  only_if { node["cyclescape"]["environment"] == "staging" }
   code <<-EOH
     htpasswd -bc /etc/apache2/passwords staginguser staging
   EOH
