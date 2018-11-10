@@ -21,5 +21,5 @@ default['apache']['prefork']['startservers'] = 4
 default['passenger']['ruby_bin'] = "/usr/bin/ruby#{default['brightbox-ruby']['version']}"
 default['passenger']['version'] = '5.1.11'
 default['passenger']['root_path'] = "#{languages['ruby']['gems_dir']}/gems/passenger-#{node['passenger']['version']}"
-default['nodejs']['version'] = '6.4.1'
+default['nodejs']['version'] = '6'
 default['nodejs']['install_repo'] = true

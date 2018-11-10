@@ -24,6 +24,10 @@ include_recipe 'ufw'
 include_recipe 'munin-plugins-rails'
 include_recipe 'nodejs::npm'
 
+package 'nodejs' do
+  action :upgrade
+end
+
 deploy_dir = '/var/www/cyclescape'
 shared_dir = File.join(deploy_dir, 'shared')
 node.default['letsencrypt']['error_email'] = data_bag_item("secrets", "i18n")["error_email"]
@@ -243,8 +247,11 @@ deploy_revision deploy_dir do
       interpreter 'bash'
       cwd current_release_directory
       user running_deploy_user
-      environment "NPM_CONFIG_CACHE" => "../../shared/npm/cache",
-        "NPM_CONFIG_TMP" => "../../shared/npm/tmp"
+      environment(
+        "NPM_CONFIG_CACHE" => "../../shared/npm/cache",
+        "NPM_CONFIG_TMP" => "../../shared/npm/tmp",
+        "NODE_ENV" => "production"
+      )
       code "npm install"
       only_if do
         File.exists?(File.join(current_release_directory, 'package.json'))
