@@ -170,6 +170,11 @@ deploy_revision deploy_dir do
       EOS
     end
 
+    script 'Install npm version' do
+      interpreter 'bash'
+      code "npm install -g npm@#{node['nodejs']['version']}"
+    end
+
     # Stop any cron jobs from running during migration
     script 'Clear crontab' do
       interpreter 'bash'
