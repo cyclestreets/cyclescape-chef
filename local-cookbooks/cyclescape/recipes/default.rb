@@ -327,7 +327,7 @@ deploy_revision deploy_dir do
   # restart_command 'passenger-config restart-app /'
 end
 
-script 'create cyclescape db user' do
+script 'create basic auth password' do
   interpreter 'bash'
   code <<-EOH
     htpasswd -bc /etc/apache2/passwords staginguser staging
