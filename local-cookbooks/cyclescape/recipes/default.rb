@@ -187,7 +187,7 @@ deploy_revision deploy_dir do
 
     # The symlink_before_default does this, but annoyingly comes after before_migrate is called
     # That way, db:create fails. So do it manually instead...
-    (api_keys + %w(database.yml mailboxes.yml)).each do |config|
+    (api_keys + %w(database.yml mailboxes.yml schedule.yml)).each do |config|
       link File.join(current_release_directory, "config", config) do
         to File.join(shared_config, config)
       end
