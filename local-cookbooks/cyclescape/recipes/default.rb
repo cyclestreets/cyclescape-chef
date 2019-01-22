@@ -70,12 +70,6 @@ apache_module 'ssl'
 apache_module 'expires'
 apache_module 'headers'
 
-# We can install bundler with the ubuntu version of gem ...
-gem_package 'bundler' do
-  action :install
-  version "1.16.0"
-end
-
 # Create the database user. For now, it's a superuser.
 script 'create cyclescape db user' do
   interpreter 'bash'
@@ -160,6 +154,12 @@ deploy_revision deploy_dir do
     running_deploy_user = new_resource.user
     shared_config = new_resource.shared_path + '/config'
     excluded_groups = %w(development test)
+
+    # Install the bundler version used in the Gemfile.lock
+    gem_package 'bundler' do
+      action :install
+      version "#{ File.open(File.join("/var/www/cyclescape/current/", "Gemfile.lock")).to_a.last.strip }"
+    end
 
     # This must be called before any bundle execs
     script 'Bundling the gems' do
