@@ -10,6 +10,11 @@ include_recipe 'ssl'
 include_recipe 'apache2'
 include_recipe 'postgres'
 include_recipe 'ntp'
+
+if node['platform_version'] == '16.04'
+  node.default['java']['jdk_version'] = 8
+end
+
 include_recipe 'java'
 include_recipe 'brightbox-ruby::default'
 gem_package 'rack' do
@@ -63,9 +68,7 @@ package 'heirloom-mailx'
 package 'git'
 
 apache_module 'rewrite'
-if node['platform'] == 'ubuntu' && node['platform_version'] == '14.04'
-  apache_module 'socache_shmcb'
-end
+apache_module 'socache_shmcb'
 apache_module 'ssl'
 apache_module 'expires'
 apache_module 'headers'
@@ -94,12 +97,18 @@ end
   end
 end
 
+postgres_script = if (node['platform'] == 'ubuntu' && node['platform_version'] == "14.04")
+           "script_dir: #{node['postgres']['script_dir']}"
+         else
+           ""
+         end
+
 template deploy_dir + '/shared/config/database.yml' do
   source 'database.yml.erb'
   owner 'cyclescape'
   group 'cyclescape'
   mode '0644'
-  variables script_dir: node['postgres']['script_dir']
+  variables script: postgres_script
 end
 
 mb = data_bag_item('secrets', 'mailbox')

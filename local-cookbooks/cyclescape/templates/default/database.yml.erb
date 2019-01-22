@@ -4,7 +4,7 @@ postgres: &postgres
   pool: 5
   username: cyclescape
   password:
-  script_dir: <%= @script_dir %>
+  <%= @script %>
 
 test:
   <<: *postgres
