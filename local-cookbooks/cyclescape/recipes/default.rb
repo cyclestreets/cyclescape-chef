@@ -16,6 +16,11 @@ if node['platform_version'] == '16.04'
 end
 
 include_recipe 'java'
+
+if node['platform_version'] == '16.04'
+  node.default['brightbox-ruby']['install_ruby_switch'] = false
+end
+
 include_recipe 'brightbox-ruby::default'
 gem_package 'rack' do
   action :install
