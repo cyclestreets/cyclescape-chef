@@ -302,11 +302,12 @@ deploy_revision deploy_dir do
     end
 
     # use foreman to create upstart files.
+    foreman_export = (node['platform_version'].to_f <= 14.04) ? "upstart /etc/init" : "systemd /etc/systemd/system"
     script 'Update foreman configuration' do
       interpreter 'bash'
       cwd release_path
       code <<-EOH
-        bundle exec foreman export upstart /etc/init -a cyclescape -u cyclescape -e .env
+        bundle exec foreman export #{foreman_export} -a cyclescape -u cyclescape -e .env
       EOH
       notifies :restart, 'service[cyclescape]'
     end
