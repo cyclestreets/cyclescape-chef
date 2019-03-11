@@ -315,6 +315,8 @@ deploy_revision deploy_dir do
     service 'cyclescape' do
       if platform?('ubuntu') && node['platform_version'].to_f <= 14.04
         provider Chef::Provider::Service::Upstart
+      else
+        provider Chef::Provider::Service::Systemd
       end
       supports restart: true
     end
