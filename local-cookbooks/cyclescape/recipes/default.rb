@@ -301,23 +301,28 @@ deploy_revision deploy_dir do
       EOH
     end
 
-    # use foreman to create upstart files.
-    foreman_export = (node['platform_version'].to_f <= 14.04) ? "upstart /etc/init" : "systemd /etc/systemd/system"
+    # use foreman to create init files.
+    if (node['platform_version'].to_f <= 14.04)
+      foreman_export = "upstart /etc/init" 
+      service_extention = ""
+      foreman_provider = Chef::Provider::Service::Upstart
+    else
+      foreman_export = "systemd /etc/systemd/system"
+      service_extention = ".target"
+      foreman_provider = Chef::Provider::Service::Systemd
+    end
+
     script 'Update foreman configuration' do
       interpreter 'bash'
       cwd release_path
       code <<-EOH
         bundle exec foreman export #{foreman_export} -a cyclescape -u cyclescape -e .env
       EOH
-      notifies :restart, 'service[cyclescape]'
+      notifies :restart, "service[cyclescape#{service_extention}]"
     end
 
-    service 'cyclescape' do
-      if platform?('ubuntu') && node['platform_version'].to_f <= 14.04
-        provider Chef::Provider::Service::Upstart
-      else
-        provider Chef::Provider::Service::Systemd
-      end
+    service "cyclescape" do
+      provider foreman_provider
       supports restart: true
     end
 
