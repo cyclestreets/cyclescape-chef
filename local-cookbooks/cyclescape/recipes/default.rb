@@ -318,12 +318,12 @@ deploy_revision deploy_dir do
       code <<-EOH
         bundle exec foreman export #{foreman_export} -a cyclescape -u cyclescape -e .env
       EOH
-      notifies :restart, "service[cyclescape#{service_extention}]"
     end
 
     service "cyclescape#{service_extention}" do
       provider foreman_provider
       supports restart: true
+      action :restart
     end
 
     script 'Set crontab' do
