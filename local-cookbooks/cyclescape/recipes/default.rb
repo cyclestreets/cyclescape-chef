@@ -321,7 +321,7 @@ deploy_revision deploy_dir do
       notifies :restart, "service[cyclescape#{service_extention}]"
     end
 
-    service "cyclescape" do
+    service "cyclescape#{service_extention}" do
       provider foreman_provider
       supports restart: true
     end
