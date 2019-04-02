@@ -1,5 +1,5 @@
 DEPENDENCIES
-  apache2 (~> 3.0.0)
+  apache2 (= 5.0.1)
   brightbox-ruby (~> 1.2.1)
   build-essential (~> 1.0.0)
   cyclescape
@@ -29,9 +29,7 @@ DEPENDENCIES
   ufw (~> 0.7.4)
 
 GRAPH
-  apache2 (3.0.1)
-    iptables (>= 0.0.0)
-    logrotate (>= 0.0.0)
+  apache2 (5.0.1)
   apt (2.8.2)
   ark (3.1.0)
     build-essential (>= 0.0.0)
@@ -60,11 +58,9 @@ GRAPH
   cyclescape-user (0.0.1)
   firewall (1.6.1)
     poise (~> 2.0)
-  iptables (4.3.1)
   java (1.35.0)
   letsencrypt (0.1.0)
     apt (>= 0.0.0)
-  logrotate (2.2.0)
   munin (0.0.1)
   munin-plugins-rails (0.0.1)
   nodejs (5.0.0)

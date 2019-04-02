@@ -168,11 +168,12 @@ deploy_revision deploy_dir do
     running_deploy_user = new_resource.user
     shared_config = new_resource.shared_path + '/config'
     excluded_groups = %w(development test)
+    gem_lock = File.join("/var/www/cyclescape/current/", "Gemfile.lock")
 
     # Install the bundler version used in the Gemfile.lock
     gem_package 'bundler' do
       action :install
-      version "#{ File.open(File.join("/var/www/cyclescape/current/", "Gemfile.lock")).to_a.last.strip }"
+      version "#{ File.file?(gem_lock) ? File.open(gem_lock).to_a.last.strip : '1.17.1' }"
     end
 
     # This must be called before any bundle execs
@@ -183,7 +184,7 @@ deploy_revision deploy_dir do
       environment 'LC_ALL' => 'en_GB.UTF-8'
       code <<-EOS
         HOME=#{bundler_depot} BUNDLE_PATH=#{bundler_depot}\
-        bundle install --deployment --path #{bundler_depot}\
+        bundle install --deployment --path #{bundler_depot} --quiet\
         --without #{excluded_groups.join(' ')}
       EOS
     end
@@ -303,7 +304,7 @@ deploy_revision deploy_dir do
 
     # use foreman to create init files.
     if (node['platform_version'].to_f <= 14.04)
-      foreman_export = "upstart /etc/init" 
+      foreman_export = "upstart /etc/init"
       service_extention = ""
       foreman_provider = Chef::Provider::Service::Upstart
     else
