@@ -312,18 +312,18 @@ deploy_revision deploy_dir do
       foreman_provider = Chef::Provider::Service::Systemd
     end
 
+    service "cyclescape#{service_extention}" do
+      provider foreman_provider
+      supports restart: true
+    end
+
     script 'Update foreman configuration' do
       interpreter 'bash'
       cwd release_path
       code <<-EOH
         bundle exec foreman export #{foreman_export} -a cyclescape -u cyclescape -e .env
       EOH
-    end
-
-    service "cyclescape#{service_extention}" do
-      provider foreman_provider
-      supports restart: true
-      action :restart
+      notifies :restart, "service[cyclescape#{service_extention}]"
     end
 
     script 'Set crontab' do
