@@ -17,6 +17,8 @@ end
 
 include_recipe 'java'
 
+node.default['brightbox-ruby']['install_ruby_switch'] = system("update-alternatives --list ruby")
+
 include_recipe 'brightbox-ruby::default'
 gem_package 'rack' do
   action :install
