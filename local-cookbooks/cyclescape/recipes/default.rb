@@ -284,15 +284,9 @@ deploy_revision deploy_dir do
     end
 
     # use foreman to create init files.
-    if (node['platform_version'].to_f <= 14.04)
-      foreman_export = "upstart /etc/init"
-      service_extention = ""
-      foreman_provider = Chef::Provider::Service::Upstart
-    else
-      foreman_export = "systemd /etc/systemd/system"
-      service_extention = ".target"
-      foreman_provider = Chef::Provider::Service::Systemd
-    end
+    foreman_export = "systemd /etc/systemd/system"
+    service_extention = ".target"
+    foreman_provider = Chef::Provider::Service::Systemd
 
     service "cyclescape#{service_extention}" do
       provider foreman_provider
