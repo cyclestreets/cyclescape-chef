@@ -53,8 +53,8 @@ package 'redis-server'
 # Imagemagick, for dragonfly to do image processing with convert
 package 'imagemagick'
 
-# mailx - not actually for the app, just for some other scripts we have
-package 'heirloom-mailx'
+# not actually for the app, just for some other scripts we have
+package 's-nail'
 
 # git - useful when running testing the scripts with Vagrant. Normally
 # installed manually in order to acquire the cookbooks, as per README
