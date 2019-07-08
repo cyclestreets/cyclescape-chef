@@ -15,7 +15,7 @@ default["brightbox-ruby"]["version"] = "2.3"
 default['brightbox-ruby']['default_action'] = :install
 default['brightbox-ruby']['install_ruby_switch'] = true
 default['brightbox-ruby']['rubygems_version'] = '2.6.13'
-default['java']['jdk_version'] = 7
+default['java']['jdk_version'] = 8
 
 default['apache']['prefork']['startservers'] = 4
 default['passenger']['ruby_bin'] = "/usr/bin/ruby#{default['brightbox-ruby']['version']}"

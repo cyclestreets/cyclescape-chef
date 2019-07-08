@@ -11,10 +11,6 @@ include_recipe 'apache2'
 include_recipe 'postgres'
 include_recipe 'ntp'
 
-if node['platform_version'] == '16.04'
-  node.default['java']['jdk_version'] = 8
-end
-
 include_recipe 'java'
 
 node.default['brightbox-ruby']['install_ruby_switch'] = system("update-alternatives --list ruby")
