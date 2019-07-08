@@ -90,18 +90,11 @@ end
   end
 end
 
-postgres_script = if (node['platform'] == 'ubuntu' && node['platform_version'] == "14.04")
-           "script_dir: #{node['postgres']['script_dir']}"
-         else
-           ""
-         end
-
 template deploy_dir + '/shared/config/database.yml' do
   source 'database.yml.erb'
   owner 'cyclescape'
   group 'cyclescape'
   mode '0644'
-  variables script: postgres_script
 end
 
 mb = data_bag_item('secrets', 'mailbox')
