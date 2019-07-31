@@ -1,15 +1,15 @@
 DEPENDENCIES
-  apache2 (= 5.0.1)
+  apache2 (~> 5)
   brightbox-ruby (~> 1.2.1)
-  build-essential (~> 1.0.0)
+  build-essential (~> 8.0.0)
   cyclescape
     path: local-cookbooks/cyclescape
   cyclescape-backups
     path: local-cookbooks/cyclescape-backups
   cyclescape-user
     path: local-cookbooks/cyclescape-user
-  firewall (< 2.0.0)
-  java (~> 1.35.0)
+  firewall (~> 2)
+  java (~> 4.2.0)
   letsencrypt
     path: local-cookbooks/letsencrypt
   munin
@@ -26,18 +26,20 @@ DEPENDENCIES
     path: local-cookbooks/postgres
   ssl
     path: local-cookbooks/ssl
-  ufw (~> 0.7.4)
+  ufw (~> 3.2.1)
 
 GRAPH
-  apache2 (5.0.1)
-  apt (2.8.2)
-  ark (3.1.0)
+  apache2 (5.2.1)
+  apt (7.1.1)
+  ark (4.0.0)
     build-essential (>= 0.0.0)
     seven_zip (>= 0.0.0)
-    windows (>= 0.0.0)
   brightbox-ruby (1.2.2)
     apt (>= 0.0.0)
-  build-essential (1.0.2)
+  build-essential (8.0.4)
+    mingw (>= 1.1)
+    seven_zip (>= 0.0.0)
+  chef-sugar (5.0.1)
   cyclescape (0.1.0)
     apache2 (>= 0.0.0)
     apt (>= 0.0.0)
@@ -56,11 +58,16 @@ GRAPH
     ufw (>= 0.0.0)
   cyclescape-backups (0.0.1)
   cyclescape-user (0.0.1)
-  firewall (1.6.1)
-    poise (~> 2.0)
-  java (1.35.0)
+  firewall (2.7.0)
+    chef-sugar (>= 0.0.0)
+  homebrew (5.0.8)
+  java (4.2.0)
+    homebrew (>= 0.0.0)
+    windows (>= 0.0.0)
   letsencrypt (0.1.0)
     apt (>= 0.0.0)
+  mingw (2.1.0)
+    seven_zip (>= 0.0.0)
   munin (0.0.1)
   munin-plugins-rails (0.0.1)
   nodejs (5.0.0)
@@ -70,12 +77,11 @@ GRAPH
   passenger_apache2 (3.0.1)
     apache2 (>= 2.0)
     build-essential (>= 0.0.0)
-  poise (2.8.1)
   postfix (0.0.1)
   postgres (0.0.1)
-  seven_zip (3.0.0)
+  seven_zip (3.1.1)
     windows (>= 0.0.0)
   ssl (0.0.1)
-  ufw (0.7.4)
-    firewall (>= 0.9.0)
-  windows (4.3.3)
+  ufw (3.2.1)
+    firewall (>= 2.0)
+  windows (6.0.0)

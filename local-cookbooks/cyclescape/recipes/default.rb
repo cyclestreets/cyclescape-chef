@@ -32,8 +32,6 @@ package 'nodejs' do
   action :upgrade
 end
 
-package 'npm'
-
 deploy_dir = '/var/www/cyclescape'
 shared_dir = File.join(deploy_dir, 'shared')
 node.default['letsencrypt']['error_email'] = data_bag_item("secrets", "i18n")["error_email"]

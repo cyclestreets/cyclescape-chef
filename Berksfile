@@ -1,10 +1,10 @@
 source "https://supermarket.chef.io"
 
-cookbook 'build-essential', '~> 1.0.0'
-cookbook 'apache2', '= 5.0.1' # Chef 12 support ends
-cookbook 'java', '~> 1.35.0'
-cookbook 'ufw', '~> 0.7.4'
-cookbook 'firewall', '< 2.0.0'
+cookbook 'build-essential', '~> 8.0.0'
+cookbook 'apache2', '~> 5'
+cookbook 'java', '~> 4.2.0'
+cookbook 'ufw', '~> 3.2.1'
+cookbook 'firewall', '~> 2'
 cookbook 'brightbox-ruby', '~> 1.2.1'
 cookbook 'passenger_apache2', '~> 3.0.1'
 cookbook 'nodejs', '~> 5.0.0'
