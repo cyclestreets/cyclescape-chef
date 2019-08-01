@@ -316,7 +316,9 @@ deploy_revision deploy_dir do
   end
 
   migrate true
-  migration_command 'bundle exec rake db:migrate'
+  migration_command <<~EOH
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin RAILS_ENV=#{node['cyclescape']['environment']} bundle exec rake db:migrate
+  EOH
   environment 'RAILS_ENV' => node['cyclescape']['environment']
   action :deploy
   restart_command 'touch tmp/restart.txt'
