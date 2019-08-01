@@ -61,8 +61,7 @@ apache_module 'expires'
 apache_module 'headers'
 
 # Create the database user. For now, it's a superuser.
-script 'create cyclescape db user' do
-  interpreter 'bash'
+bash 'create cyclescape db user' do
   user 'postgres'
   group 'postgres'
   cwd '/var/lib/postgresql'
@@ -152,8 +151,7 @@ deploy_revision deploy_dir do
     end
 
     # This must be called before any bundle execs
-    script 'Bundling the gems' do
-      interpreter 'bash'
+    bash 'Bundling the gems' do
       cwd current_release_directory
       user running_deploy_user
       environment 'LC_ALL' => 'en_GB.UTF-8'
@@ -165,8 +163,7 @@ deploy_revision deploy_dir do
     end
 
     # Stop any cron jobs from running during migration
-    script 'Clear crontab' do
-      interpreter 'bash'
+    bash 'Clear crontab' do
       cwd current_release_directory
       user running_deploy_user
       code <<-EOH
@@ -204,8 +201,7 @@ deploy_revision deploy_dir do
     %w(secret_token devise_secret_token secret_key_base).each do |secret|
       # We need to create a secret, and store it in the shared config
       # path for future use.
-      script "create the #{secret}" do
-        interpreter 'bash'
+      bash "create the #{secret}" do
         cwd current_release_directory
         user running_deploy_user
         code "bundle exec rake secret > #{shared_config}/#{secret}"
@@ -217,8 +213,7 @@ deploy_revision deploy_dir do
       end
     end
 
-    script 'Create the database' do
-      interpreter 'bash'
+    bash 'Create the database' do
       cwd current_release_directory
       user running_deploy_user
       environment 'RAILS_ENV' => node['cyclescape']['environment']
@@ -228,8 +223,7 @@ deploy_revision deploy_dir do
       not_if %q(test -n "`sudo -u postgres psql template1 -A -t -c '\l' | grep cyclescape_production`")
     end
 
-    script 'Install npm modules' do
-      interpreter 'bash'
+    bash 'Install npm modules' do
       cwd current_release_directory
       user running_deploy_user
       environment(
@@ -243,8 +237,7 @@ deploy_revision deploy_dir do
       end
     end
 
-    script 'Compile the assets' do
-      interpreter 'bash'
+    bash 'Compile the assets' do
       cwd current_release_directory
       user running_deploy_user
       environment 'RAILS_ENV' => node['cyclescape']['environment']
@@ -255,8 +248,7 @@ deploy_revision deploy_dir do
   end
 
   before_restart do
-    script 'Update seed data' do
-      interpreter 'bash'
+    bash 'Update seed data' do
       cwd release_path
       user new_resource.user
       environment 'RAILS_ENV' => node['cyclescape']['environment']
@@ -264,8 +256,7 @@ deploy_revision deploy_dir do
     end
 
     # Create the server ENV
-    script 'Update foreman configuration' do
-      interpreter 'bash'
+    bash 'Update foreman configuration' do
       cwd release_path
       code <<-EOH
         echo "RAILS_ENV=#{node['cyclescape']['environment']}" > .env
@@ -282,8 +273,7 @@ deploy_revision deploy_dir do
       supports restart: true
     end
 
-    script 'Update foreman configuration' do
-      interpreter 'bash'
+    bash 'Update foreman configuration' do
       cwd release_path
       code <<-EOH
         bundle exec foreman export #{foreman_export} -a cyclescape -u cyclescape -e .env
@@ -291,8 +281,7 @@ deploy_revision deploy_dir do
       notifies :restart, "service[cyclescape#{service_extention}]"
     end
 
-    script 'Set crontab' do
-      interpreter 'bash'
+    bash 'Set crontab' do
       cwd release_path
       user new_resource.user
       code <<-EOH
@@ -303,8 +292,7 @@ deploy_revision deploy_dir do
   end
 
   after_restart do
-    script 'Reindex search' do
-      interpreter 'bash'
+    bash 'Reindex search' do
       cwd release_path
       user new_resource.user
       environment 'RAILS_ENV' => node['cyclescape']['environment']
@@ -325,8 +313,7 @@ deploy_revision deploy_dir do
   # restart_command 'passenger-config restart-app /'
 end
 
-script 'create htpasswd file' do
-  interpreter 'bash'
+bash 'create htpasswd file' do
   only_if { node["cyclescape"]["environment"] == "staging" }
   code <<-EOH
     htpasswd -bc /etc/apache2/passwords staginguser staging
