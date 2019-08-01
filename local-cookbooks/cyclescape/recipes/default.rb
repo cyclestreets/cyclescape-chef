@@ -263,22 +263,17 @@ deploy_revision deploy_dir do
       EOH
     end
 
-    # use foreman to create init files.
-    foreman_export = "systemd /etc/systemd/system"
-    service_extention = ".target"
-    foreman_provider = Chef::Provider::Service::Systemd
-
-    service "cyclescape#{service_extention}" do
-      provider foreman_provider
+    service "cyclescape.target" do
+      provider Chef::Provider::Service::Systemd
       supports restart: true
     end
 
     bash 'Update foreman configuration' do
       cwd release_path
       code <<-EOH
-        bundle exec foreman export #{foreman_export} -a cyclescape -u cyclescape -e .env
+        bundle exec foreman export systemd /etc/systemd/system -a cyclescape -u cyclescape -e .env
       EOH
-      notifies :restart, "service[cyclescape#{service_extention}]"
+      notifies :restart, "service[cyclescape.target]"
     end
 
     bash 'Set crontab' do
