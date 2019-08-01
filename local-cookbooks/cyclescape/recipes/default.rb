@@ -26,11 +26,7 @@ include_recipe 'cyclescape-user'
 include_recipe 'cyclescape-backups'
 include_recipe 'ufw'
 include_recipe 'munin-plugins-rails'
-include_recipe 'nodejs::npm'
-
-package 'nodejs' do
-  action :upgrade
-end
+include_recipe 'nodejs'
 
 deploy_dir = '/var/www/cyclescape'
 shared_dir = File.join(deploy_dir, 'shared')
@@ -166,11 +162,6 @@ deploy_revision deploy_dir do
         bundle install --deployment --path #{bundler_depot} --quiet\
         --without #{excluded_groups.join(' ')}
       EOS
-    end
-
-    script 'Install npm version' do
-      interpreter 'bash'
-      code "npm install -g npm@#{node['nodejs']['version']}"
     end
 
     # Stop any cron jobs from running during migration
