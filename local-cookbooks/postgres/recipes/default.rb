@@ -4,11 +4,11 @@
 #
 # Copyright 2011, Cyclestreets Ltd
 
-pg_version = '9.5'
-postgis_pkg = 'postgresql-9.5-postgis-2.2'
-if node['platform_version'] == '14.04'
-  pg_version = '9.3'
-  postgis_pkg = 'postgresql-9.3-postgis-2.1'
+pg_version = '10'
+postgis_pkg = 'postgresql-10-postgis-2.4'
+if node['platform_version'] == '16.04'
+  pg_version = '9.5'
+  postgis_pkg = 'postgresql-9.5-postgis-2.2'
 end
 
 package "postgresql-#{pg_version}" do

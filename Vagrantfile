@@ -24,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   # If this value is a shorthand to a box in Vagrant Cloud then
   # config.vm.box_url doesn't need to be specified.
-  config.vm.box = 'bento/ubuntu-16.04'
+  config.vm.box = 'bento/ubuntu-18.04'
 
 
   # Assign this VM to a host-only network IP, allowing you to access it
@@ -79,7 +79,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cyclescape: {environment: "staging"}
     }
     chef.data_bags_path = 'data-bags'
-    chef.version = "12.15.19"
+    chef.version = "13.10.4"
 
     chef.run_list = [
       'recipe[cyclescape]', 'recipe[munin]'

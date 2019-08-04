@@ -6,7 +6,7 @@ are very welcome.
 
 This is designed to use chef-solo. First we need to grab this repository and
 prep the cookbooks, then install chef-solo, then chef can take care of the rest.
-The base system is ubuntu-server 16.04 LTS or 14.04 LTS so there's not much
+The base system is ubuntu-server 18.04 LTS or 16.04 LTS so there's not much
 installed already.
 
     cd ~
@@ -19,8 +19,8 @@ installed already.
 
 Now, we need to install chef development kit can (full details from https://downloads.chef.io/chef-dk/ubuntu/)
 
-    wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.10.0-1_amd64.deb
-    sudo dpkg -i chefdk_0.10.0-1_amd64.deb
+    curl -o chefdk.deb https://packages.chef.io/files/stable/chefdk/2.5.13/ubuntu/18.04/chefdk_2.5.13-1_amd64.deb
+    sudo dpkg -i chefdk.deb
 
 To test on a development machine this it is possible to use vagrant with VirtualBox
 

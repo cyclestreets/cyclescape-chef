@@ -11,10 +11,6 @@ include_recipe 'apache2'
 include_recipe 'postgres'
 include_recipe 'ntp'
 
-if node['platform_version'] == '16.04'
-  node.default['java']['jdk_version'] = 8
-end
-
 include_recipe 'java'
 
 node.default['brightbox-ruby']['install_ruby_switch'] = system("update-alternatives --list ruby")
@@ -30,11 +26,7 @@ include_recipe 'cyclescape-user'
 include_recipe 'cyclescape-backups'
 include_recipe 'ufw'
 include_recipe 'munin-plugins-rails'
-include_recipe 'nodejs::npm'
-
-package 'nodejs' do
-  action :upgrade
-end
+include_recipe 'nodejs'
 
 deploy_dir = '/var/www/cyclescape'
 shared_dir = File.join(deploy_dir, 'shared')
@@ -49,22 +41,14 @@ include_recipe 'letsencrypt'
 package 'libgeos-dev'
 package 'apache2-utils'
 
-if node['platform'] == 'ubuntu' && node['platform_version'] == '14.04'
-  ['/usr/lib/libgeos.so', '/usr/lib/libgeos.so.1'].each do |t|
-    link t do
-      to '/usr/lib/libgeos-3.4.2.so'
-    end
-  end
-end
-
 # Redis server for queueing and caching
 package 'redis-server'
 
 # Imagemagick, for dragonfly to do image processing with convert
 package 'imagemagick'
 
-# mailx - not actually for the app, just for some other scripts we have
-package 'heirloom-mailx'
+# not actually for the app, just for some other scripts we have
+package 's-nail'
 
 # git - useful when running testing the scripts with Vagrant. Normally
 # installed manually in order to acquire the cookbooks, as per README
@@ -77,8 +61,7 @@ apache_module 'expires'
 apache_module 'headers'
 
 # Create the database user. For now, it's a superuser.
-script 'create cyclescape db user' do
-  interpreter 'bash'
+bash 'create cyclescape db user' do
   user 'postgres'
   group 'postgres'
   cwd '/var/lib/postgresql'
@@ -100,18 +83,11 @@ end
   end
 end
 
-postgres_script = if (node['platform'] == 'ubuntu' && node['platform_version'] == "14.04")
-           "script_dir: #{node['postgres']['script_dir']}"
-         else
-           ""
-         end
-
 template deploy_dir + '/shared/config/database.yml' do
   source 'database.yml.erb'
   owner 'cyclescape'
   group 'cyclescape'
   mode '0644'
-  variables script: postgres_script
 end
 
 mb = data_bag_item('secrets', 'mailbox')
@@ -175,8 +151,7 @@ deploy_revision deploy_dir do
     end
 
     # This must be called before any bundle execs
-    script 'Bundling the gems' do
-      interpreter 'bash'
+    bash 'Bundling the gems' do
       cwd current_release_directory
       user running_deploy_user
       environment 'LC_ALL' => 'en_GB.UTF-8'
@@ -187,14 +162,8 @@ deploy_revision deploy_dir do
       EOS
     end
 
-    script 'Install npm version' do
-      interpreter 'bash'
-      code "npm install -g npm@#{node['nodejs']['version']}"
-    end
-
     # Stop any cron jobs from running during migration
-    script 'Clear crontab' do
-      interpreter 'bash'
+    bash 'Clear crontab' do
       cwd current_release_directory
       user running_deploy_user
       code <<-EOH
@@ -232,8 +201,7 @@ deploy_revision deploy_dir do
     %w(secret_token devise_secret_token secret_key_base).each do |secret|
       # We need to create a secret, and store it in the shared config
       # path for future use.
-      script "create the #{secret}" do
-        interpreter 'bash'
+      bash "create the #{secret}" do
         cwd current_release_directory
         user running_deploy_user
         code "bundle exec rake secret > #{shared_config}/#{secret}"
@@ -245,8 +213,7 @@ deploy_revision deploy_dir do
       end
     end
 
-    script 'Create the database' do
-      interpreter 'bash'
+    bash 'Create the database' do
       cwd current_release_directory
       user running_deploy_user
       environment 'RAILS_ENV' => node['cyclescape']['environment']
@@ -256,8 +223,7 @@ deploy_revision deploy_dir do
       not_if %q(test -n "`sudo -u postgres psql template1 -A -t -c '\l' | grep cyclescape_production`")
     end
 
-    script 'Install npm modules' do
-      interpreter 'bash'
+    bash 'Install npm modules' do
       cwd current_release_directory
       user running_deploy_user
       environment(
@@ -271,8 +237,7 @@ deploy_revision deploy_dir do
       end
     end
 
-    script 'Compile the assets' do
-      interpreter 'bash'
+    bash 'Compile the assets' do
       cwd current_release_directory
       user running_deploy_user
       environment 'RAILS_ENV' => node['cyclescape']['environment']
@@ -283,8 +248,7 @@ deploy_revision deploy_dir do
   end
 
   before_restart do
-    script 'Update seed data' do
-      interpreter 'bash'
+    bash 'Update seed data' do
       cwd release_path
       user new_resource.user
       environment 'RAILS_ENV' => node['cyclescape']['environment']
@@ -292,41 +256,27 @@ deploy_revision deploy_dir do
     end
 
     # Create the server ENV
-    script 'Update foreman configuration' do
-      interpreter 'bash'
+    bash 'Update foreman configuration' do
       cwd release_path
       code <<-EOH
         echo "RAILS_ENV=#{node['cyclescape']['environment']}" > .env
       EOH
     end
 
-    # use foreman to create init files.
-    if (node['platform_version'].to_f <= 14.04)
-      foreman_export = "upstart /etc/init"
-      service_extention = ""
-      foreman_provider = Chef::Provider::Service::Upstart
-    else
-      foreman_export = "systemd /etc/systemd/system"
-      service_extention = ".target"
-      foreman_provider = Chef::Provider::Service::Systemd
-    end
-
-    service "cyclescape#{service_extention}" do
-      provider foreman_provider
+    service "cyclescape.target" do
+      provider Chef::Provider::Service::Systemd
       supports restart: true
     end
 
-    script 'Update foreman configuration' do
-      interpreter 'bash'
+    bash 'Update foreman configuration' do
       cwd release_path
       code <<-EOH
-        bundle exec foreman export #{foreman_export} -a cyclescape -u cyclescape -e .env
+        bundle exec foreman export systemd /etc/systemd/system -a cyclescape -u cyclescape -e .env
       EOH
-      notifies :restart, "service[cyclescape#{service_extention}]"
+      notifies :restart, "service[cyclescape.target]"
     end
 
-    script 'Set crontab' do
-      interpreter 'bash'
+    bash 'Set crontab' do
       cwd release_path
       user new_resource.user
       code <<-EOH
@@ -337,8 +287,7 @@ deploy_revision deploy_dir do
   end
 
   after_restart do
-    script 'Reindex search' do
-      interpreter 'bash'
+    bash 'Reindex search' do
       cwd release_path
       user new_resource.user
       environment 'RAILS_ENV' => node['cyclescape']['environment']
@@ -350,15 +299,16 @@ deploy_revision deploy_dir do
   end
 
   migrate true
-  migration_command 'bundle exec rake db:migrate'
+  migration_command <<~EOH
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin RAILS_ENV=#{node['cyclescape']['environment']} bundle exec rake db:migrate
+  EOH
   environment 'RAILS_ENV' => node['cyclescape']['environment']
   action :deploy
   restart_command 'touch tmp/restart.txt'
   # restart_command 'passenger-config restart-app /'
 end
 
-script 'create htpasswd file' do
-  interpreter 'bash'
+bash 'create htpasswd file' do
   only_if { node["cyclescape"]["environment"] == "staging" }
   code <<-EOH
     htpasswd -bc /etc/apache2/passwords staginguser staging
