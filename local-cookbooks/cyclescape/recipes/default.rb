@@ -35,8 +35,6 @@ node.default['letsencrypt']['domain_names'] = [node['cyclescape']['server_name']
 node.default['letsencrypt']['domain_names_and_passwords'] = [data_bag_item('secrets', 'dns')["domain_name"] => data_bag_item('secrets', 'dns')["dns_api_password"]]
 node.default['letsencrypt']['working_dir'] = shared_dir
 
-include_recipe 'letsencrypt'
-
 # Geos dev package for RGeo gem
 package 'libgeos-dev'
 package 'apache2-utils'
@@ -82,6 +80,8 @@ end
     recursive true
   end
 end
+
+include_recipe 'letsencrypt'
 
 template deploy_dir + '/shared/config/database.yml' do
   source 'database.yml.erb'
