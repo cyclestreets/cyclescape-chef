@@ -7,15 +7,13 @@ tar --exclude="*.log" -cjpf <%= @shared_filename %> -C /var/www/cyclescape share
 openssl dgst -md5 <%= @shared_filename %> > <%= @shared_filename + ".md5" %>
 
 # Back up the database
-pg_dump <%= @database %> -Z 1 -f <%= @dbdump_filename %>
+pg_dump <%= @database %> -Z 9 -f <%= @dbdump_filename %>
 openssl dgst -md5 <%= @dbdump_filename %> > <%= @dbdump_filename + ".md5" %>
 
 # Create an Anonymous version
-<% backupdb = "#{@database}_backup_#{Time.now.to_i}" %>
-createdb <%= backupdb %>
-
-psql <%= backupdb %> < <%= @dbdump_filename %>
-psql -d <%= backupdb %> -c <<SQL
+createdb <%= "#{@database}_backup" %>
+zcat <%= @dbdump_filename %> | psql <%= "#{@database}_backup" %>
+psql -d <%= "#{@database}_backup" %> -c "
 UPDATE users SET full_name = CONCAT('someone+', id),
                  email = CONCAT('someone+', id, '@example.com'),
                  confirmation_token = NULL,
@@ -23,9 +21,9 @@ UPDATE users SET full_name = CONCAT('someone+', id),
                  last_seen_at = NULL,
                  public_token = CONCAT('token', id)
              WHERE NOT role = 'admin'
-SQL
+             "
 
-pg_dump <%= backupdb %> -Z 1 -f <%= @anon_dbdump_filename %>
+pg_dump <%= "#{@database}_backup" %> -Z 9 -f <%= @anon_dbdump_filename %>
 openssl dgst -md5 <%= @anon_dbdump_filename %> > <%= "#{@anon_dbdump_filename}.md5" %>
 
-dropdb <%= backupdb %>
+dropdb <%= "#{@database}_backup" %>
