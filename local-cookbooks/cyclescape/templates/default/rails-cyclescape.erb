@@ -1,0 +1,10 @@
+<%= @shared_dir %>/log/*.log {
+  weekly # rotate weekly
+  missingok
+  rotate 52 # 52 weeks of logs
+  compress
+  delaycompress # delays the compression process till the next log rotation
+  notifempty # avoid log rotation if the logfile is empty
+  copytruncate # makes a backup copy of the current log and then clears the log file for continued writing
+    # using copytruncate option avoids having to restart the rails app after every log rotation
+}

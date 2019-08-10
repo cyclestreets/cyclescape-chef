@@ -104,6 +104,11 @@ template deploy_dir + '/shared/config/mailboxes.yml' do
   )
 end
 
+template '/etc/logrotate.d/rails-cyclescape' do
+  source 'rails-cyclescape.erb'
+  variables(shared_dir: shared_dir)
+end
+
 api_keys = %w(rollbar akismet cyclestreets)
 api_keys.each do |key|
   template deploy_dir + "/shared/config/#{key}" do
