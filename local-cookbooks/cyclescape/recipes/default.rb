@@ -147,7 +147,7 @@ deploy_revision deploy_dir do
     running_deploy_user = new_resource.user
     shared_config = new_resource.shared_path + '/config'
     excluded_groups = %w(development test)
-    gem_lock = File.join("/var/www/cyclescape/current/", "Gemfile.lock")
+    gem_lock = File.join(release_path, "Gemfile.lock")
 
     # Install the bundler version used in the Gemfile.lock
     gem_package 'bundler' do
