@@ -277,8 +277,8 @@ deploy_revision deploy_dir do
       cwd release_path
       code <<-EOH
         bundle exec foreman export systemd /etc/systemd/system -a cyclescape -u cyclescape -e .env
+        systemctl daemon-reload
       EOH
-      notifies :restart, "service[cyclescape.target]"
     end
 
     bash 'Set crontab' do
