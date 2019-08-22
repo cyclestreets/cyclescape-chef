@@ -6,14 +6,14 @@
 
 include_recipe 'apt'
 
-remote_file File.join(node['letsencrypt']['working_dir'], 'dehydrated.deb') do
+dehydrated_deb = File.join(node['letsencrypt']['working_dir'], 'dehydrated.deb')
+remote_file dehydrated_deb do
   source 'http://archive.ubuntu.com/ubuntu/pool/universe/d/dehydrated/dehydrated_0.6.1-2_all.deb'
   action :create_if_missing
 end
 
-package 'dehydrated' do
-  source File.join(node['letsencrypt']['working_dir'], 'dehydrated.deb')
-  action :install
+bash 'dehydrated' do
+  code "apt install -y #{dehydrated_deb}"
 end
 
 package 'dnsutils'
