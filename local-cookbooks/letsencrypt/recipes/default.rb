@@ -11,11 +11,7 @@ remote_file File.join(node['letsencrypt']['working_dir'], 'dehydrated.deb') do
   action :create_if_missing
 end
 
-package 'dpkg' do
-  action :upgrade
-end
-
-dpkg_package 'dehydrated' do
+package 'dehydrated' do
   source File.join(node['letsencrypt']['working_dir'], 'dehydrated.deb')
   action :install
 end
