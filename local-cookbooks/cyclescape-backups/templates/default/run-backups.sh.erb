@@ -2,28 +2,39 @@
 
 set -e
 
-# Back up the shared directory, which includes uploaded images and documents
+echo "Back up the shared directory, which includes uploaded images and documents"
+echo `date`
 tar -cjpf <%= @shared_filename %> -C /var/www/cyclescape/shared system
 openssl dgst -md5 <%= @shared_filename %> > <%= @shared_filename + ".md5" %>
 
-# Back up the database
+echo "Back up the only recently changed shared files"
+echo `date`
+pushd /var/www/cyclescape/shared
+find . -type f -mtime +2 -print0 | tar -cjpf <%= @recent_filename %> --null -T -
+popd
+openssl dgst -md5 <%= @recent_filename %> > <%= @recent_filename + ".md5" %>
+
+echo "Back up the database"
+echo `date`
 pg_dump <%= @database %> -Z 9 -f <%= @dbdump_filename %>
 openssl dgst -md5 <%= @dbdump_filename %> > <%= @dbdump_filename + ".md5" %>
 
-# Create an Anonymous version
+echo "Create an Anonymous version"
+echo `date`
 createdb <%= "#{@database}_backup" %>
-zcat <%= @dbdump_filename %> | psql <%= "#{@database}_backup" %>
-psql -d <%= "#{@database}_backup" %> -c "
-UPDATE users SET full_name = CONCAT('someone+', id),
-                 email = CONCAT('someone+', id, '@example.com'),
-                 confirmation_token = NULL,
-                 reset_password_token = NULL,
-                 last_seen_at = NULL,
-                 public_token = CONCAT('token', id)
-             WHERE NOT role = 'admin'
-             "
+gunzip -c <%= @dbdump_filename %> | psql <%= "#{@database}_backup" %>
+psql -d <%= "#{@database}_backup" %> -c "UPDATE users SET full_name = CONCAT('someone+', id),
+    email = CONCAT('someone+', id, '@example.com'),
+    confirmation_token = NULL,
+    reset_password_token = NULL,
+    last_seen_at = NULL,
+    public_token = CONCAT('token', id)
+    WHERE NOT role = 'admin'
+  "
 
 pg_dump <%= "#{@database}_backup" %> -Z 9 -f <%= @anon_dbdump_filename %>
 openssl dgst -md5 <%= @anon_dbdump_filename %> > <%= "#{@anon_dbdump_filename}.md5" %>
 
 dropdb <%= "#{@database}_backup" %>
+echo "Finished"
+echo `date`

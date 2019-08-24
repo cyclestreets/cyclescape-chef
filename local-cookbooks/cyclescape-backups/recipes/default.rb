@@ -2,10 +2,11 @@
 # Cookbook Name:: cyclescape-backups
 # Recipe:: default
 #
-# Copyright 2011, Cyclestreets Ltd
+# Copyright 2019, Cyclestreets Ltd
 
 backup_directory = '/websites/cyclescape/backup'
 shared = 'cyclescapeShared.tar.bz2'
+recent = 'cyclescapeSharedRecent.tar.bz2'
 dbdump = 'cyclescapeDB.sql.gz'
 anon_dbdump = 'cyclescapeDB.anon.sql.gz'
 database = 'cyclescape_production'
@@ -26,6 +27,7 @@ template 'backup script' do
   variables(
     backup_directory: backup_directory,
     shared_filename: File.join(backup_directory, shared),
+    recent_filename: File.join(backup_directory, recent),
     dbdump_filename: File.join(backup_directory, dbdump),
     anon_dbdump_filename: File.join(backup_directory, anon_dbdump),
     database: database
