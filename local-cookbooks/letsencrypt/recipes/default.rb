@@ -4,16 +4,8 @@
 #
 # Copyright 2018, Cyclestreets Ltd
 
-include_recipe 'apt'
-
-dehydrated_deb = File.join(node['letsencrypt']['working_dir'], 'dehydrated.deb')
-remote_file dehydrated_deb do
-  source 'http://archive.ubuntu.com/ubuntu/pool/universe/d/dehydrated/dehydrated_0.6.1-2_all.deb'
-  action :create_if_missing
-end
-
-bash 'dehydrated' do
-  code "apt install -y #{dehydrated_deb}"
+package 'dehydrated' do
+  version "0.6.2-2ubuntu0.18.04.1"
 end
 
 package 'dnsutils'
