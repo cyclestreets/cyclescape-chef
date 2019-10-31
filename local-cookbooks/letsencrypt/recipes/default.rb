@@ -39,6 +39,7 @@ file "/etc/dehydrated/conf.d/hook.sh" do
 HOOK=/etc/dehydrated/dehydrated-mythic-dns01/dehydrated-mythic-dns01.sh
 CHALLENGETYPE=dns-01
 HOOK_CHAIN=yes
+AUTO_CLEANUP=yes
   BASH
 end
 
@@ -66,6 +67,7 @@ file "/etc/cron.daily/dehydrated" do
   content <<-BASH
 #!/bin/sh
 LOGFILE=#{dehydrated_log}
+APACHE_SSL=/etc/apache2/ssl/
 echo "Cron Job running at `date`" >> ${LOGFILE}
 exec /usr/bin/dehydrated -c >> ${LOGFILE} 2>&1
 
@@ -76,8 +78,9 @@ echo "CHANGED=${CHANGED}" >> ${LOGFILE}
 # If changed files is not empty then symlink over and update apache
 if [[ ! -z $CHANGED ]]; then
   echo "The certificates have changed, relinking and reloading apache" >> ${LOGFILE}
-  /bin/ln -sf #{File.join(dehydrated_cert, node["letsencrypt"]["domain_names"][0], "*")} /etc/apache2/ssl/
+  /bin/ln -sf #{File.join(dehydrated_cert, node["letsencrypt"]["domain_names"][0], "*")} "${APACHE_SSL}
   /etc/init.d/apache2 reload >> ${LOGFILE}
+  find "${APACHE_SSL}" -xtype l -delete
 fi
   BASH
   mode '0755'
