@@ -317,7 +317,7 @@ end
 bash 'create htpasswd file' do
   only_if { node["cyclescape"]["environment"] == "staging" }
   code <<-EOH
-    htpasswd -bc /etc/apache2/passwords staginguser staging
+    htpasswd -bc /etc/apache2/passwords #{node["cyclescape"]["basic_auth"]["username"]} #{node["cyclescape"]["basic_auth"]["password"]}
   EOH
 end
 
@@ -335,7 +335,9 @@ template '/etc/apache2/sites-available/cyclescape.conf' do
   mode '0644'
   variables(
     environment: node['cyclescape']['environment'],
-    server_name: node['cyclescape']['server_name']
+    server_name: node['cyclescape']['server_name'],
+    basic_auth_username: node['cyclescape']['basic_auth']['username'],
+    basic_auth_password: node['cyclescape']['basic_auth']['password']
   )
   notifies :reload, 'service[apache2]'
 end

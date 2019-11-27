@@ -24,3 +24,5 @@ default['passenger']['root_path'] = "#{languages['ruby']['gems_dir']}/gems/passe
 node.default['nodejs']['install_method'] = 'binary'
 node.default['nodejs']['version'] = '8.16.0'
 node.default['nodejs']['binary']['checksum'] = 'b391450e0fead11f61f119ed26c713180cfe64b363cd945bac229130dfab64fa'
+default['cyclescape']['basic_auth']['username'] = 'staginguser'
+default['cyclescape']['basic_auth']['password'] = 'staging'
