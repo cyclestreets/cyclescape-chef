@@ -23,14 +23,19 @@ echo "Create an Anonymous version"
 echo `date`
 createdb <%= "#{@database}_backup" %>
 gunzip -c <%= @dbdump_filename %> | psql <%= "#{@database}_backup" %>
+# Wipes personal info and sets the password to "password"
 psql -d <%= "#{@database}_backup" %> -c "UPDATE users SET full_name = CONCAT('someone+', id),
     email = CONCAT('someone+', id, '@example.com'),
     confirmation_token = NULL,
     reset_password_token = NULL,
     last_seen_at = NULL,
-    public_token = CONCAT('token', id)
+    public_token = CONCAT('token', id),
+    api_key = CONCAT('api_key', id),
+    encrypted_password = '\$2a\$10\$Wp3qoMvrRxNOAeZTbaNuPepxGlZe/KrzhDy8qU9l5tA7tQxICSY1K',
     WHERE NOT role = 'admin'
   "
+psql -d <%= "#{@database}_backup" %> -c "UPDATE users SET display_name = CONCAT('mydisplay_name+', id) WHERE display_name IS NOT NULL"
+
 
 pg_dump <%= "#{@database}_backup" %> -Z 9 -f <%= @anon_dbdump_filename %>
 openssl dgst -md5 <%= @anon_dbdump_filename %> > <%= "#{@anon_dbdump_filename}.md5" %>
