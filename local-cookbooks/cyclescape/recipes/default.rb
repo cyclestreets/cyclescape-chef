@@ -209,6 +209,7 @@ deploy_revision deploy_dir do
       bash "create the #{secret}" do
         cwd current_release_directory
         user running_deploy_user
+        environment 'RAILS_ENV' => node['cyclescape']['environment']
         code "bundle exec rake secret > #{shared_config}/#{secret}"
         not_if "test -e #{shared_config}/#{secret}"
       end
