@@ -307,6 +307,7 @@ deploy_revision deploy_dir do
 
   migrate true
   migration_command <<~EOH
+    echo #{node['cyclescape']['environment']};
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin RAILS_ENV=#{node['cyclescape']['environment']} bundle exec rake db:migrate
   EOH
   environment 'RAILS_ENV' => node['cyclescape']['environment']
