@@ -11,10 +11,8 @@ default['firewall']['rules'] = [
 ]
 
 default['apache']['listen_ports'] = %w(80 443)
-default["brightbox-ruby"]["version"] = "2.3"
+default["brightbox-ruby"]["version"] = "2.5"
 default['brightbox-ruby']['default_action'] = :install
-default['brightbox-ruby']['install_ruby_switch'] = true
-default['brightbox-ruby']['rubygems_version'] = '2.6.13'
 default['java']['jdk_version'] = 8
 
 default['apache']['prefork']['startservers'] = 4
