@@ -272,6 +272,7 @@ deploy_revision deploy_dir do
     service "cyclescape.target" do
       provider Chef::Provider::Service::Systemd
       supports restart: true
+      action :enable
     end
 
     bash 'Update foreman configuration' do
