@@ -109,17 +109,6 @@ template '/etc/logrotate.d/rails-cyclescape' do
   variables(shared_dir: shared_dir)
 end
 
-api_keys = %w(rollbar akismet cyclestreets facebook_app_id facebook_app_secret twitter_app_id twitter_app_secret)
-api_keys.each do |key|
-  template deploy_dir + "/shared/config/#{key}" do
-    source 'api-key.erb'
-    owner 'cyclescape'
-    group 'cyclescape'
-    mode '0400'
-    variables(api_key: data_bag_item('secrets', 'keys').fetch(key))
-  end
-end
-
 schedule_bag = data_bag_item('secrets', 'i18n')
 template deploy_dir + "/shared/config/schedule.yml" do
   source "schedule.yml.erb"
@@ -178,7 +167,7 @@ deploy_revision deploy_dir do
 
     # The symlink_before_default does this, but annoyingly comes after before_migrate is called
     # That way, db:create fails. So do it manually instead...
-    (api_keys + %w(database.yml mailboxes.yml schedule.yml)).each do |config|
+    %w(database.yml mailboxes.yml schedule.yml).each do |config|
       link File.join(current_release_directory, "config", config) do
         to File.join(shared_config, config)
       end
@@ -261,11 +250,12 @@ deploy_revision deploy_dir do
       code "bundle exec rake db:seed"
     end
 
-    # Create the server ENV
-    bash 'Update foreman configuration' do
+    api_keys = %w(rollbar akismet cyclestreets facebook_app_id facebook_app_secret twitter_app_id twitter_app_secret)
+    bash 'Create the server env' do
       cwd release_path
       code <<-EOH
-        echo "RAILS_ENV=#{node['cyclescape']['environment']}" > .env
+        echo "RAILS_ENV=#{node['cyclescape']['environment']}
+#{api_keys.map { |key| "#{key.upcase}=#{data_bag_item('secrets', 'keys').fetch(key)}" }.join("\n") }" > .env
       EOH
     end
 
