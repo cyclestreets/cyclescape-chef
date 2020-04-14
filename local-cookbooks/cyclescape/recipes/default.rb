@@ -123,6 +123,13 @@ template deploy_dir + "/shared/config/schedule.yml" do
 end
 
 deploy_branch = (node['cyclescape']['environment'] == 'staging') ? 'staging' : 'master'
+api_keys = %w(rollbar akismet cyclestreets facebook_app_id facebook_app_secret twitter_app_id twitter_app_secret)
+rails_environment = {
+  'RAILS_ENV' => node['cyclescape']['environment']
+}
+api_keys.each do |key|
+  rails_environment[key.upcase] = data_bag_item('secrets', 'keys').fetch(key)
+end
 
 deploy_revision deploy_dir do
   bundler_depot = shared_path + '/bundle'
@@ -198,7 +205,7 @@ deploy_revision deploy_dir do
       bash "create the #{secret}" do
         cwd current_release_directory
         user running_deploy_user
-        environment 'RAILS_ENV' => node['cyclescape']['environment']
+        environment rails_environment
         code "bundle exec rake secret > #{shared_config}/#{secret}"
         not_if "test -e #{shared_config}/#{secret}"
       end
@@ -211,7 +218,7 @@ deploy_revision deploy_dir do
     bash 'Create the database' do
       cwd current_release_directory
       user running_deploy_user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
+      environment rails_environment
       code <<-EOH
         bundle exec rake db:create
       EOH
@@ -235,7 +242,7 @@ deploy_revision deploy_dir do
     bash 'Compile the assets' do
       cwd current_release_directory
       user running_deploy_user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
+      environment rails_environment
       code <<-EOH
         bundle exec rake assets:precompile
       EOH
@@ -246,16 +253,14 @@ deploy_revision deploy_dir do
     bash 'Update seed data' do
       cwd release_path
       user new_resource.user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
+      environment rails_environment
       code "bundle exec rake db:seed"
     end
 
-    api_keys = %w(rollbar akismet cyclestreets facebook_app_id facebook_app_secret twitter_app_id twitter_app_secret)
     bash 'Create the server env' do
       cwd release_path
       code <<-EOH
-        echo "RAILS_ENV=#{node['cyclescape']['environment']}
-#{api_keys.map { |key| "#{key.upcase}=#{data_bag_item('secrets', 'keys').fetch(key)}" }.join("\n") }" > .env
+        echo "#{rails_environment.map { |key, value| "#{key.upcase}=#{value}" }.join("\n") }" > .env
       EOH
     end
 
@@ -288,7 +293,7 @@ deploy_revision deploy_dir do
     bash 'Reindex search' do
       cwd release_path
       user new_resource.user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
+      environment rails_environment
 
       code <<-EOH
         sleep 1m && bundle exec rake sunspot:reindex
@@ -301,7 +306,7 @@ deploy_revision deploy_dir do
     echo #{node['cyclescape']['environment']};
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin RAILS_ENV=#{node['cyclescape']['environment']} bundle exec rake db:migrate
   EOH
-  environment 'RAILS_ENV' => node['cyclescape']['environment']
+  environment rails_environment
   action :deploy
   restart_command 'touch tmp/restart.txt'
   # restart_command 'passenger-config restart-app /'
