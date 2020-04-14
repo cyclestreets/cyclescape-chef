@@ -109,6 +109,17 @@ template '/etc/logrotate.d/rails-cyclescape' do
   variables(shared_dir: shared_dir)
 end
 
+api_keys = %w(rollbar akismet cyclestreets facebook_app_id facebook_app_secret twitter_app_id twitter_app_secret)
+api_keys.each do |key|
+  template deploy_dir + "/shared/config/#{key}" do
+    source 'api-key.erb'
+    owner 'cyclescape'
+    group 'cyclescape'
+    mode '0400'
+    variables(api_key: data_bag_item('secrets', 'keys').fetch(key))
+  end
+end
+
 schedule_bag = data_bag_item('secrets', 'i18n')
 template deploy_dir + "/shared/config/schedule.yml" do
   source "schedule.yml.erb"
@@ -123,13 +134,6 @@ template deploy_dir + "/shared/config/schedule.yml" do
 end
 
 deploy_branch = (node['cyclescape']['environment'] == 'staging') ? 'staging' : 'master'
-api_keys = %w(rollbar akismet cyclestreets facebook_app_id facebook_app_secret twitter_app_id twitter_app_secret)
-rails_environment = {
-  'RAILS_ENV' => node['cyclescape']['environment']
-}
-api_keys.each do |key|
-  rails_environment[key.upcase] = data_bag_item('secrets', 'keys').fetch(key)
-end
 
 deploy_revision deploy_dir do
   bundler_depot = shared_path + '/bundle'
@@ -174,7 +178,7 @@ deploy_revision deploy_dir do
 
     # The symlink_before_default does this, but annoyingly comes after before_migrate is called
     # That way, db:create fails. So do it manually instead...
-    %w(database.yml mailboxes.yml schedule.yml).each do |config|
+    (api_keys + %w(database.yml mailboxes.yml schedule.yml)).each do |config|
       link File.join(current_release_directory, "config", config) do
         to File.join(shared_config, config)
       end
@@ -205,7 +209,7 @@ deploy_revision deploy_dir do
       bash "create the #{secret}" do
         cwd current_release_directory
         user running_deploy_user
-        environment rails_environment
+        environment 'RAILS_ENV' => node['cyclescape']['environment']
         code "bundle exec rake secret > #{shared_config}/#{secret}"
         not_if "test -e #{shared_config}/#{secret}"
       end
@@ -218,7 +222,7 @@ deploy_revision deploy_dir do
     bash 'Create the database' do
       cwd current_release_directory
       user running_deploy_user
-      environment rails_environment
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
         bundle exec rake db:create
       EOH
@@ -242,7 +246,7 @@ deploy_revision deploy_dir do
     bash 'Compile the assets' do
       cwd current_release_directory
       user running_deploy_user
-      environment rails_environment
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code <<-EOH
         bundle exec rake assets:precompile
       EOH
@@ -253,14 +257,15 @@ deploy_revision deploy_dir do
     bash 'Update seed data' do
       cwd release_path
       user new_resource.user
-      environment rails_environment
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
       code "bundle exec rake db:seed"
     end
 
-    bash 'Create the server env' do
+    # Create the server ENV
+    bash 'Update foreman configuration' do
       cwd release_path
       code <<-EOH
-        echo "#{rails_environment.map { |key, value| "#{key.upcase}=#{value}" }.join("\n") }" > .env
+        echo "RAILS_ENV=#{node['cyclescape']['environment']}" > .env
       EOH
     end
 
@@ -293,7 +298,7 @@ deploy_revision deploy_dir do
     bash 'Reindex search' do
       cwd release_path
       user new_resource.user
-      environment rails_environment
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
 
       code <<-EOH
         sleep 1m && bundle exec rake sunspot:reindex
@@ -306,7 +311,7 @@ deploy_revision deploy_dir do
     echo #{node['cyclescape']['environment']};
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin RAILS_ENV=#{node['cyclescape']['environment']} bundle exec rake db:migrate
   EOH
-  environment rails_environment
+  environment 'RAILS_ENV' => node['cyclescape']['environment']
   action :deploy
   restart_command 'touch tmp/restart.txt'
   # restart_command 'passenger-config restart-app /'
@@ -333,7 +338,6 @@ template '/etc/apache2/sites-available/cyclescape.conf' do
   mode '0644'
   variables(
     environment: node['cyclescape']['environment'],
-    pass_env: api_keys.map(&:upcase).join(" "),
     server_name: node['cyclescape']['server_name'],
     basic_auth_username: node['cyclescape']['basic_auth']['username'],
     basic_auth_password: node['cyclescape']['basic_auth']['password']
