@@ -333,6 +333,7 @@ template '/etc/apache2/sites-available/cyclescape.conf' do
   mode '0644'
   variables(
     environment: node['cyclescape']['environment'],
+    pass_env: api_keys.map(&:upcase).join(" "),
     server_name: node['cyclescape']['server_name'],
     basic_auth_username: node['cyclescape']['basic_auth']['username'],
     basic_auth_password: node['cyclescape']['basic_auth']['password']
