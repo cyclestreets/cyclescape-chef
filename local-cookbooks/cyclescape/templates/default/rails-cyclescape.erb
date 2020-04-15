@@ -1,7 +1,7 @@
 <%= @shared_dir %>/log/*.log {
   weekly # rotate weekly
   missingok
-  rotate 52 # 52 weeks of logs
+  rotate 51
   compress
   delaycompress # delays the compression process till the next log rotation
   notifempty # avoid log rotation if the logfile is empty
