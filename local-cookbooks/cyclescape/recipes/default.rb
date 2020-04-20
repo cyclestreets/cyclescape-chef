@@ -279,6 +279,9 @@ deploy_revision deploy_dir do
       cwd release_path
       code <<-EOH
         bundle exec foreman export systemd /etc/systemd/system -a cyclescape -u cyclescape -e .env
+        for service_filename in /etc/systemd/system/cyclescape-*/*.service; do
+          echo "TasksMax=infinity" >> "$service_filename"
+        done
         systemctl daemon-reload
       EOH
       notifies :restart, "service[cyclescape.target]"
