@@ -297,18 +297,6 @@ deploy_revision deploy_dir do
     end
   end
 
-  after_restart do
-    bash 'Reindex search' do
-      cwd release_path
-      user new_resource.user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
-
-      code <<-EOH
-        sleep 1m && bundle exec rake sunspot:reindex
-      EOH
-    end
-  end
-
   migrate true
   migration_command <<~EOH
     echo #{node['cyclescape']['environment']};
