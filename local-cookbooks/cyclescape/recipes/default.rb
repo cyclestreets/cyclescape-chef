@@ -73,6 +73,7 @@ end
   deploy_dir, shared_dir,
   File.join(shared_dir, 'config'), File.join(shared_dir, 'log'),
   File.join(shared_dir, 'system'), File.join(shared_dir, 'tmp', 'dragonfly'),
+  File.join(shared_dir, 'solr')
 ].each do |dir|
   directory dir do
     owner 'cyclescape'
@@ -197,7 +198,13 @@ deploy_revision deploy_dir do
       group 'cyclescape'
     end
 
-    ["node_modules", File.join(%w(tmp dragonfly))].each do |dir|
+    directory File.join(shared_directory, "solr") do
+      action :create
+      owner 'cyclescape'
+      group 'cyclescape'
+    end
+
+    ["node_modules", File.join(%w(tmp dragonfly)), "solr"].each do |dir|
       link File.join(current_release_directory, dir) do
         to File.join(shared_directory, dir)
       end
