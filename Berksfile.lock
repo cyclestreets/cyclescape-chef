@@ -8,6 +8,7 @@ DEPENDENCIES
     path: local-cookbooks/cyclescape-backups
   cyclescape-user
     path: local-cookbooks/cyclescape-user
+  deploy_resource (~> 1.0.3)
   firewall (~> 2)
   java (~> 4.2.0)
   letsencrypt
@@ -58,6 +59,7 @@ GRAPH
     ufw (>= 0.0.0)
   cyclescape-backups (0.0.1)
   cyclescape-user (0.0.1)
+  deploy_resource (1.0.3)
   firewall (2.7.0)
     chef-sugar (>= 0.0.0)
   homebrew (5.0.8)
