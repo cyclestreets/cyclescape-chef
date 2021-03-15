@@ -302,6 +302,10 @@ deploy_revision deploy_dir do
       EOH
       only_if { node['cyclescape']['environment'] == 'production' }
     end
+
+    bash 'reload cron' do # old cron seemed to persist
+      code "/etc/init.d/cron reload"
+    end
   end
 
   migrate true
