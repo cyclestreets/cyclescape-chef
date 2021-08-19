@@ -7,6 +7,10 @@ default['firewall']['rules'] = [
   },
   'munin' => {
     'port' => '4949'
+  },
+  'npt' => {
+    'port' => '123',
+    'protocal' => 'udp'
   }
 ]
 
