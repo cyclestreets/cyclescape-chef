@@ -10,7 +10,7 @@ default['firewall']['rules'] = [
   },
   'npt' => {
     'port' => '123',
-    'protocal' => 'udp'
+    'protocol' => 'udp'
   }
 ]
 
