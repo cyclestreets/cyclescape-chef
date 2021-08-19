@@ -10,7 +10,7 @@ openssl dgst -md5 <%= @shared_filename %> > <%= @shared_filename + ".md5" %>
 echo "Back up the only recently changed shared files"
 echo `date`
 pushd /var/www/cyclescape/shared
-find . -type f -mtime +2 -print0 | tar -cjpf <%= @recent_filename %> --null -T -
+find . -type f -mtime -2 -print0 | tar -cjpf <%= @recent_filename %> --null -T -
 popd
 openssl dgst -md5 <%= @recent_filename %> > <%= @recent_filename + ".md5" %>
 
@@ -21,7 +21,8 @@ openssl dgst -md5 <%= @dbdump_filename %> > <%= @dbdump_filename + ".md5" %>
 
 echo "Create an Anonymous version"
 echo `date`
-createdb <%= "#{@database}_backup" %>
+createdb <%= "" %>
+echo "SELECT 'CREATE DATABASE <%= "#{@database}_backup" %>' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '<%= "#{@database}_backup" %>')\gexec" | psql
 gunzip -c <%= @dbdump_filename %> | psql <%= "#{@database}_backup" %>
 # Wipes personal info and sets the password to "password"
 psql -d <%= "#{@database}_backup" %> -c "UPDATE users SET full_name = CONCAT('someone+', id),

@@ -38,5 +38,5 @@ cron 'shared-backup' do
   minute '37'
   hour '1'
   user 'cyclescape'
-  command "/bin/bash #{File.join(backup_directory, 'run-backups.sh')} > #{File.join(backup_directory, 'run-backups.log')} 2>&1"
+  command "/bin/bash #{File.join(backup_directory, 'run-backups.sh')} >> #{File.join(backup_directory, 'run-backups.log')} 2>&1"
 end
