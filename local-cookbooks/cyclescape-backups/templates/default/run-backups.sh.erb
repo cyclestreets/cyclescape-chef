@@ -9,7 +9,7 @@ openssl dgst -md5 <%= @shared_filename %> > <%= @shared_filename + ".md5" %>
 
 echo "Back up the only recently changed shared files"
 echo `date`
-pushd /var/www/cyclescape/shared
+pushd /var/www/cyclescape/shared/system
 find . -type f -mtime -2 -print0 | tar -cjpf <%= @recent_filename %> --null -T -
 popd
 openssl dgst -md5 <%= @recent_filename %> > <%= @recent_filename + ".md5" %>

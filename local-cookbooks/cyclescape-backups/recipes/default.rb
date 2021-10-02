@@ -37,6 +37,7 @@ end
 cron 'shared-backup' do
   minute '37'
   hour '1'
+  mailto data_bag_item("secrets", "mailbox")["error_email"]
   user 'cyclescape'
   command "/bin/bash #{File.join(backup_directory, 'run-backups.sh')} >> #{File.join(backup_directory, 'run-backups.log')} 2>&1"
 end
