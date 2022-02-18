@@ -242,7 +242,8 @@ deploy_revision deploy_dir do
       environment(
         "NPM_CONFIG_CACHE" => "../../shared/npm/cache",
         "NPM_CONFIG_TMP" => "../../shared/npm/tmp",
-        "NODE_ENV" => "production"
+        "NODE_ENV" => "production",
+        "FONTAWESOME_NPM_AUTH_TOKEN" => data_bag_item('secrets', 'keys').fetch('fontawsome_npm_auth')
       )
       code "npm install"
       only_if do
