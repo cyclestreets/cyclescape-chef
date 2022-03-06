@@ -236,6 +236,11 @@ deploy_revision deploy_dir do
       not_if %q(test -n "`sudo -u postgres psql template1 -A -t -c '\l' | grep cyclescape_production`")
     end
 
+    bash 'Install npm version' do # No idea why the nodejs cookbook doesn't do this...
+      code "npm install -g npm@8.2.0"
+      not_if %q{test -n "`npm -v | grep 8.2.0`"}
+    end
+
     bash 'Install npm modules' do
       cwd current_release_directory
       user running_deploy_user
