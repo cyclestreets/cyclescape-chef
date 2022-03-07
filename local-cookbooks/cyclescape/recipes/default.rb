@@ -256,6 +256,17 @@ deploy_revision deploy_dir do
       end
     end
 
+    # need to replace url with asset-url pointing to the node_modules path
+    bash 'prepare fontawsome' do
+      cwd current_release_directory
+      user running_deploy_user
+      environment 'RAILS_ENV' => node['cyclescape']['environment']
+      code <<-EOH
+        cp node_modules/@fortawesome/fontawesome-pro/css/all.css vendor/assets/stylesheets/_fontawesome.css
+        sed -i 's:url("\.\.:asset-url("@fortawesome/fontawesome-pro:g' vendor/assets/stylesheets/_fontawesome.css
+      EOH
+    end
+
     bash 'Compile the assets' do
       cwd current_release_directory
       user running_deploy_user
