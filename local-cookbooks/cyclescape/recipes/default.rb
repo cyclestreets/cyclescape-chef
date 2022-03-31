@@ -265,6 +265,9 @@ deploy_revision deploy_dir do
         cp node_modules/@fortawesome/fontawesome-pro/css/all.css vendor/assets/stylesheets/_fontawesome.css
         sed -i 's:url("\.\.:asset-url("@fortawesome/fontawesome-pro:g' vendor/assets/stylesheets/_fontawesome.css
       EOH
+      only_if do
+        File.exists?("node_modules/@fortawesome/fontawesome-pro/css/all.css")
+      end
     end
 
     bash 'Compile the assets' do
