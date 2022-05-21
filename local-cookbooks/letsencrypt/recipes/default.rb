@@ -5,7 +5,7 @@
 # Copyright 2018, Cyclestreets Ltd
 
 package 'dehydrated' do
-  version "0.6.2-2ubuntu0.18.04.1"
+  version "0.6.5-1"
 end
 
 package 'dnsutils'
