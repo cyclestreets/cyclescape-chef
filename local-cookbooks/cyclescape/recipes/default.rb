@@ -289,17 +289,11 @@ deploy_revision deploy_dir do
     end
 
     # Create the server ENV
-    bash 'Update foreman configuration' do
+    bash 'Update env configuration' do
       cwd release_path
       code <<-EOH
         echo "RAILS_ENV=#{node['cyclescape']['environment']}" > .env
       EOH
-    end
-
-    service "cyclescape.target" do
-      provider Chef::Provider::Service::Systemd
-      supports restart: true
-      action :enable
     end
 
     bash 'Update foreman configuration' do
@@ -311,7 +305,12 @@ deploy_revision deploy_dir do
         done
         systemctl daemon-reload
       EOH
-      notifies :restart, "service[cyclescape.target]"
+    end
+
+    service "cyclescape.target" do
+      provider Chef::Provider::Service::Systemd
+      supports restart: true
+      action [:restart, :enable]
     end
 
     bash 'Set crontab' do
