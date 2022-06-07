@@ -8,6 +8,7 @@ DEPENDENCIES
     path: local-cookbooks/cyclescape-backups
   cyclescape-user
     path: local-cookbooks/cyclescape-user
+  deploy_resource
   firewall (~> 2)
   java (~> 4.2.0)
   letsencrypt
@@ -40,12 +41,13 @@ GRAPH
     mingw (>= 1.1)
     seven_zip (>= 0.0.0)
   chef-sugar (5.0.1)
-  cyclescape (0.2.14)
+  cyclescape (0.3.0)
     apache2 (>= 0.0.0)
     apt (>= 0.0.0)
     brightbox-ruby (>= 0.0.0)
     cyclescape-backups (>= 0.0.0)
     cyclescape-user (>= 0.0.0)
+    deploy_resource (>= 0.0.0)
     java (>= 0.0.0)
     letsencrypt (>= 0.0.0)
     munin-plugins-rails (>= 0.0.0)
@@ -58,13 +60,14 @@ GRAPH
     ufw (>= 0.0.0)
   cyclescape-backups (0.0.3)
   cyclescape-user (0.0.1)
+  deploy_resource (1.0.3)
   firewall (2.7.0)
     chef-sugar (>= 0.0.0)
   homebrew (5.0.8)
   java (4.2.0)
     homebrew (>= 0.0.0)
     windows (>= 0.0.0)
-  letsencrypt (0.1.2)
+  letsencrypt (0.1.4)
   mingw (2.1.0)
     seven_zip (>= 0.0.0)
   munin (0.0.1)

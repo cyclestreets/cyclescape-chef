@@ -19,7 +19,7 @@ installed already.
 
 Now, we need to install chef development kit can (full details from https://downloads.chef.io/chef-dk/ubuntu/)
 
-    curl -o chefdk.deb https://packages.chef.io/files/stable/chefdk/2.5.13/ubuntu/20.04/chefdk_2.5.13-1_amd64.deb
+    wget -O chefdk.deb https://packages.chef.io/files/stable/chefdk/3.13.1/ubuntu/18.04/chefdk_3.13.1-1_amd64.deb
     sudo dpkg -i chefdk.deb
 
 To test on a development machine this it is possible to use vagrant with VirtualBox
