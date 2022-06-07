@@ -198,10 +198,16 @@ deploy_revision deploy_dir do
       group 'cyclescape'
     end
 
-    directory File.join(shared_directory, "solr") do
-      action :create
-      owner 'cyclescape'
-      group 'cyclescape'
+    bash "Copy solr directory over" do
+      cwd current_release_directory
+      user running_deploy_user
+      code "mv solr #{shared_dir}"
+      not_if "test -d #{File.join(shared_dir, 'solr')}"
+    end
+
+    directory File.join(current_release_directory, "solr") do
+      recursive true
+      action :delete
     end
 
     ["node_modules", File.join(%w(tmp dragonfly)), "solr"].each do |dir|
