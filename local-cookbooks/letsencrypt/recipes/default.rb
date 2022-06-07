@@ -4,8 +4,12 @@
 #
 # Copyright 2018, Cyclestreets Ltd
 
-package 'dehydrated' do
-  version "0.6.5-1"
+if node['platform_version'] == '18.04'
+  package 'dehydrated' do
+    version "0.6.2-2ubuntu0.18.04.1"
+  end
+else
+  package 'dehydrated'
 end
 
 package 'dnsutils'
