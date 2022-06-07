@@ -13,6 +13,12 @@ include_recipe 'ntp'
 
 include_recipe 'java'
 
+cookbook_file "/etc/gemrc" do
+  action :create_if_missing
+  source "gemrc"
+  mode   "0644"
+end
+
 node.default['brightbox-ruby']['install_ruby_switch'] = system("update-alternatives --list ruby")
 
 include_recipe 'brightbox-ruby::default'
