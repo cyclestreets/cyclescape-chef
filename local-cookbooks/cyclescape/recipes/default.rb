@@ -278,7 +278,7 @@ deploy_revision deploy_dir do
         sed -i 's:url("\.\.:asset-url("@fortawesome/fontawesome-pro:g' vendor/assets/stylesheets/_fontawesome.css
       EOH
       only_if do
-        File.exists?("node_modules/@fortawesome/fontawesome-pro/css/all.css")
+        File.exists?(File.join(current_release_directory, "node_modules/@fortawesome/fontawesome-pro/css/all.css"))
       end
     end
 
