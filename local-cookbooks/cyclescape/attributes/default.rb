@@ -21,7 +21,7 @@ default['java']['jdk_version'] = 8
 
 default['apache']['prefork']['startservers'] = 4
 default['passenger']['ruby_bin'] = "/usr/bin/ruby#{default['brightbox-ruby']['version']}"
-default['passenger']['version'] = '6.0.12' # 6.0.13 drops ruby 2.5
+default['passenger']['version'] = '6.0.15'
 default['passenger']['root_path'] = "#{languages['ruby']['gems_dir']}/gems/passenger-#{default['passenger']['version']}"
 node.default['nodejs']['install_method'] = 'binary'
 node.default['nodejs']['version'] = '14.21.1'
