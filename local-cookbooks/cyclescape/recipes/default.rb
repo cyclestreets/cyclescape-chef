@@ -260,25 +260,10 @@ deploy_revision deploy_dir do
         "NPM_CONFIG_CACHE" => "../../shared/npm/cache",
         "NPM_CONFIG_TMP" => "../../shared/npm/tmp",
         "NODE_ENV" => "production",
-        "FONTAWESOME_NPM_AUTH_TOKEN" => data_bag_item('secrets', 'keys').fetch('fontawsome_npm_auth')
       )
       code "npm install"
       only_if do
         File.exists?(File.join(current_release_directory, 'package.json'))
-      end
-    end
-
-    # need to replace url with asset-url pointing to the node_modules path
-    bash 'prepare fontawsome' do
-      cwd current_release_directory
-      user running_deploy_user
-      environment 'RAILS_ENV' => node['cyclescape']['environment']
-      code <<-EOH
-        cp node_modules/@fortawesome/fontawesome-pro/css/all.css vendor/assets/stylesheets/_fontawesome.css
-        sed -i 's:url("\.\.:asset-url("@fortawesome/fontawesome-pro:g' vendor/assets/stylesheets/_fontawesome.css
-      EOH
-      only_if do
-        File.exists?(File.join(current_release_directory, "node_modules/@fortawesome/fontawesome-pro/css/all.css"))
       end
     end
 
