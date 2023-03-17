@@ -31,3 +31,4 @@ default['cyclescape']['basic_auth']['password'] = 'staging'
 
 default['exim4']['configtype'] = 'satellite'
 default['exim4']['hide_mailname'] = 'true'
+default['exim4']['localdelivery'] = 'mail_spool'
