@@ -9,6 +9,7 @@ cookbook 'brightbox-ruby', '~> 1.2.1'
 cookbook 'passenger_apache2', '~> 3.0.1'
 cookbook 'nodejs', '~> 5.0.0'
 cookbook 'deploy_resource'
+cookbook 'exim4-light'
 
 local_cookbooks = %w(cyclescape cyclescape-backups cyclescape-user munin-plugins-rails
 munin ntp postfix postgres ssl letsencrypt)

@@ -26,8 +26,12 @@ gem_package 'rack' do
   action :install
   version "1.6.0"
 end
+
 include_recipe 'passenger_apache2'
-include_recipe 'postfix'
+
+node.default['exim4']['smarthost_server'] = data_bag_item("secrets", "mailbox")["relayhost"]
+include_recipe 'exim4-light'
+
 include_recipe 'cyclescape-user'
 include_recipe 'cyclescape-backups'
 include_recipe 'ufw'
