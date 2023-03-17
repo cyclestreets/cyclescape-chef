@@ -30,6 +30,12 @@ end
 include_recipe 'passenger_apache2'
 
 node.default['exim4']['smarthost_server'] = data_bag_item("secrets", "mailbox")["relayhost"]
+file '/etc/exim4/exim4.conf.localmacros' do
+  content 'MAIN_TLS_ENABLE = no'
+  mode '0644'
+  owner 'root'
+  group 'root'
+end
 include_recipe 'exim4-light'
 
 include_recipe 'cyclescape-user'
