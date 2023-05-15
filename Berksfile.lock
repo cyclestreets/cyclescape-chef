@@ -22,8 +22,6 @@ DEPENDENCIES
   ntp
     path: local-cookbooks/ntp
   passenger_apache2 (~> 3.0.1)
-  postfix
-    path: local-cookbooks/postfix
   postgres
     path: local-cookbooks/postgres
   ssl
@@ -42,7 +40,7 @@ GRAPH
     mingw (>= 1.1)
     seven_zip (>= 0.0.0)
   chef-sugar (5.0.1)
-  cyclescape (0.4.0)
+  cyclescape (0.4.1)
     apache2 (>= 0.0.0)
     apt (>= 0.0.0)
     brightbox-ruby (>= 0.0.0)
@@ -81,7 +79,6 @@ GRAPH
   passenger_apache2 (3.0.1)
     apache2 (>= 2.0)
     build-essential (>= 0.0.0)
-  postfix (0.0.1)
   postgres (0.0.1)
   seven_zip (3.1.1)
     windows (>= 0.0.0)
