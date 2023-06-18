@@ -27,16 +27,26 @@ gem_package 'rack' do
   version "3.1.7"
 end
 
+bash 'install passenger' do
+  # gem_package behaves the same as chef_gem in Ubuntu 22
+  # so gem_package "passenger" installs passenger to chefs embedded ruby
+  # https://github.com/chef/chef/issues/13754
+  code <<-EOH
+    sudo usr/bin/gem3.0 install passenger:#{node['passenger']['version']} --conservative
+  EOH
+  only_if { node[:packages].include?("apache2-dev") }
+end
+
 include_recipe 'passenger_apache2'
 
 node.default['exim4']['smarthost_server'] = data_bag_item("secrets", "mailbox")["relayhost"]
+include_recipe 'exim4-light'
 file '/etc/exim4/exim4.conf.localmacros' do
   content 'MAIN_TLS_ENABLE = no'
   mode '0644'
   owner 'root'
   group 'root'
 end
-include_recipe 'exim4-light'
 
 include_recipe 'cyclescape-user'
 include_recipe 'cyclescape-backups'

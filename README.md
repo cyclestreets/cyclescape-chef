@@ -6,7 +6,7 @@ are very welcome.
 
 This is designed to use chef-solo. First we need to grab this repository and
 prep the cookbooks, then install chef-solo, then chef can take care of the rest.
-The base system is ubuntu-server 20.04 LTS or 18.04 LTS so there's not much
+The base system is ubuntu-server 22.04 LTS or 20.04 LTS so there's not much
 installed already.
 
     cd ~
@@ -19,15 +19,16 @@ installed already.
 
 Now, we need to install chef development kit can (full details from https://downloads.chef.io/chef-dk/ubuntu/)
 
-    wget -O chefdk.deb https://packages.chef.io/files/stable/chefdk/3.13.1/ubuntu/18.04/chefdk_3.13.1-1_amd64.deb
+    wget -O chefdk.deb https://packages.chef.io/files/stable/chefdk/3.13.1/ubuntu/22.04/chefdk_3.13.1-1_amd64.deb
     sudo dpkg -i chefdk.deb
 
 To test on a development machine this it is possible to use vagrant with VirtualBox
 
 ```sh
-sudo apt install vagrant virtualbox-5.1
+sudo apt install vagrant virtualbox-6.1
 vagrant plugin install vagrant-berkshelf
-vagrant up
+gem install berkshelf
+berks vendor cookbooks; vagrant up --provision
 ```
 
 Note on debian https://wiki.debian.org/VirtualBox#Installation_of_non-free_edition
