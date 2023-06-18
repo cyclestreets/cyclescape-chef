@@ -6,8 +6,13 @@
 
 include_recipe 'munin'
 
-gem_package 'munin-plugins-rails' do
-  action :install
+bash 'install munin-plugins-rails' do
+  # gem_package behaves the same as chef_gem in Ubuntu 22
+  # so gem_package "passenger" installs passenger to chefs embedded ruby
+  # https://github.com/chef/chef/issues/13754
+  code <<-EOH
+    sudo usr/bin/gem3.0 install munin-plugins-rails --conservative
+  EOH
 end
 
 script 'install passenger munin plugins' do
