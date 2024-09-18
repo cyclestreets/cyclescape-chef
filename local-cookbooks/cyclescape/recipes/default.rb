@@ -24,7 +24,7 @@ node.default['brightbox-ruby']['install_ruby_switch'] = system("update-alternati
 include_recipe 'brightbox-ruby::default'
 gem_package 'rack' do
   action :install
-  version "1.6.0"
+  version "3.1.7"
 end
 
 include_recipe 'passenger_apache2'
