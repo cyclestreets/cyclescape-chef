@@ -3,7 +3,7 @@ maintainer       'Cyclestreets Ltd'
 maintainer_email 'YOUR_EMAIL'
 license          'MIT'
 description      'Installs/Configures Cyclescape'
-version          '0.4.3'
+version          '0.4.4'
 
 depends 'apt'
 depends 'ssl'

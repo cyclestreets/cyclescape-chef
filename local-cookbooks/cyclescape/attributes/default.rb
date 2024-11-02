@@ -15,7 +15,7 @@ default['firewall']['rules'] = [
 ]
 
 default['apache']['listen_ports'] = %w(80 443)
-default["brightbox-ruby"]["version"] = "2.7"
+default["brightbox-ruby"]["version"] = "3.0"
 default['brightbox-ruby']['default_action'] = :install
 default['java']['jdk_version'] = 8
 
