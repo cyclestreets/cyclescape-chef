@@ -10,6 +10,7 @@ include_recipe 'ssl'
 include_recipe 'apache2'
 include_recipe 'postgres'
 include_recipe 'ntp'
+include_recipe 'passenger_apache2'
 
 include_recipe 'java'
 
@@ -19,25 +20,21 @@ cookbook_file "/etc/gemrc" do
   mode   "0644"
 end
 
-node.default['brightbox-ruby']['install_ruby_switch'] = system("update-alternatives --list ruby")
+include_recipe 'ruby_build'
 
-include_recipe 'brightbox-ruby::default'
+ruby_build_ruby node["cyclescape"]["ruby_version"]
+
+Dir["/usr/local/ruby/#{node['cyclescape']['ruby_version']}/bin/*"].each do |ruby_file|
+  link "#{node['cyclescape']['ruby_dir']}#{File.basename(ruby_file)}" do
+    to ruby_file
+  end
+end
+
+
 gem_package 'rack' do
   action :install
   version "3.1.7"
 end
-
-bash 'install passenger' do
-  # gem_package behaves the same as chef_gem in Ubuntu 22
-  # so gem_package "passenger" installs passenger to chefs embedded ruby
-  # https://github.com/chef/chef/issues/13754
-  code <<-EOH
-    sudo usr/bin/gem3.0 install passenger:#{node['passenger']['version']} --conservative
-  EOH
-  only_if { node[:packages].include?("apache2-dev") }
-end
-
-include_recipe 'passenger_apache2'
 
 node.default['exim4']['smarthost_server'] = data_bag_item("secrets", "mailbox")["relayhost"]
 include_recipe 'exim4-light'

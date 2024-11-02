@@ -11,7 +11,7 @@ bash 'install munin-plugins-rails' do
   # so gem_package "passenger" installs passenger to chefs embedded ruby
   # https://github.com/chef/chef/issues/13754
   code <<-EOH
-    sudo usr/bin/gem3.0 install munin-plugins-rails --conservative
+    sudo #{node['cyclescape']['ruby_dir']}gem install munin-plugins-rails --conservative
   EOH
 end
 
