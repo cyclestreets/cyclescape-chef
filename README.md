@@ -23,9 +23,11 @@ Now, we need to install chef development kit can (full details from https://down
     sudo dpkg -i chefdk.deb
 
 To test on a development machine this it is possible to use vagrant with VirtualBox
+See the debian guide to [installing VirtualBox](https://wiki.debian.org/VirtualBox)
+You may need to disable secure boot in your BIOS.
 
 ```sh
-sudo apt install vagrant virtualbox-6.1
+sudo apt install vagrant virtualbox
 vagrant plugin install vagrant-berkshelf
 gem install berkshelf
 berks vendor cookbooks; vagrant up --provision
