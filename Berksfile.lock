@@ -19,8 +19,6 @@ DEPENDENCIES
   munin-plugins-rails
     path: local-cookbooks/munin-plugins-rails
   nodejs (~> 5.0.0)
-  ntp
-    path: local-cookbooks/ntp
   passenger_apache2
   postgres
     path: local-cookbooks/postgres
@@ -50,7 +48,6 @@ GRAPH
     letsencrypt (>= 0.0.0)
     munin-plugins-rails (>= 0.0.0)
     nodejs (>= 0.0.0)
-    ntp (>= 0.0.0)
     passenger_apache2 (>= 0.0.0)
     postgres (>= 0.0.0)
     ruby_build (>= 0.0.0)
@@ -75,7 +72,6 @@ GRAPH
   nodejs (5.0.0)
     ark (>= 2.0.2)
     build-essential (>= 0.0.0)
-  ntp (0.0.1)
   passenger_apache2 (3.1.0)
     apache2 (>= 2.0)
     build-essential (>= 5.0)

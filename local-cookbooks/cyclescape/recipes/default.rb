@@ -9,8 +9,6 @@ include_recipe 'apt'
 include_recipe 'ssl'
 include_recipe 'apache2'
 include_recipe 'postgres'
-include_recipe 'ntp'
-include_recipe 'passenger_apache2'
 
 include_recipe 'java'
 
@@ -30,11 +28,18 @@ Dir["/usr/local/ruby/#{node['cyclescape']['ruby_version']}/bin/*"].each do |ruby
   end
 end
 
-
-gem_package 'rack' do
+gem_package 'rack' do # needed old rake gems have rackup but passenger_apache2 installs rackup as a spearate gem
   action :install
   version "3.1.7"
 end
+
+gem_dir = `#{node['passenger']['ruby_bin']} -e "puts ::Gem.dir"`
+# no idea why these are needed
+node.default['passenger']['root_path'] = "#{gem_dir.strip}/gems/passenger-#{node['passenger']['version']}"
+node.default['passenger']['module_path'] = "#{node['passenger']['root_path']}/#{Chef::Recipe::PassengerConfig.build_directory_for_version(node['passenger']['version'])}/apache2/mod_passenger.so"
+
+include_recipe 'passenger_apache2'
+
 
 node.default['exim4']['smarthost_server'] = data_bag_item("secrets", "mailbox")["relayhost"]
 include_recipe 'exim4-light'
@@ -385,6 +390,9 @@ link '/etc/apache2/sites-enabled/cyclescape.conf' do
   notifies :reload, 'service[apache2]'
 end
 
+service 'systemd-timesyncd' do
+  action [:enable, :start]
+end
 # Enable ExtendedStatus in apache2
 # This can be removed with later apache2 versions which have it included by default.
 apache_conf 'status'

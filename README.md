@@ -6,7 +6,7 @@ are very welcome.
 
 This is designed to use chef-solo. First we need to grab this repository and
 prep the cookbooks, then install chef-solo, then chef can take care of the rest.
-The base system is ubuntu-server 22.04 LTS or 20.04 LTS so there's not much
+The base system is ubuntu-server 24.04 LTS or 22.04 LTS so there's not much
 installed already.
 
     cd ~

@@ -13,7 +13,7 @@ cookbook 'deploy_resource'
 cookbook 'exim4-light'
 
 local_cookbooks = %w(cyclescape cyclescape-backups cyclescape-user munin-plugins-rails
-munin ntp postgres ssl letsencrypt)
+munin postgres ssl letsencrypt)
 local_cookbooks.each do |local_cookbook|
   cookbook local_cookbook, path: "local-cookbooks/#{local_cookbook}"
 end

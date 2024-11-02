@@ -25,9 +25,6 @@ default['cyclescape']['ruby_dir'] = "/usr/local/sbin/"
 default['passenger']['ruby_bin'] = "#{default['cyclescape']['ruby_dir']}ruby"
 default['passenger']['version'] = '6.0.23'
 
-# no idea why these are needed
-default['passenger']['root_path'] = "#{languages['ruby']['gems_dir']}/gems/passenger-#{default['passenger']['version']}"
-default['passenger']['module_path'] = "#{node['passenger']['root_path']}/#{Chef::Recipe::PassengerConfig.build_directory_for_version(node['passenger']['version'])}/apache2/mod_passenger.so"
 
 node.default['nodejs']['install_method'] = 'binary'
 node.default['nodejs']['version'] = '14.21.1'
