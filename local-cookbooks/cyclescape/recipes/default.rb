@@ -12,6 +12,12 @@ include_recipe 'postgres'
 
 include_recipe 'java'
 
+# https://github.com/phusion/passenger/issues/2397
+cookbook_file "/usr/lib/tmpfiles.d/passenger.conf" do
+  source "name_too_long_passenger.conf"
+end
+directory "/var/run/passenger-instreg"
+
 cookbook_file "/etc/gemrc" do
   action :create_if_missing
   source "gemrc"

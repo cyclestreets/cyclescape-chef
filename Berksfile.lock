@@ -37,7 +37,7 @@ GRAPH
     mingw (>= 1.1)
     seven_zip (>= 0.0.0)
   chef-sugar (5.0.1)
-  cyclescape (0.5.2)
+  cyclescape (0.5.3)
     apache2 (>= 0.0.0)
     apt (>= 0.0.0)
     cyclescape-backups (>= 0.0.0)
