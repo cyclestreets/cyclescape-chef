@@ -25,6 +25,8 @@ default['cyclescape']['ruby_dir'] = "/usr/local/sbin/"
 default['passenger']['ruby_bin'] = "#{default['cyclescape']['ruby_dir']}ruby"
 default['passenger']['version'] = '6.0.23'
 
+default['apt']['unattended_upgrades']['enable'] = true
+default['apt']['unattended_upgrades']['auto_fix_interrupted_dpkg'] = true
 
 node.default['nodejs']['install_method'] = 'binary'
 node.default['nodejs']['version'] = '14.21.1'

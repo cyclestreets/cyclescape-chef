@@ -6,6 +6,7 @@
 
 ENV["PATH"] = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 include_recipe 'apt'
+include_recipe 'apt::unattended-upgrades'
 include_recipe 'ssl'
 include_recipe 'apache2'
 include_recipe 'postgres'
