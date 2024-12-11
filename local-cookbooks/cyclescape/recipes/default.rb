@@ -145,15 +145,12 @@ template '/etc/logrotate.d/rails-cyclescape' do
   variables(shared_dir: shared_dir)
 end
 
-api_keys = %w(rollbar akismet cyclestreets facebook_app_id facebook_app_secret twitter_app_id twitter_app_secret)
-api_keys.each do |key|
-  template deploy_dir + "/shared/config/#{key}" do
-    source 'api-key.erb'
-    owner 'cyclescape'
-    group 'cyclescape'
-    mode '0400'
-    variables(api_key: data_bag_item('secrets', 'keys').fetch(key))
-  end
+template deploy_dir + "config/credentials/#{node["cyclescape"]["environment"]}.key" do
+  source 'api-key.erb'
+  owner 'cyclescape'
+  group 'cyclescape'
+  mode '0400'
+  variables(api_key: data_bag_item('secrets', "keys").fetch("credentials_#{node['cyclescape']['environment']}"))
 end
 
 schedule_bag = data_bag_item('secrets', 'i18n')
