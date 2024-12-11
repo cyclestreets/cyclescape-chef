@@ -8,10 +8,6 @@ default['firewall']['rules'] = [
   'munin' => {
     'port' => '4949'
   },
-  'npt' => {
-    'port' => '123',
-    'protocol' => 'udp'
-  }
 ]
 
 default['apache']['listen_ports'] = %w(80 443)
