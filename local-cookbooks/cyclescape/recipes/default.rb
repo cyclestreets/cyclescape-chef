@@ -106,7 +106,7 @@ end
 
 [
   deploy_dir, shared_dir,
-  File.join(shared_dir, 'config'), File.join(shared_dir, 'log'),
+  File.join(shared_dir, 'config', 'credentials'), File.join(shared_dir, 'log'),
   File.join(shared_dir, 'system'), File.join(shared_dir, 'tmp', 'dragonfly'),
   File.join(shared_dir, 'solr')
 ].each do |dir|
@@ -143,14 +143,6 @@ end
 template '/etc/logrotate.d/rails-cyclescape' do
   source 'rails-cyclescape.erb'
   variables(shared_dir: shared_dir)
-end
-
-template deploy_dir + "config/credentials/#{node["cyclescape"]["environment"]}.key" do
-  source 'api-key.erb'
-  owner 'cyclescape'
-  group 'cyclescape'
-  mode '0400'
-  variables(api_key: data_bag_item('secrets', "keys").fetch("credentials_#{node['cyclescape']['environment']}"))
 end
 
 schedule_bag = data_bag_item('secrets', 'i18n')
@@ -211,10 +203,18 @@ deploy_revision deploy_dir do
 
     # The symlink_before_default does this, but annoyingly comes after before_migrate is called
     # That way, db:create fails. So do it manually instead...
-    (api_keys + %w(database.yml mailboxes.yml schedule.yml)).each do |config|
+    %w(database.yml mailboxes.yml schedule.yml).each do |config|
       link File.join(current_release_directory, "config", config) do
         to File.join(shared_config, config)
       end
+    end
+
+    template current_release_directory + "/config/credentials/#{node["cyclescape"]["environment"]}.key" do
+      source 'api-key.erb'
+      owner 'cyclescape'
+      group 'cyclescape'
+      mode '0400'
+      variables(api_key: data_bag_item('secrets', "keys").fetch("credentials"))
     end
 
     # Things for the dragonfly gem
@@ -245,22 +245,6 @@ deploy_revision deploy_dir do
     ["node_modules", File.join(%w(tmp dragonfly)), "solr"].each do |dir|
       link File.join(current_release_directory, dir) do
         to File.join(shared_directory, dir)
-      end
-    end
-
-    %w(secret_token devise_secret_token secret_key_base).each do |secret|
-      # We need to create a secret, and store it in the shared config
-      # path for future use.
-      bash "create the #{secret}" do
-        cwd current_release_directory
-        user running_deploy_user
-        environment 'RAILS_ENV' => node['cyclescape']['environment']
-        code "bundle exec rake secret > #{shared_config}/#{secret}"
-        not_if "test -e #{shared_config}/#{secret}"
-      end
-
-      link current_release_directory + "/config/#{secret}" do
-        to shared_config + "/#{secret}"
       end
     end
 
