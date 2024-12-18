@@ -47,7 +47,6 @@ node.default['passenger']['module_path'] = "#{node['passenger']['root_path']}/#{
 
 include_recipe 'passenger_apache2'
 
-
 node.default['exim4']['smarthost_server'] = data_bag_item("secrets", "mailbox")["relayhost"]
 include_recipe 'exim4-light'
 file '/etc/exim4/exim4.conf.localmacros' do

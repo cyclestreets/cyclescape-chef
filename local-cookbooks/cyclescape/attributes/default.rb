@@ -29,7 +29,7 @@ node.default['nodejs']['version'] = '14.21.1'
 node.default['nodejs']['binary']['checksum'] = ''
 default['cyclescape']['basic_auth']['username'] = 'staginguser'
 default['cyclescape']['basic_auth']['password'] = 'staging'
-default['cyclescape']['ruby_version'] = '3.0.7'
+default['cyclescape']['ruby_version'] = '3.3.6'
 
 default['exim4']['configtype'] = 'satellite'
 default['exim4']['hide_mailname'] = 'true'
