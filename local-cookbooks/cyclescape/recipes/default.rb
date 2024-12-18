@@ -118,26 +118,6 @@ end
 
 include_recipe 'letsencrypt'
 
-template deploy_dir + '/shared/config/database.yml' do
-  source 'database.yml.erb'
-  owner 'cyclescape'
-  group 'cyclescape'
-  mode '0644'
-end
-
-mb = data_bag_item('secrets', 'mailbox')
-
-template deploy_dir + '/shared/config/mailboxes.yml' do
-  source 'mailboxes.yml.erb'
-  owner 'cyclescape'
-  group 'cyclescape'
-  mode '0400'
-  variables(
-    server: mb['server'],
-    username: mb['username'],
-    password: mb['password']
-  )
-end
 
 template '/etc/logrotate.d/rails-cyclescape' do
   source 'rails-cyclescape.erb'
@@ -202,7 +182,7 @@ deploy_revision deploy_dir do
 
     # The symlink_before_default does this, but annoyingly comes after before_migrate is called
     # That way, db:create fails. So do it manually instead...
-    %w(database.yml mailboxes.yml schedule.yml).each do |config|
+    %w(schedule.yml).each do |config|
       link File.join(current_release_directory, "config", config) do
         to File.join(shared_config, config)
       end
@@ -380,6 +360,3 @@ end
 service 'systemd-timesyncd' do
   action [:enable, :start]
 end
-# Enable ExtendedStatus in apache2
-# This can be removed with later apache2 versions which have it included by default.
-apache_conf 'status'
