@@ -19,7 +19,7 @@ default['java']['jdk_version'] = 8
 default['apache']['prefork']['startservers'] = 4
 default['cyclescape']['ruby_dir'] = "/usr/local/sbin/"
 default['passenger']['ruby_bin'] = "#{default['cyclescape']['ruby_dir']}ruby"
-default['passenger']['version'] = '6.0.23'
+default['passenger']['version'] = '6.0.24'
 
 default['apt']['unattended_upgrades']['enable'] = true
 default['apt']['unattended_upgrades']['auto_fix_interrupted_dpkg'] = true
