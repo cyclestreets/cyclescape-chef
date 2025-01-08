@@ -67,7 +67,7 @@ file "/etc/cron.daily/dehydrated" do
 LOGFILE=#{dehydrated_log}
 APACHE_SSL=/etc/apache2/ssl/
 echo "Cron Job running at `date`" >> ${LOGFILE}
-exec /usr/bin/dehydrated -c >> ${LOGFILE} 2>&1
+/usr/bin/dehydrated -c >> ${LOGFILE} 2>&1
 
 # Find any pem files changed in the last 30 mins
 CHANGED=`/usr/bin/find #{File.join(dehydrated_cert, node["letsencrypt"]["domain_names"][0])} -mmin -30 -name "*.pem" -ls`
@@ -76,7 +76,7 @@ echo "CHANGED=${CHANGED}" >> ${LOGFILE}
 # If changed files is not empty then symlink over and update apache
 if [[ ! -z $CHANGED ]]; then
   echo "The certificates have changed, relinking and reloading apache" >> ${LOGFILE}
-  /bin/ln -sf #{File.join(dehydrated_cert, node["letsencrypt"]["domain_names"][0], "*")} "${APACHE_SSL}
+  /bin/ln -sf #{File.join(dehydrated_cert, node["letsencrypt"]["domain_names"][0], "*")} "${APACHE_SSL}"
   /etc/init.d/apache2 reload >> ${LOGFILE}
   find "${APACHE_SSL}" -xtype l -delete
 fi
