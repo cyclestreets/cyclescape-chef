@@ -94,8 +94,25 @@ If the cookbooks themselves change - for example, if you add another package,
 or change the contents of one of the templates, you'll need to update and rebundle
 the cookbooks, then run chef-solo:
 
-    cd /opt/cyclescape-chef/
-    git pull
-    sudo berks install
-    sudo berks vendor cookbooks/
-    sudo chef-solo -c solo.rb -j node.json
+```
+sudo touch /usr/local/sbin/update-everything.sh
+sudo chown root:root /usr/local/sbin/update-everything.sh
+sudo chmod 700 /usr/local/sbin/update-everything.sh
+
+# then make the file
+sudo cat /usr/local/sbin/update-everything.sh
+#!/usr/bin/env bash
+
+# Safety Options
+set -o errexit    # Exit immediately if a command exits with a non-zero status.
+set -o nounset    # Treat unset variables as an error.
+set -o pipefail   # Exit if any command in a pipeline fails.
+set -o errtrace   # Ensure ERR traps are inherited.
+
+pushd /opt/cyclescape-chef/
+git pull
+berks install
+berks vendor cookbooks/
+chef-solo -c solo.rb -j node.json
+popd
+```
