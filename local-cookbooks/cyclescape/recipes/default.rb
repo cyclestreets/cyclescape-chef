@@ -106,11 +106,12 @@ bash 'create cyclescape db user' do
   not_if %q(test -n "`sudo -u postgres psql template1 -A -t -c '\du cyclescape'`") # Mmm, hacky
 end
 
+shared_dirs_to_copy = [ File.join('tmp', 'dragonfly'), File.join('solr', 'default', 'data'), File.join('solr', 'pid') ]
+
 [
-  deploy_dir, shared_dir,
-  File.join(shared_dir, 'config', 'credentials'), File.join(shared_dir, 'log'),
-  File.join(shared_dir, 'system'), File.join(shared_dir, 'tmp', 'dragonfly'),
-  File.join(shared_dir, 'solr')
+  deploy_dir,
+  File.join(shared_dir, 'config', 'credentials'), File.join(shared_dir, 'log'), File.join(shared_dir, 'system'),
+  *shared_dirs_to_copy.map { |sd| File.join(shared_dir, sd) }
 ].each do |dir|
   directory dir do
     owner 'cyclescape'
@@ -120,7 +121,6 @@ end
 end
 
 include_recipe 'letsencrypt'
-
 
 template '/etc/logrotate.d/rails-cyclescape' do
   source 'rails-cyclescape.erb'
@@ -212,19 +212,7 @@ deploy_revision deploy_dir do
       group 'cyclescape'
     end
 
-    bash "Copy solr directory over" do
-      cwd current_release_directory
-      user running_deploy_user
-      code "mv solr #{shared_dir}"
-      not_if "test -d #{File.join(shared_dir, 'solr')}"
-    end
-
-    directory File.join(current_release_directory, "solr") do
-      recursive true
-      action :delete
-    end
-
-    ["node_modules", File.join(%w(tmp dragonfly)), "solr"].each do |dir|
+    ["node_modules", *shared_dirs_to_copy].each do |dir|
       link File.join(current_release_directory, dir) do
         to File.join(shared_directory, dir)
       end
