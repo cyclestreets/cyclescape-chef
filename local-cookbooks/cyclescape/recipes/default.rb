@@ -146,6 +146,7 @@ deploy_revision deploy_dir do
   bundler_depot = shared_path + '/bundle'
   repo 'https://github.com/cyclestreets/cyclescape.git'
   revision deploy_branch
+  symlink_before_migrate.clear
   user 'cyclescape'
   group 'cyclescape'
   before_migrate do
