@@ -88,6 +88,57 @@ If running a test in a VM, ensure you have allocated enough memory. The installa
 
 It's easy to run chef again - for example, in order to deploy the latest version.
 
+# New machine
+
+This could be simplified by adding your SSH key to the cyclescape user.
+
+```
+ssh -o ForwardAgent=yes -A USER@staging.cyclescape.org
+NEW_MACHINE="foo"
+sudo cp -r /etc/chef/databags .
+sudo chown -R $USER:$USER databags
+scp -r databags $NEW_MACHINE.cyclescape.org:.
+sudo cp /etc/apache2/ssl/{cert.pem,chain.pem,privkey.pem} .
+sudo chown $USER:$USER cert.pem chain.pem privkey.pem
+scp cert.pem chain.pem privkey.pem $NEW_MACHINE.cyclescape.org:.
+rm -r cert.pem chain.pem privkey.pem databags
+ssh $NEW_MACHINE.cyclescape.org
+sudo mv databags /etc/chef/.
+sudo chown -R root:root /etc/chef/databags
+sudo mv cert.pem chain.pem privkey.pem /etc/apache2/ssl/.
+sudo chown root:root /etc/apache2/ssl/{cert.pem,chain.pem,privkey.pem}
+
+scp staging.cyclescape.org:/websites/cyclescape/backup/cyclescapeDB.sql.gz .
+scp staging.cyclescape.org:/websites/cyclescape/backup/cyclescapeShared.tar.bz2 . # or cyclescapeSharedRecent.tar.bz2 for the last 2 days
+sudo mv cyclescapeDB.sql.gz cyclescapeShared.tar.bz2 /websites/cyclescape/backup/
+sudo chown cyclescape:cyclescape /websites/cyclescape/backup/{cyclescapeDB.sql.gz,cyclescapeShared.tar.bz2}
+cd /var/www/cyclescape/current
+sudo su cyclescape
+touch /var/www/cyclescape/current/public/maintenance.enable # put the new server in maintenance mode
+RAILS_ENV=production bundle exec rails db:drop db:create
+gunzip -c /websites/cyclescape/backup/cyclescapeDB.sql.gz | psql cyclescape_production
+tar -xf /websites/cyclescape/backup/cyclescapeShared.tar.bz2 -C /var/www/cyclescape/shared/
+
+
+# on old production
+cd /home/cyclescape
+sudo su cyclescape
+touch /var/www/cyclescape/current/public/maintenance.enable
+rm -rf cyclescape_production; date; pg_dump -Fd -v -O -d cyclescape_production -j 12 -f cyclescape_production; date
+cd /var/www/cyclescape/shared/system
+find . -type f -mtime -1 -print0 | tar -cjpf /websites/cyclescape/backup/cyclescapeSharedRecent.tar.bz2 --null -T -
+exit
+sudo chown -R $USER:$USER cyclescape_production/
+sudo mv /home/cyclescape/cyclescape_production/ ~/.
+# on new prod
+scp -r www.cyclescape.org:cyclescape_production/ .
+sudo mv cyclescape_production/ /home/cyclescape/
+sudo chown cyclescape:cyclescape -R /home/cyclescape/cyclescape_production
+sudo su cyclescape
+cd ~
+pg_restore -O -d cyclescape_production -j 12 --clean --no-owner cyclescape_production
+```
+
 # Updating the cookbooks
 
 If the cookbooks themselves change - for example, if you add another package,
