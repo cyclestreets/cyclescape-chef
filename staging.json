@@ -1,4 +1,4 @@
 {
-  "cyclescape": {"environment": "staging", "server_name": "staging.cyclescape.org"},
+  "cyclescape": {"environment": "staging", "server_name": "staging.cyclescape.org", "redis_maxmemory": "256mb"},
   "run_list": [ "recipe[cyclescape]", "recipe[munin]" ]
 }

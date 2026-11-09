@@ -79,6 +79,14 @@ package 'apache2-utils'
 # Redis server for queueing and caching
 package 'redis-server'
 
+# Cap memory. volatile-lru only evicts keys with a TTL (the Rails cache in db1),
+# never the Resque queues. CONFIG REWRITE persists the settings to redis.conf.
+execute 'limit redis memory' do
+  command "redis-cli CONFIG SET maxmemory #{node['cyclescape']['redis_maxmemory']} && " \
+          "redis-cli CONFIG SET maxmemory-policy volatile-lru && " \
+          "redis-cli CONFIG REWRITE"
+end
+
 # Imagemagick, for dragonfly to do image processing with convert
 package 'imagemagick'
 
