@@ -7,6 +7,13 @@
 ENV["PATH"] = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 include_recipe 'apt'
 include_recipe 'apt::unattended-upgrades'
+
+# Swap for low-memory machines (e.g. staging) so builds during chef runs don't thrash
+swap_file '/swapfile' do
+  size node['cyclescape']['swap_size_mb']
+  only_if { node['cyclescape']['swap_size_mb'] > 0 }
+end
+
 include_recipe 'ssl'
 include_recipe 'apache2'
 include_recipe 'postgres'

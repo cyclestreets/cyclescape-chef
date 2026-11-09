@@ -35,3 +35,4 @@ default['exim4']['configtype'] = 'satellite'
 default['exim4']['hide_mailname'] = 'true'
 default['exim4']['localdelivery'] = 'mail_spool'
 default['cyclescape']['redis_maxmemory'] = '1gb'
+default['cyclescape']['swap_size_mb'] = 0
