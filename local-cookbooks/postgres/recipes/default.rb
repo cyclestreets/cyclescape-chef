@@ -25,13 +25,11 @@ package "postgis" do
   action :install
 end
 
-pg_config_file = `sudo -u postgres psql -t -P format=unaligned -c 'SHOW config_file'`
-bash "Add pg_stat_statements to pg_config_file" do
-  code <<-EOL
-    echo "shared_preload_libraries = 'pg_stat_statements'
-pg_stat_statements.track = all" >> #{pg_config_file}
-  EOL
-  only_if do
-    !::File.foreach(pg_config_file.strip).grep(/pg_stat_statements\.track = all/).any?
-  end
+file 'pg_stat_statements.conf' do
+  path lazy {
+    config_file = shell_out!('psql -tAc "SHOW config_file"', user: 'postgres').stdout.strip
+    ::File.join(::File.dirname(config_file), 'conf.d', 'pg_stat_statements.conf')
+  }
+  content "shared_preload_libraries = 'pg_stat_statements'\npg_stat_statements.track = all\n"
+  notifies :restart, 'service[postgresql]'
 end
