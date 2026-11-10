@@ -8,6 +8,11 @@ ENV["PATH"] = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 include_recipe 'apt'
 include_recipe 'apt::unattended-upgrades'
 
+# unattended-upgrades never empties /var/cache/apt/archives on its own
+file '/etc/apt/apt.conf.d/52clean' do
+  content "APT::Periodic::CleanInterval \"7\";\n"
+end
+
 # Swap for low-memory machines (e.g. staging) so builds during chef runs don't thrash
 swap_file '/swapfile' do
   size node['cyclescape']['swap_size_mb']
