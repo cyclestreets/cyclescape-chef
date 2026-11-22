@@ -19,7 +19,7 @@ default['java']['jdk_version'] = 8
 default['apache']['prefork']['startservers'] = 4
 default['cyclescape']['ruby_dir'] = "/usr/local/sbin/"
 default['passenger']['ruby_bin'] = "#{default['cyclescape']['ruby_dir']}ruby"
-default['passenger']['version'] = '6.0.24'
+default['passenger']['version'] = '6.2.2'
 
 default['apt']['unattended_upgrades']['enable'] = true
 default['apt']['unattended_upgrades']['auto_fix_interrupted_dpkg'] = true
@@ -31,7 +31,7 @@ node.default['nodejs']['version'] = '14.21.1'
 node.default['nodejs']['binary']['checksum'] = ''
 default['cyclescape']['basic_auth']['username'] = 'staginguser'
 default['cyclescape']['basic_auth']['password'] = 'staging'
-default['cyclescape']['ruby_version'] = '3.3.6'
+default['cyclescape']['ruby_version'] = '3.4.13'
 
 default['exim4']['configtype'] = 'satellite'
 default['exim4']['hide_mailname'] = 'true'
