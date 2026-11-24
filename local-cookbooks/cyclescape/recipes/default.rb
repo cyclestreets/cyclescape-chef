@@ -41,23 +41,49 @@ include_recipe 'ruby_build'
 
 ruby_build_ruby node["cyclescape"]["ruby_version"]
 
-Dir["/usr/local/ruby/#{node['cyclescape']['ruby_version']}/bin/*"].each do |ruby_file|
-  link "#{node['cyclescape']['ruby_dir']}#{File.basename(ruby_file)}" do
-    to ruby_file
+# Everything uses Ruby through /usr/local/ruby/current, so upgrading is one link change
+link '/usr/local/ruby/current' do
+  to "/usr/local/ruby/#{node['cyclescape']['ruby_version']}"
+end
+
+%w(ruby gem bundle bundler rake irb erb).each do |bin|
+  link "#{node['cyclescape']['ruby_dir']}#{bin}" do
+    to "/usr/local/ruby/current/bin/#{bin}"
   end
 end
 
-gem_package 'rack' do # needed old rake gems have rackup but passenger_apache2 installs rackup as a spearate gem
-  action :install
-  version "3.1.7"
+# Passenger from Phusion's APT repository
+# https://www.phusionpassenger.com/docs/advanced_guides/install_and_upgrade/apache/install/oss/noble.html
+package %w(curl gnupg)
+
+execute 'add Phusion APT key' do
+  command 'curl -fsSL https://oss-binaries.phusionpassenger.com/auto-software-signing-gpg-key-2025.txt | gpg --dearmor -o /etc/apt/trusted.gpg.d/phusion.gpg'
+  creates '/etc/apt/trusted.gpg.d/phusion.gpg'
 end
 
-gem_dir = `#{node['passenger']['ruby_bin']} -e "puts ::Gem.dir"`
-# no idea why these are needed
-node.default['passenger']['root_path'] = "#{gem_dir.strip}/gems/passenger-#{node['passenger']['version']}"
-node.default['passenger']['module_path'] = "#{node['passenger']['root_path']}/#{Chef::Recipe::PassengerConfig.build_directory_for_version(node['passenger']['version'])}/apache2/mod_passenger.so"
+apt_repository 'passenger' do
+  uri 'https://oss-binaries.phusionpassenger.com/apt/passenger'
+  distribution node['lsb']['codename']
+  components ['main']
+end
 
-include_recipe 'passenger_apache2'
+# Remove the config left by the old passenger_apache2 cookbook (a gem install),
+# so the package installs its own
+%w(load conf).each do |ext|
+  file "/etc/apache2/mods-available/passenger.#{ext}" do
+    action :delete
+    not_if 'dpkg -s libapache2-mod-passenger'
+  end
+end
+
+package 'libapache2-mod-passenger' do
+  notifies :restart, 'service[apache2]'
+end
+
+execute 'a2enmod passenger' do
+  creates '/etc/apache2/mods-enabled/passenger.load'
+  notifies :restart, 'service[apache2]'
+end
 
 node.default['exim4']['smarthost_server'] = data_bag_item("secrets", "mailbox")["relayhost"]
 node.default['exim4']['mailname'] = 'cyclescape.org'
@@ -334,6 +360,26 @@ deploy_revision deploy_dir do
   action :deploy
   restart_command 'touch tmp/restart.txt'
   # restart_command 'passenger-config restart-app /'
+end
+
+# deploy_revision only bundles when there is a new revision, so after a Ruby
+# upgrade the current release has no gems for the new Ruby version
+bundle_env = {
+  'LC_ALL' => 'en_GB.UTF-8',
+  'HOME' => "#{deploy_dir}/shared/bundle",
+  'BUNDLE_PATH' => "#{deploy_dir}/shared/bundle"
+}
+bash 'Bundling the gems for the current Ruby' do
+  cwd "#{deploy_dir}/current"
+  user 'cyclescape'
+  environment bundle_env
+  code <<-EOS
+    set -e
+    bundle install --deployment --path #{deploy_dir}/shared/bundle --quiet\
+    --without #{(%w(development test staging) - [node['cyclescape']['environment']]).join(' ')}
+    touch tmp/restart.txt
+  EOS
+  not_if 'bundle check', cwd: "#{deploy_dir}/current", user: 'cyclescape', environment: bundle_env
 end
 
 bash 'create htpasswd file' do
